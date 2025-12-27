@@ -26,7 +26,7 @@ qemu-grade:
 	@$(QEMU) bomb < ans.txt
 
 gdb:
-	$(GDB) -ex "set architecture aarch64" -ex "target remote localhost:1234" -ex "add-symbol-file bomb"
+	$(GDB) -ex "set architecture aarch64" -ex "target remote localhost:1234" bomb
 
 grade:
 	@$(DOCKER_RUN) $(GRADER) -t $(TIMEOUT) -f $(CURDIR)/scores.json make qemu-grade
