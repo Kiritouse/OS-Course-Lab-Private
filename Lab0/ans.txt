@@ -4,4 +4,3 @@ Fault Tolerance: Reliable Systems from Unreliable Components.
 2 2
 helloworlc
 93
-上述答案
