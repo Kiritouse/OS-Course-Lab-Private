@@ -131,6 +131,7 @@ static unsigned int early_uart_fr(void)
 static void early_uart_send(unsigned int c)
 {
 	/* Check if the send fifo is full. */
+	//TODO：这里到时候要改成raspi 4
 	while (early_uart_fr() & (1 << 5));
 	early_put32(RASPI3_PL011_DR, c);
 }
@@ -141,6 +142,9 @@ void uart_send_string(char *str)
 {
         /* LAB 1 TODO 3 BEGIN */
         /* BLANK BEGIN */
+		while (*str) {
+			early_uart_send(*str++);
+		}
         /* BLANK END */
         /* LAB 1 TODO 3 END */
 }

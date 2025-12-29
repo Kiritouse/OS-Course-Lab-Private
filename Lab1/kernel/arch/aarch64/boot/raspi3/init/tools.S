@@ -70,16 +70,18 @@
 BEGIN_FUNC(arm64_elX_to_el1)
 	/* LAB 1 TODO 1 BEGIN */
 	/* BLANK BEGIN */
+	mrs x9, CurrentEL // 获取当前的EL等级，用于后续比较
 	/* BLANK END */
 	/* LAB 1 TODO 1 END */
 
 	// Check the current exception level.
+	// 如果是_EL1 跳转到 .Ltarget
 	cmp x9, CURRENTEL_EL1
-	beq .Ltarget
+	beq .Ltarget 
 	cmp x9, CURRENTEL_EL2
 	beq .Lin_el2
 	// Otherwise, we are in EL3.
-
+	//下面的代码都是处于 EL3 的时候执行的
 	// Set EL2 to 64bit and enable the HVC instruction.
 	mrs x9, scr_el3
 	mov x10, SCR_EL3_NS | SCR_EL3_HCE | SCR_EL3_RW
@@ -89,6 +91,10 @@ BEGIN_FUNC(arm64_elX_to_el1)
 	// Set the return address and exception level.
 	/* LAB 1 TODO 2 BEGIN */
 	/* BLANK BEGIN */
+	adr x9, .Ltarget // 将.Ltarget地址送入x9,因为.Ltarget就是el1的入口
+	msr elr_el3, x9 // 将x9送入系统寄存器`elr_el3`
+	mov x9, SPSR_ELX_DAIF | SPSR_ELX_EL1H 
+	msr spsr_el3, x9 // 设置状态寄存器`spsr_el3`，屏蔽所有中断和将栈指针设置为SP_EL!
 	/* BLANK END */
 	/* LAB 1 TODO 2 END */
 
@@ -263,10 +269,13 @@ BEGIN_FUNC(el1_mmu_activate)
 	msr     ttbr1_el1, x8
 	isb
 
+// 下面是启动MMU的代码，首先拷贝到x8中
 	mrs     x8, sctlr_el1
 	/* Enable MMU */
 	/* LAB 1 TODO 4 BEGIN */
 	/* BLANK BEGIN */
+//启动 M 字段
+	orr x8,x8, #SCTLR_EL1_M	
 	/* BLANK END */
 	/* LAB 1 TODO 4 END */
 	/* Disable alignment checking */
