@@ -28,10 +28,12 @@ typedef unsigned int u32;
 u64 boot_ttbr0_l0[PTP_ENTRIES] ALIGN(PTP_SIZE);
 u64 boot_ttbr0_l1[PTP_ENTRIES] ALIGN(PTP_SIZE);
 u64 boot_ttbr0_l2[PTP_ENTRIES] ALIGN(PTP_SIZE);
-
+//这一串分别代表的是l0，l1,l2页表
 u64 boot_ttbr1_l0[PTP_ENTRIES] ALIGN(PTP_SIZE);
 u64 boot_ttbr1_l1[PTP_ENTRIES] ALIGN(PTP_SIZE);
 u64 boot_ttbr1_l2[PTP_ENTRIES] ALIGN(PTP_SIZE);
+
+
 
 #define IS_VALID (1UL << 0)
 #define IS_TABLE (1UL << 1)
@@ -51,6 +53,7 @@ u64 boot_ttbr1_l2[PTP_ENTRIES] ALIGN(PTP_SIZE);
 
 void init_kernel_pt(void)
 {
+        //为虚拟低地址配置页表
         u64 vaddr = PHYSMEM_START;
 
         /* TTBR0_EL1 0-1G */
@@ -83,20 +86,39 @@ void init_kernel_pt(void)
                         | DEVICE_MEMORY /* Device memory */
                         | IS_VALID;
         }
+        
 
+        //下面是对虚拟高地址配置页表
         /* TTBR1_EL1 0-1G */
         /* LAB 1 TODO 5 BEGIN */
         /* Step 1: set L0 and L1 page table entry */
-        /* BLANK BEGIN */
-        /* BLANK END */
+        //TODO :raspi4需要修改
+        vaddr = KERNEL_VADDR;
+        boot_ttbr1_l0[GET_L0_INDEX(vaddr)] = ((u64)boot_ttbr1_l1) | IS_TABLE
+                                             | IS_VALID | NG;
+        boot_ttbr1_l1[GET_L1_INDEX(vaddr)] = ((u64)boot_ttbr1_l2) | IS_TABLE
+                                             | IS_VALID | NG;
 
         /* Step 2: map PHYSMEM_START ~ PERIPHERAL_BASE with 2MB granularity */
-        /* BLANK BEGIN */
-        /* BLANK END */
-
-        /* Step 2: map PERIPHERAL_BASE ~ PHYSMEM_END with 2MB granularity */
-        /* BLANK BEGIN */
-        /* BLANK END */
+        for (vaddr = KERNEL_VADDR + PHYSMEM_START; vaddr < KERNEL_VADDR + PERIPHERAL_BASE; vaddr += SIZE_2M) {
+                boot_ttbr1_l2[GET_L2_INDEX(vaddr)] =
+                        (vaddr - KERNEL_VADDR) /* phys addr */
+                        | UXN /* Unprivileged execute never */
+                        | ACCESSED /* Set access flag */
+                        | NG /* Mark as not global */
+                        | INNER_SHARABLE /* Shareability */
+                        | NORMAL_MEMORY /* Normal memory */
+                        | IS_VALID;
+        }
+        for (vaddr = KERNEL_VADDR + PERIPHERAL_BASE; vaddr < KERNEL_VADDR + PHYSMEM_END; vaddr += SIZE_2M) {
+                boot_ttbr1_l2[GET_L2_INDEX(vaddr)] =
+                        (vaddr - KERNEL_VADDR) /* phys addr */
+                        | UXN /* Unprivileged execute never */
+                        | ACCESSED /* Set access flag */
+                        | NG /* Mark as not global */
+                        | DEVICE_MEMORY /* Device memory */
+                        | IS_VALID;
+        }
         /* LAB 1 TODO 5 END */
 
         /*
@@ -105,7 +127,8 @@ void init_kernel_pt(void)
          * 0x4000_0000 .. 0xFFFF_FFFF
          * 1G is enough (for Mini-UART). Map 1G page here.
          */
-        vaddr = KERNEL_VADDR + PHYSMEM_END;
+        vaddr = KERNEL_VADDR + PHYSMEM_END; 
+        //更新外设地址在l1表中的对应的index的起始地址
         boot_ttbr1_l1[GET_L1_INDEX(vaddr)] = PHYSMEM_END | UXN /* Unprivileged
                                                                   execute never
                                                                 */

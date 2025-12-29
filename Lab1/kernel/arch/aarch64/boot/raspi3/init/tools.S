@@ -274,7 +274,7 @@ BEGIN_FUNC(el1_mmu_activate)
 	/* Enable MMU */
 	/* LAB 1 TODO 4 BEGIN */
 	/* BLANK BEGIN */
-//启动 M 字段
+   //启动 M 字段
 	orr x8,x8, #SCTLR_EL1_M	
 	/* BLANK END */
 	/* LAB 1 TODO 4 END */
