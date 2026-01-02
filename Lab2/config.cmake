@@ -20,6 +20,8 @@ chcore_config(CHCORE_QEMU_SDCARD_IMG PATH "" "Path to SD card image file for QEM
 chcore_config(CHCORE_USER_DEBUG BOOL OFF "Build debug version of user-level libs and apps?")
 chcore_config(CHCORE_QEMU BOOL OFF "Run in QEMU?")
 chcore_config(CHCORE_MINI BOOL OFF "Build chcore as small as possible?")
+chcore_config(CHCORE_KERNEL_PM_USAGE_TEST BOOL ON "Whether to enable the challenge test?")
+
 
 chcore_config_include(kernel/config.cmake)
 # chcore_config_include(user/apps/config.cmake)

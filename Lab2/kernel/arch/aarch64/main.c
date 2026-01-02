@@ -85,6 +85,44 @@ void main(paddr_t boot_flag, void *info)
 			KSTACKx_ADDR(0),
 			(unsigned long)(cpu_stacks[0]) - KBASE, 
 			CPU_STACK_SIZE, VMR_READ | VMR_WRITE);
+	/*上述是粗粒度映射 */
+
+	#define PHYSICAL_START          (0x0UL)
+	#define DEVICE_START            (0x3F000000UL)
+	#define DEVICE_END              (0x40000000UL)
+	#define PHYSICAL_END            (0x80000000UL)
+			// 获得物理页。
+			volatile void * ttbr1_el1 = get_pages(0);
+			// 将内核空间进行细粒度映射。
+			map_range_in_pgtbl_kernel((void *)ttbr1_el1, 
+									KSTACKx_ADDR(0),
+									virt_to_phys(cpu_stacks[0]), CPU_STACK_SIZE, 
+									VMR_READ | VMR_WRITE);
+			// 映射物理内存SDRAM。注意修改虚拟空间的映射类型。
+			// VMR相关类型定义位于：kernel/user-include/uapi/memory.h。
+			map_range_in_pgtbl_kernel((void *)ttbr1_el1, 
+									KBASE + PHYSICAL_START,
+									PHYSICAL_START,
+									DEVICE_START - PHYSICAL_START, 
+									VMR_EXEC);
+			// 映射设备（共享外设内存地址）。
+			map_range_in_pgtbl_kernel((void *)ttbr1_el1, 
+									KBASE + DEVICE_START,
+									DEVICE_START, 
+									DEVICE_END - DEVICE_START, 
+									VMR_DEVICE);
+			// 映射本地CPU外设内存。
+			map_range_in_pgtbl_kernel((void *)ttbr1_el1,    
+									KBASE + DEVICE_END,
+									DEVICE_END, 
+									PHYSICAL_END - DEVICE_END, 
+									VMR_DEVICE);
+			flush_tlb_all();        // 刷新TLB。
+			kinfo("[ChCore] kernel remap finished\n");
+	#undef PHYSICAL_START
+	#undef DEVICE_START
+	#undef DEVICE_END
+	#undef PHYSICAL_END
 
 	/* Init exception vector */
 	arch_interrupt_init();
