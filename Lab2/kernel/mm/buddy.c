@@ -105,7 +105,6 @@ __maybe_unused static struct page * merge_chunk(struct phys_mem_pool *__maybe_un
          */
         /* BLANK BEGIN */
         struct page *buddy_chunk;
-        struct list_head *free_list;
         int order;
 
         order = chunk->order;
@@ -120,11 +119,11 @@ __maybe_unused static struct page * merge_chunk(struct phys_mem_pool *__maybe_un
                 return chunk;
 
         /* Check if buddy is free and has the same order */
+        /*如果说已经有分配数据了，或者伙伴块的order不等于当前块的order，则不进行合并*/
         if (buddy_chunk->allocated != 0 || buddy_chunk->order != order)
                 return chunk;
 
         /* Remove buddy from its free list */
-        free_list = &(pool->free_lists[order].free_list);
         list_del(&buddy_chunk->node);
         pool->free_lists[order].nr_free -= 1;
 
@@ -138,7 +137,7 @@ __maybe_unused static struct page * merge_chunk(struct phys_mem_pool *__maybe_un
         /* Merge: increase order and clear buddy's metadata */
         chunk->order += 1;
         buddy_chunk->order = 0;
-        buddy_chunk->allocated = 0;
+        //buddy_chunk->allocated = 0; //没有必要重新设置为0，因为只有0才能运行到这里
 
         /* Recursively try to merge the merged chunk */
         return merge_chunk(pool, chunk);
