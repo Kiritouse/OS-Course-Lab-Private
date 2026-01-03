@@ -36,6 +36,12 @@ struct object {
          * opaque marks the end of this struct and the real object will be
          * stored here. Now its address will be 8-byte aligned.
          */
+        /*
+        这是 C 语言内核开发中常用的一种技巧。当你调用 obj_alloc(type, size) 时，内核实际上会分配 sizeof(struct object) + size 大小的连续内存。
+前一部分是通用的 struct object，后一部分（即 opaque 开始的部分）就是具体类型的对象数据。
+通过这种方式，系统可以用统一的 struct object * 指针来管理不同类型的内核对象。
+        */
+       //柔性数组成员，表示具体对象在这里存储，使用malloc分配内存时会分配足够的空间存储这个对象
         u64 opaque[];
 };
 

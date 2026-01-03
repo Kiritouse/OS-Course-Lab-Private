@@ -1,0 +1,20 @@
+{
+    "configurations": [
+        {
+            "name": "Lab3",
+            "includePath": [
+                "${workspaceFolder}/Lab3/kernel/include",
+                "${workspaceFolder}/Lab3/kernel/user-include",
+                "${workspaceFolder}/Lab3/**"
+            ],
+            "defines": [
+                "CHCORE"
+            ],
+            "compilerPath": "/usr/bin/clang-16",
+            "cStandard": "c17",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "linux-clang-x64"
+        }
+    ],
+    "version": 4
+}

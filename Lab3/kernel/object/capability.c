@@ -53,16 +53,18 @@ const obj_deinit_func obj_deinit_tbl[TYPE_NR] = {
  * initialize the obj;
  * cap_alloc(obj);
  */
+//分配一个object结构体，并初始化
 void *obj_alloc(u64 type, u64 size)
 {
         u64 total_size;
         struct object *object;
 
         total_size = sizeof(*object) + size;
-        object = kzalloc(total_size);
+        //size里面包含的就是具体的object数据，struct object只是一个头部，类似于metadata
+        object = kzalloc(total_size);//分配内存并初始化为0
         if (!object)
                 return NULL;
-
+        //更新metadata信息
         object->type = type;
         object->size = size;
         object->refcount = 0;
@@ -71,9 +73,11 @@ void *obj_alloc(u64 type, u64 size)
          * If the cap of the object is copied, then the copied cap (slot) is
          * stored in such a list.
          */
+        //如果object被cap引用了，那么这些cap会被串联成一个链表，链表头就是copies_head
         init_list_head(&object->copies_head);
+        //锁的初始化
         lock_init(&object->copies_lock);
-
+        //注意我们返回的指针是object->opaque，也就是紧跟在struct object后面的内存地址
         return object->opaque;
 }
 
@@ -87,12 +91,18 @@ void obj_free(void *obj)
 
         if (!obj)
                 return;
+        //偏移回原始的metadata头节点,
         object = container_of(obj, struct object, opaque);
 
         BUG_ON(object->refcount != 0);
         kfree(object);
 }
 
+/// @brief 分配一个cap,指向obj对象，并设置权限rights
+/// @param cap_group 在哪个cap_group中分配cap
+/// @param obj 指向的内核对象
+/// @param rights 权限
+/// @return cap id，失败返回负数错误码
 cap_t cap_alloc_with_rights(struct cap_group *cap_group, void *obj, cap_right_t rights)
 {
         struct object *object;
@@ -100,17 +110,17 @@ cap_t cap_alloc_with_rights(struct cap_group *cap_group, void *obj, cap_right_t 
         struct object_slot *slot;
         cap_t r, slot_id;
 
-        object = container_of(obj, struct object, opaque);
-        slot_table = &cap_group->slot_table;
+        object = container_of(obj, struct object, opaque);//获取object的metadata头节点
+        slot_table = &cap_group->slot_table;//获取cap_group的slot_table，也就是cap数组，里面存储了cap信息，每个cap对应一个object
 
-        write_lock(&slot_table->table_guard);
-        slot_id = alloc_slot_id(cap_group);
-        if (slot_id < 0) {
+        write_lock(&slot_table->table_guard);//加锁，防止并发修改slot_table
+        slot_id = alloc_slot_id(cap_group);//分配一个slot id，也就是cap id
+        if (slot_id < 0) { //如果分配失败，满了，返回错误码
                 r = -ENOMEM;
                 goto out_unlock_table;
         }
 
-        slot = kmalloc(sizeof(*slot));
+        slot = kmalloc(sizeof(*slot));//分配一个object_slot结构体，表示一个cap
         if (!slot) {
                 r = -ENOMEM;
                 goto out_free_slot_id;
@@ -122,12 +132,12 @@ cap_t cap_alloc_with_rights(struct cap_group *cap_group, void *obj, cap_right_t 
         slot->rights = cap_rights_change(rights,
                                          CAP_DEFAULT_RIGHTS,
                                          CAP_DEFAULT_RIGHTS);
-        list_add(&slot->copies, &object->copies_head);
+        list_add(&slot->copies, &object->copies_head);//把这个slot加入object的copies链表中
 
         BUG_ON(object->refcount != 0);
-        object->refcount = 1;
+        object->refcount = 1;//增加object的引用计数
 
-        install_slot(cap_group, slot_id, slot);
+        install_slot(cap_group, slot_id, slot); //把slot安装到cap_group的slot_table中,本质上就是数组赋值
 
         write_unlock(&slot_table->table_guard);
         return slot_id;

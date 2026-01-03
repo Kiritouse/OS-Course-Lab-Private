@@ -348,6 +348,7 @@ cap_t sys_create_cap_group(unsigned long cap_group_args_p)
         /* cap current cap_group */
         /* LAB 3 TODO BEGIN */
         /* Allocate a new cap_group object */
+        //分配一个新的cap_group类型的obj，cap_group本身也是一个内核对象
 
         /* LAB 3 TODO END */
         if (!new_cap_group) {
