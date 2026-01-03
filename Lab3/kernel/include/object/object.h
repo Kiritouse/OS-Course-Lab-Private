@@ -79,7 +79,10 @@ void *obj_get_with_rights(struct cap_group *cap_group, cap_t slot_id, int type,
                           cap_right_t mask, cap_right_t rights);
 void obj_put(void *obj);
 void obj_ref(void *obj);
-
+/// @brief 分配一个内核对象
+/// @param type 内核对象类型
+/// @param size 分配的大小
+/// @return 返回指针指向对象数据，即meta节点偏移一部分
 void *obj_alloc(u64 type, u64 size);
 void obj_free(void *obj);
 void free_object_internal(struct object *object);

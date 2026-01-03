@@ -321,7 +321,9 @@ void obj_ref(void *obj)
         object = container_of(obj, struct object, opaque);
         atomic_fetch_add_long(&object->refcount, 1);
 }
-
+/// @brief 系统调用创建一个cap_group，是在创建用户态的
+/// @param cap_group_args_p  cap_group参数的用户态地址
+/// @return cap id，失败返回负数错误码
 cap_t sys_create_cap_group(unsigned long cap_group_args_p)
 {
         struct cap_group *new_cap_group;
@@ -357,7 +359,10 @@ cap_t sys_create_cap_group(unsigned long cap_group_args_p)
         }
         /* LAB 3 TODO BEGIN */
         /* initialize cap group from user*/
-
+        //初始化我们的能力组。为进程分配用户态id。
+        //注意最后一个参数不是指针类型的，所以要传地址
+        cap_group_init_user(new_cap_group,BASE_OBJECT_NUM,&args);
+        new_cap_group->pid = args.pid;
         /* LAB 3 TODO END */
 
         cap = cap_alloc(current_cap_group, new_cap_group);
@@ -379,8 +384,11 @@ cap_t sys_create_cap_group(unsigned long cap_group_args_p)
                 goto out_free_cap_grp_current;
         }
 
-        /* 2st cap is vmspace */
+        /* 2st cap is vmspace */ 
         /* LAB 3 TODO BEGIN */
+        //CAP表格中的第二个槽是虚拟空间
+        //这里注意是指针的解引用，获取vmspace结构体的大小
+        vmspace  = obj_alloc(TYPE_VMSPACE,sizeof(*vmspace));
 
         /* LAB 3 TODO END */
 
@@ -411,7 +419,9 @@ out_fail:
         return r;
 }
 
+
 /* This is for creating the first (init) user process. */
+//创建根cap_group(cap group管理多个内核对象)，注意这里是用户态创建
 struct cap_group *create_root_cap_group(char *name, size_t name_len)
 {
         struct cap_group *cap_group = NULL;
@@ -419,22 +429,27 @@ struct cap_group *create_root_cap_group(char *name, size_t name_len)
         cap_t slot_id;
 
         /* LAB 3 TODO BEGIN */
-        UNUSED(vmspace);
-        UNUSED(cap_group);
-
+        // UNUSED(vmspace);
+        // UNUSED(cap_group);
+        //分配能力组内核对象
+        cap_group = obj_alloc(TYPE_CAP_GROUP,sizeof(*cap_group));
         /* LAB 3 TODO END */
         BUG_ON(!cap_group);
 
         /* LAB 3 TODO BEGIN */
         /* initialize cap group with common, use ROOT_CAP_GROUP_BADGE */
-
+        //初始化能力组
+        cap_group_init_common(cap_group,BASE_OBJECT_NUM,ROOT_CAP_GROUP_BADGE);
+        //之前为什么有错误，因为用了cap_group_init_user
         /* LAB 3 TODO END */
+        //分配一个slot槽，类似于分破一个数组空间，然后返回slot id
         slot_id = cap_alloc(cap_group, cap_group);
 
         BUG_ON(slot_id != CAP_GROUP_OBJ_ID);
-
+        /*上面是分配一个cap_group*/
+        /*下面是分配vmspace*/
         /* LAB 3 TODO BEGIN */
-
+        vmspace = obj_alloc(TYPE_VMSPACE,sizeof(*vmspace));
         /* LAB 3 TODO END */
         BUG_ON(!vmspace);
 
@@ -442,7 +457,8 @@ struct cap_group *create_root_cap_group(char *name, size_t name_len)
         vmspace_init(vmspace, ROOT_PROCESS_PCID);
 
         /* LAB 3 TODO BEGIN */
-
+        //为vmspace分配一个槽位id
+        slot_id = cap_alloc(cap_group, vmspace);
         /* LAB 3 TODO END */
 
         BUG_ON(slot_id != VMSPACE_OBJ_ID);
