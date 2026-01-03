@@ -136,6 +136,7 @@ char ROOT_NAME[] = "/procmgr.srv";
  * The root_thread is actually a first user thread
  * which has no difference with other user threads
  */
+/*创建根进程要求我们实现一个elf加载器*/
 void create_root_thread(void)
 {
         struct cap_group *root_cap_group;
@@ -159,12 +160,19 @@ void create_root_thread(void)
          * the entry point of the init process, followed by eight bytes of data
          * that stores the mem_size of the binary.
          */
-
+        //从二进制文件中读取。
+        //通过incbin指令，init进程（procmgr）的消息和二进制文件链接在内核映像的后面。
+        //binary_procmgr_bin_start指向第一条信息：init进程的入口点，后面跟着存储二进制文件的内存大小的8个字节数据。
+        //读取entry、flags、phentsize、phnum、phdr_addr
+        //从binary_procmgr_bin_start开始偏移相应的位置，读取对应的数据
+        
+        /*加载elf头部的所有数据*/
         memcpy(data,
                (void *)((unsigned long)&binary_procmgr_bin_start
                         + ROOT_ENTRY_OFF),
-               sizeof(data));
-        meta.entry = (unsigned long)be64_to_cpu(*(u64 *)data);
+               sizeof(data));//读取entry 点，即代码的进入点
+               /*注：elf的进入点是随机的*/
+        meta.entry = (unsigned long)be64_to_cpu(*(u64 *)data);//转换为主机字节序
 
         memcpy(data,
                (void *)((unsigned long)&binary_procmgr_bin_start
@@ -190,12 +198,14 @@ void create_root_thread(void)
                sizeof(data));
         meta.phdr_addr = (unsigned long)be64_to_cpu(*(u64 *)data);
 
+        /*为根进程创建能力组*/
         root_cap_group = create_root_cap_group(ROOT_NAME, strlen(ROOT_NAME));
         test_root_thread_basic(root_cap_group);
-
+        /*分配和初始化虚拟地址空间*/
         init_vmspace = obj_get(root_cap_group, VMSPACE_OBJ_ID, TYPE_VMSPACE);
-
+        
         /* Allocate and setup a user stack for the init thread */
+        /*创建物理内存对象*/
         stack_pmo_cap = create_pmo(ROOT_THREAD_STACK_SIZE,
                                    PMO_ANONYM,
                                    root_cap_group,
@@ -203,7 +213,8 @@ void create_root_thread(void)
                                    &stack_pmo,
                                    PMO_ALL_RIGHTS);
         BUG_ON(stack_pmo_cap < 0);
-
+        /*创建和分配页表*/
+        /*建立物理内存和虚拟内存的映射*/
         ret = vmspace_map_range(init_vmspace,
                                 ROOT_THREAD_STACK_BASE,
                                 ROOT_THREAD_STACK_SIZE,
@@ -212,48 +223,103 @@ void create_root_thread(void)
         BUG_ON(ret != 0);
 
         /* Allocate the init thread */
+        /*为初始线程分配内核对象*/
         thread = obj_alloc(TYPE_THREAD, sizeof(*thread));
         BUG_ON(thread == NULL);
-
+        /*遍历elf文件中的每一个段表(segment),遍历segemnt的时候用于装载和执行，而遍历section的时候用作链接*/
+        /*一个 ELF 程序通常有多个段（比如 .text、.data、.bss 等）*/
         for (int i = 0; i < meta.phnum; i++) {
+                /*
+                该段的权限标志（可读/可写/可执行），决定内存映射时的访问权限。
+                */
                 unsigned int flags;
+                /*
+                offset: 段在文件中的偏移位置，告诉加载器从文件的哪个位置开始读取该段的数据。
+                vaddr: 段在进程虚拟地址空间中的起始地址，
+                filesz: 段在文件中的大小，告诉加载器需要从文件中读取多少字节的数据到内存中。
+                因为我们需要从文件中加载段的数据到内存中，所以 filesz 是必须的。
+                memsz: 段在内存中的大小，通常大于或等于 filesz，因为有些段（如 .bss 段）在文件中不占用空间，但在内存中需要分配空间。
+                这个memsz是理论上的内存大小，用于告诉内存管理单元需要为该段分配多少内存空间。往往大于filesz，因为有些段在文件中不占用空间，但在内存中需要分配空间（如.bss段）。
+                这些信息对于正确加载和映射 ELF 文件的各个段到进程的虚拟地址空间中是必不可少的。
+                */
                 unsigned long offset, vaddr, filesz, memsz;
 
+                /*获取flags信息*/
                 memcpy(data,
                        (void *)((unsigned long)&binary_procmgr_bin_start
                                 + ROOT_PHDR_OFF + i * ROOT_PHENT_SIZE
                                 + PHDR_FLAGS_OFF),
                        sizeof(data));
                 flags = (unsigned int)le32_to_cpu(*(u32 *)data);
-
+                /*TODO：如果后续有BUG，一定要看这里*/
                 /* LAB 3 TODO BEGIN */
+                /*依葫芦画瓢，获取offset,vaddr,filesz,memsz*/
                 /* Get offset, vaddr, filesz, memsz from image*/
-                UNUSED(flags);
-                UNUSED(filesz);
-                UNUSED(offset);
-                UNUSED(memsz);
+                // UNUSED(flags);
+                // UNUSED(filesz);
+                // UNUSED(offset);
+                // UNUSED(memsz);
+                memcpy(data,
+                       (void *)((unsigned long)&binary_procmgr_bin_start
+                                + ROOT_PHDR_OFF + i * ROOT_PHENT_SIZE
+                                + PHDR_OFFSET_OFF),
+                       sizeof(data));
+                offset = (unsigned long)le32_to_cpu(*(u64 *)data);
 
+                memcpy(data,
+                       (void *)((unsigned long)&binary_procmgr_bin_start
+                                + ROOT_PHDR_OFF + i * ROOT_PHENT_SIZE
+                                + PHDR_VADDR_OFF),
+                       sizeof(data));
+                vaddr = (unsigned long)le32_to_cpu(*(u64 *)data);
+
+                memcpy(data,
+                       (void *)((unsigned long)&binary_procmgr_bin_start
+                                + ROOT_PHDR_OFF + i * ROOT_PHENT_SIZE
+                                + PHDR_FILESZ_OFF),
+                          sizeof(data));
+                filesz = (unsigned long)le32_to_cpu(*(u64 *)data);
+
+                memcpy(data,
+                          (void *)((unsigned long)&binary_procmgr_bin_start
+                                    + ROOT_PHDR_OFF + i * ROOT_PHENT_SIZE
+                                    + PHDR_MEMSZ_OFF),
+                          sizeof(data));
+                memsz = (unsigned long)le32_to_cpu(*(u64 *)data);
                 /* LAB 3 TODO END */
 
                 struct pmobject *segment_pmo = NULL;
                 /* LAB 3 TODO BEGIN */
-                UNUSED(segment_pmo);
-
+                // UNUSED(segment_pmo);
+                size_t segment_pmo_size = ROUND_UP(memsz, PAGE_SIZE); //向上取整到页大小的整数倍
+                /*获取段内容的虚拟起始地址*/
+                size_t segment_file_vaddr = ( size_t )&binary_procmgr_bin_start + offset;
+                ret = create_pmo(segment_pmo_size,
+                                    PMO_DATA,
+                                    root_cap_group,
+                                    0,
+                                    &segment_pmo,
+                                    PMO_ALL_RIGHTS);
                 /* LAB 3 TODO END */
-
                 BUG_ON(ret < 0);
-
+                kfree((void*)segment_pmo->start); //释放之前分配的内存
                 /* LAB 3 TODO BEGIN */
                 /* Copy elf file contents into memory*/
-
+                /*把获取的elf的偏移放入物理内存的中*/
+                segment_pmo->start = virt_to_phys((void *)segment_file_vaddr);
+                segment_pmo->size = segment_pmo_size;
                 /* LAB 3 TODO END */
-
-                unsigned vmr_flags = 0;
+                unsigned int vmr_flags = 0;
                 /* LAB 3 TODO BEGIN */
                 /* Set flags*/
-
+                //在操作系统中的权限都是位运算，然后或的话就表示同时具有这些权限
+                if(flags & PHDR_FLAGS_R)
+                        vmr_flags |= VMR_READ;
+                if(flags & PHDR_FLAGS_W)
+                        vmr_flags |= VMR_WRITE;
+                if(flags & PHDR_FLAGS_X)
+                        vmr_flags |= VMR_EXEC;
                 /* LAB 3 TODO END */
-
                 ret = vmspace_map_range(init_vmspace,
                                         vaddr,
                                         segment_pmo->size,

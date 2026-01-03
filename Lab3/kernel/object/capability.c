@@ -10,6 +10,19 @@
  * See the Mulan PSL v2 for more details.
  */
 
+/**
+ * @brief Capability group structure
+ * @dot
+ * digraph cap_group {
+ *   node [shape=record];
+ *   cap_group [label="{cap_group|slot_table|thread_list|vmspace}"];
+ *   slot_table [label="{slot_table|slots[]|slots_bmp}"];
+ *   cap_group -> slot_table;
+ * }
+ * @enddot
+ */
+
+
 #include <machine.h>
 #include <common/sync.h>
 #include <ipc/connection.h>
