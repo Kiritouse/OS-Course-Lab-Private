@@ -3,6 +3,9 @@
 #undef stdout
 
 static unsigned char buf[BUFSIZ+UNGET];
+/*c++20中的语法，指定初始化器
+用于初始化结构体成员
+*/
 hidden FILE __stdout_FILE = {
 	.buf = buf+UNGET,
 	.buf_size = sizeof buf-UNGET,

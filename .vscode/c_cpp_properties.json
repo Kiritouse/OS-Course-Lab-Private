@@ -5,7 +5,9 @@
             "includePath": [
                 "${workspaceFolder}/Lab3/kernel/include",
                 "${workspaceFolder}/Lab3/kernel/user-include",
-                "${workspaceFolder}/Lab3/**"
+                "${workspaceFolder}/Lab3/**",
+                "${workspaceFolder}/Thirdparty/musl-libc/src/internal/"
+
             ],
             "defines": [
                 "CHCORE"
