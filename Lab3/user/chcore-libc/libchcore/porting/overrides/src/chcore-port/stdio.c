@@ -131,7 +131,9 @@ static int get_one_char(void)
 static void put(char buffer[], unsigned size)
 {
         /* LAB 3 TODO BEGIN */
-
+        /*把具体的系统调用号传入x8寄存器*/
+        /*操作系统会根据这个号码去系统调用表中查找对应的函数*/
+         chcore_syscall2(CHCORE_SYS_putstr, (vaddr_t)buffer, size);
         /* LAB 3 TODO END */
 }
 
