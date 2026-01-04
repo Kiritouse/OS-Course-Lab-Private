@@ -35,7 +35,8 @@
 .macro	exception_enter
 
 	/* LAB 3 TODO BEGIN */
-	sub sp, sp, #ARCH_EXEC_CONT_SIZE //预留空间存储寄存器上下文的大小在内核栈中，栈顶指针移动到预留的新位置    stp x0, x1, [sp, #16 * 0]
+	sub sp, sp, #ARCH_EXEC_CONT_SIZE //预留空间存储寄存器上下文的大小在内核栈中，栈顶指针移动到预留的新位置    
+	stp x0, x1, [sp, #16 * 0]
     stp x2, x3, [sp, #16 * 1]
     stp    x4, x5, [sp, #16 * 2]
     stp    x6, x7, [sp, #16 * 3]
