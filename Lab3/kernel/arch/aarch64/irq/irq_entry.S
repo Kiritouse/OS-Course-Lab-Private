@@ -31,18 +31,37 @@
 .endm
 
 /* See more details about the bias in registers.h */
+/*保存通用寄存器 */
 .macro	exception_enter
 
 	/* LAB 3 TODO BEGIN */
+	sub sp, sp, #ARCH_EXEC_CONT_SIZE //预留空间存储寄存器上下文的大小在内核栈中，栈顶指针移动到预留的新位置    stp x0, x1, [sp, #16 * 0]
+    stp x2, x3, [sp, #16 * 1]
+    stp    x4, x5, [sp, #16 * 2]
+    stp    x6, x7, [sp, #16 * 3]
+    stp    x8, x9, [sp, #16 * 4]
+    stp    x10, x11, [sp, #16 * 5]
+    stp    x12, x13, [sp, #16 * 6]
+    stp    x14, x15, [sp, #16 * 7]
+    stp    x16, x17, [sp, #16 * 8]
+    stp    x18, x19, [sp, #16 * 9]
+    stp    x20, x21, [sp, #16 * 10]
+    stp    x22, x23, [sp, #16 * 11]
+    stp    x24, x25, [sp, #16 * 12]
+    stp    x26, x27, [sp, #16 * 13]
+    stp    x28, x29, [sp, #16 * 14]
+
 
 	/* LAB 3 TODO END */
 
-	mrs	x21, sp_el0
-	mrs	x22, elr_el1
-	mrs	x23, spsr_el1
+	mrs	x21, sp_el0 //存储内核栈指针
+	mrs	x22, elr_el1//存储异常指令执行后的返回地址
+	mrs	x23, spsr_el1//存储程序状态寄存器
+	
 
 	/* LAB 3 TODO BEGIN */
-
+    stp x30, x21, [sp, #16 * 15] //存储x30寄存器（链接寄存器）即普通函数调用跳转后的返回地址和sp_el0
+    stp x22, x23, [sp, #16 * 16] //存储返回地址和程序状态寄存器
 	/* LAB 3 TODO END */
 
 .endm
@@ -50,7 +69,9 @@
 .macro	exception_exit
 
 	/* LAB 3 TODO BEGIN */
-
+	/*从栈顶开始还原 */
+   	ldp     x22, x23, [sp, #16 * 16]
+    ldp     x30, x21, [sp, #16 * 15] 
 	/* LAB 3 TODO END */
 
 	msr	sp_el0, x21
@@ -58,17 +79,34 @@
 	msr	spsr_el1, x23
 
 	/* LAB 3 TODO BEGIN */
-
+	ldp     x0, x1, [sp, #16 * 0]
+    ldp     x2, x3, [sp, #16 * 1]
+    ldp     x4, x5, [sp, #16 * 2]
+    ldp     x6, x7, [sp, #16 * 3]
+    ldp     x8, x9, [sp, #16 * 4]
+    ldp     x10, x11, [sp, #16 * 5]
+    ldp     x12, x13, [sp, #16 * 6]
+    ldp     x14, x15, [sp, #16 * 7]
+    ldp     x16, x17, [sp, #16 * 8]
+    ldp     x18, x19, [sp, #16 * 9]
+    ldp     x20, x21, [sp, #16 * 10]
+    ldp     x22, x23, [sp, #16 * 11]
+    ldp     x24, x25, [sp, #16 * 12]
+    ldp     x26, x27, [sp, #16 * 13]
+    ldp     x28, x29, [sp, #16 * 14]
+ 	add     sp, sp, #ARCH_EXEC_CONT_SIZE //释放栈空间
 	/* LAB 3 TODO END */
 
 	eret
 .endm
 
-
+//切换CPU栈
 .macro switch_to_cpu_stack
-	mrs     x24, TPIDR_EL1
+//Thread Pointer / ID Register (EL1)
+//EL1 线程指针/ID 寄存器
+	mrs     x24, TPIDR_EL1 //获取当前CPU的per-CPU变量地址
 	/* LAB 3 TODO BEGIN */
-
+	 add x24, x24, #OFFSET_LOCAL_CPU_STACK//偏移到其存储的CPU栈指针的位置
 	/* LAB 3 TODO END */
 	ldr	x24, [x24]
 	mov	sp, x24
@@ -112,7 +150,25 @@
 EXPORT(el1_vector)
 
 	/* LAB 3 TODO BEGIN */
+ exception_entry sync_el1t  // Synchronous EL1t
+ exception_entry irq_el1t  // IRQ EL1t
+ exception_entry fiq_el1t  // FIQ EL1t
+ exception_entry error_el1t  // Error EL1t
 
+ exception_entry sync_el1h  // Synchronous EL1h
+ exception_entry irq_el1h  // IRQ EL1h
+ exception_entry fiq_el1h  // FIQ EL1h
+ exception_entry error_el1h  // Error EL1h
+
+ exception_entry sync_el0_64  // Synchronous 64-bit EL0
+ exception_entry irq_el0_64  // IRQ 64-bit EL0
+ exception_entry fiq_el0_64  // FIQ 64-bit EL0
+ exception_entry error_el0_64  // Error 64-bit EL0
+
+ exception_entry sync_el0_32  // Synchronous 32-bit EL0
+ exception_entry irq_el0_32  // IRQ 32-bit EL0
+ exception_entry fiq_el0_32  // FIQ 32-bit EL0
+ exception_entry error_el0_32  // Error 32-bit EL0
 	/* LAB 3 TODO END */
 
 /*
@@ -146,7 +202,13 @@ error_el1t:
 error_el1h:
 sync_el1t:
 	/* LAB 3 TODO BEGIN */
-
+	/*对于 irq_el1t
+	fiq_el1t
+	fiq_el1h
+	error_el1t
+	error_el1h
+	sync_el1t 则跳转 unexpected_handler 处理异常。 */
+	bl unexpected_handler
 	/* LAB 3 TODO END */
 
 sync_el1h:
@@ -157,7 +219,12 @@ sync_el1h:
 
 	/* LAB 3 TODO BEGIN */
 	/* jump to handle_entry_c, store the return value as the ELR_EL1 */
-
+	bl handle_entry_c
+	str x0, [sp, #16*16] //存储异常处理的返回地址到栈中
+	 //这里的返回地址是新的，我们以新的为准
+	//注意这里我们不能写msr ELR_EL1, x0
+	//在多线程环境下，每个线程都有自己的ELR_EL1,x0，如果说不存入自己所在的内核栈中
+	//那么其他线程的ELR_EL1就会被覆盖，导致异常返回错误
 	/* LAB 3 TODO END */
 	exception_exit
 
