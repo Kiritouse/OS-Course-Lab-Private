@@ -170,26 +170,26 @@ void create_root_thread(void)
         memcpy(data,
                (void *)((unsigned long)&binary_procmgr_bin_start
                         + ROOT_ENTRY_OFF),
-               sizeof(data));//读取entry 点，即代码的进入点
-               /*注：elf的进入点是随机的*/
+               sizeof(data));//读取entry 点，即要加载的代码的进入点
         meta.entry = (unsigned long)be64_to_cpu(*(u64 *)data);//转换为主机字节序
 
         memcpy(data,
                (void *)((unsigned long)&binary_procmgr_bin_start
                         + ROOT_FLAGS_OFF),
-               sizeof(data));
+               sizeof(data));//获取特定文件中与特定处理器相关的标志
         meta.flags = (unsigned long)be64_to_cpu(*(u64 *)data);
 
+        /*因为我们是读取elf然后加载到内存中，所以存在program header table,是作为segment，而不是section*/
         memcpy(data,
                (void *)((unsigned long)&binary_procmgr_bin_start
                         + ROOT_PHENT_SIZE_OFF),
-               sizeof(data));
+               sizeof(data));//获取程序头部表中每个表项的字节长度，注：这里是加载段用，不是链接用section
         meta.phentsize = (unsigned long)be64_to_cpu(*(u64 *)data);
 
         memcpy(data,
                (void *)((unsigned long)&binary_procmgr_bin_start
                         + ROOT_PHNUM_OFF),
-               sizeof(data));
+               sizeof(data));//这一项给出程序头部表的项数
         meta.phnum = (unsigned long)be64_to_cpu(*(u64 *)data);
 
         memcpy(data,
@@ -228,20 +228,13 @@ void create_root_thread(void)
         BUG_ON(thread == NULL);
         /*遍历elf文件中的每一个段表(segment),遍历segemnt的时候用于装载和执行，而遍历section的时候用作链接*/
         /*一个 ELF 程序通常有多个段（比如 .text、.data、.bss 等）*/
+
+        //读取程序头部表
         for (int i = 0; i < meta.phnum; i++) {
                 /*
                 该段的权限标志（可读/可写/可执行），决定内存映射时的访问权限。
                 */
                 unsigned int flags;
-                /*
-                offset: 段在文件中的偏移位置，告诉加载器从文件的哪个位置开始读取该段的数据。
-                vaddr: 段在进程虚拟地址空间中的起始地址，
-                filesz: 段在文件中的大小，告诉加载器需要从文件中读取多少字节的数据到内存中。
-                因为我们需要从文件中加载段的数据到内存中，所以 filesz 是必须的。
-                memsz: 段在内存中的大小，通常大于或等于 filesz，因为有些段（如 .bss 段）在文件中不占用空间，但在内存中需要分配空间。
-                这个memsz是理论上的内存大小，用于告诉内存管理单元需要为该段分配多少内存空间。往往大于filesz，因为有些段在文件中不占用空间，但在内存中需要分配空间（如.bss段）。
-                这些信息对于正确加载和映射 ELF 文件的各个段到进程的虚拟地址空间中是必不可少的。
-                */
                 unsigned long offset, vaddr, filesz, memsz;
 
                 /*获取flags信息*/
@@ -255,10 +248,6 @@ void create_root_thread(void)
                 /* LAB 3 TODO BEGIN */
                 /*依葫芦画瓢，获取offset,vaddr,filesz,memsz*/
                 /* Get offset, vaddr, filesz, memsz from image*/
-                // UNUSED(flags);
-                // UNUSED(filesz);
-                // UNUSED(offset);
-                // UNUSED(memsz);
                 memcpy(data,
                        (void *)((unsigned long)&binary_procmgr_bin_start
                                 + ROOT_PHDR_OFF + i * ROOT_PHENT_SIZE
