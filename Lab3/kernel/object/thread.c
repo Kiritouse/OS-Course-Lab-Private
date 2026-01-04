@@ -253,52 +253,52 @@ void create_root_thread(void)
                                 + ROOT_PHDR_OFF + i * ROOT_PHENT_SIZE
                                 + PHDR_OFFSET_OFF),
                        sizeof(data));
-                offset = (unsigned long)le32_to_cpu(*(u64 *)data);
+                offset = (unsigned long)le64_to_cpu(*(u64 *)data);
 
                 memcpy(data,
                        (void *)((unsigned long)&binary_procmgr_bin_start
                                 + ROOT_PHDR_OFF + i * ROOT_PHENT_SIZE
                                 + PHDR_VADDR_OFF),
                        sizeof(data));
-                vaddr = (unsigned long)le32_to_cpu(*(u64 *)data);
+                vaddr = (unsigned long)le64_to_cpu(*(u64 *)data);
 
                 memcpy(data,
                        (void *)((unsigned long)&binary_procmgr_bin_start
                                 + ROOT_PHDR_OFF + i * ROOT_PHENT_SIZE
                                 + PHDR_FILESZ_OFF),
-                          sizeof(data));
-                filesz = (unsigned long)le32_to_cpu(*(u64 *)data);
+                       sizeof(data));
+                filesz = (unsigned long)le64_to_cpu(*(u64 *)data);
 
                 memcpy(data,
-                          (void *)((unsigned long)&binary_procmgr_bin_start
-                                    + ROOT_PHDR_OFF + i * ROOT_PHENT_SIZE
-                                    + PHDR_MEMSZ_OFF),
-                          sizeof(data));
-                memsz = (unsigned long)le32_to_cpu(*(u64 *)data);
+                       (void *)((unsigned long)&binary_procmgr_bin_start
+                                + ROOT_PHDR_OFF + i * ROOT_PHENT_SIZE
+                                + PHDR_MEMSZ_OFF),
+                       sizeof(data));
+                memsz = (unsigned long)le64_to_cpu(*(u64 *)data);
                 /* LAB 3 TODO END */
 
                 struct pmobject *segment_pmo = NULL;
                 /* LAB 3 TODO BEGIN */
                 // UNUSED(segment_pmo);
-                size_t segment_pmo_size = ROUND_UP(memsz, PAGE_SIZE); //向上取整到页大小的整数倍
+                size_t pmo_size = ROUND_UP(memsz, PAGE_SIZE); //向上取整到页大小的整数倍
                 /*获取段内容的虚拟起始地址*/
-                size_t segment_file_vaddr = ( size_t )&binary_procmgr_bin_start + offset;
-                ret = create_pmo(segment_pmo_size,
-                                    PMO_DATA,
-                                    root_cap_group,
-                                    0,
-                                    &segment_pmo,
-                                    PMO_ALL_RIGHTS);
+                vaddr_t segment_content_kvaddr =
+                        ((unsigned long)&binary_procmgr_bin_start) + offset;
+                BUG_ON(filesz!=memsz);//保证文件大小和内存大小相等
+                ret = create_pmo(PAGE_SIZE,
+                                 PMO_DATA,
+                                 root_cap_group,
+                                 0,
+                                 &segment_pmo,
+                                 PMO_ALL_RIGHTS);
                 /* LAB 3 TODO END */
                 BUG_ON(ret < 0);
-                kfree((void*)segment_pmo->start); //释放之前分配的内存
-                /* LAB 3 TODO BEGIN */
-                /* Copy elf file contents into memory*/
-                /*把获取的elf的偏移放入物理内存的中*/
-                segment_pmo->start = virt_to_phys((void *)segment_file_vaddr);
-                segment_pmo->size = segment_pmo_size;
+                kfree((void *)phys_to_virt(segment_pmo->start));
+                /* Copy elf file contents into PMO memory */
+                segment_pmo->start = virt_to_phys(segment_content_kvaddr);
+                segment_pmo->size = pmo_size;
                 /* LAB 3 TODO END */
-                unsigned int vmr_flags = 0;
+                unsigned  vmr_flags = 0;
                 /* LAB 3 TODO BEGIN */
                 /* Set flags*/
                 //在操作系统中的权限都是位运算，然后或的话就表示同时具有这些权限
