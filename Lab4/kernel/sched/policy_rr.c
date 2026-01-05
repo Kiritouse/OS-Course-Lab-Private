@@ -154,7 +154,8 @@ int __rr_sched_dequeue(struct thread *thread)
         /* LAB 4 TODO BEGIN (exercise 3) */
         /* Delete thread from the ready queue and upate the queue length */
         /* Note: you should add two lines of code. */
-
+        list_del(&(thread->ready_queue_node  ));
+        rr_ready_queue_meta[thread->thread_ctx->cpuid].queue_len--;
         /* LAB 4 TODO END (exercise 3) */
         obj_put(thread);
         return 0;
