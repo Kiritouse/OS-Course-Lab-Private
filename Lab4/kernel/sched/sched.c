@@ -473,7 +473,7 @@ void sys_yield(void)
         /* LAB 4 TODO BEGIN (exercise 4) */
         /* Trigger sched */
         /* Note: you should just add a function call (one line of code) */
-
+        cur_sched_ops->sched();
         /* LAB 4 TODO END (exercise 4) */
         eret_to_thread(switch_context());
 }

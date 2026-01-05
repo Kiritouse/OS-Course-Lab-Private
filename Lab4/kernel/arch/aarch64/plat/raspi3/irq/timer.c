@@ -44,12 +44,15 @@ void plat_timer_init(void)
 	/* LAB 4 TODO BEGIN (exercise 5) */
 	/* Note: you should add three lines of code. */
 	/* Read system register cntfrq_el0 to cntp_freq*/
-	UNUSED(timer_ctl);
-
+	// UNUSED(timer_ctl);
+	//读取 CNTFRQ_EL0 寄存器，为全局变量 cntp_freq 赋值。
+	asm volatile ("mrs %0, cntfrq_el0":"=r" (cntp_freq)); //获取计数频率
 	/* Calculate the cntp_tval based on TICK_MS and cntp_freq */
-
+	//注意cntp_freq的单位是HZ,我们要求ms
+	//这里计算的是多少个时钟周期可以出发一个中断
 	/* Write cntp_tval to the system register cntp_tval_el0 */
-
+	cntp_tval = (cntp_freq *TICK_MS/ 1000); //计算多少个计数=一个时钟周期（类比于时钟周期，本质上上时钟滴答数）
+	asm volatile ("msr cntp_tval_el0, %0"::"r" (cntp_tval));//设置一个时钟周期对应于多少个计数到寄存器汇总
 	/* LAB 4 TODO END (exercise 5) */
 
 
@@ -60,8 +63,10 @@ void plat_timer_init(void)
 	/* LAB 4 TODO BEGIN (exercise 5) */
 	/* Note: you should add two lines of code. */
 	/* Calculate the value of timer_ctl */
-
+	/*计算控制寄存器*/
+	timer_ctl = 1; //使能定时器，注意，这里第0位是最右边的，第1位是最左边的，那么bit 0 = 1，表示开启定时器,bit 1 = 0,表示中断未屏蔽
 	/* Write timer_ctl to the control register (cntp_ctl_el0) */
+	asm volatile ("msr cntp_ctl_el0, %0"::"r" (timer_ctl));
 
 	/* LAB 4 TODO END (exercise 5) */
 	lab4_test_timer_init();

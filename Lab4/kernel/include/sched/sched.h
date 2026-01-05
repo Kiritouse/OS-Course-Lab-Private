@@ -74,11 +74,11 @@ enum thread_type {
 struct thread;
 
 struct sched_ops {
-        int (*sched_init)(void);
-        int (*sched)(void);
-        int (*sched_periodic)(void);
+        int (*sched_init)(void); //初始化调度系统函数
+        int (*sched)(void);//触发一次当前cpu核心上的调度
+        int (*sched_periodic)(void);//周期性触发调度函数
         int (*sched_enqueue)(struct thread *thread);
-        int (*sched_dequeue)(struct thread *thread);
+        int (*sched_dequeue)(struct thread *thread);//某个线程的出栈和入栈
         /* Debug tools */
         void (*sched_top)(void);
 };

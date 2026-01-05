@@ -264,17 +264,18 @@ int rr_sched(void)
                 /* check old state */
                 if (!thread_is_exited(old)) {
                         if (thread_is_ts_running(old)) {
-                                /* A thread without SC should not be TS_RUNNING.
-                                 */
+                                /* A thread without SC should not be TS_RUNNING.*/
                                 BUG_ON(!old->thread_ctx->sc);
+                                /*时间片未用完 且 未挂起 → 继续运行当前线程（快速路径）*/
                                 if (old->thread_ctx->sc->budget != 0
                                     && !thread_is_suspend(old)) {
-                                        switch_to_thread(old);
+                                        switch_to_thread(old); //继续执行旧线程
                                         return 0; /* no schedule needed */
                                 }
                         /* LAB 4 TODO BEGIN (exercise 4) */
                         /* Refill budget for current running thread (old) and enqueue the current thread.*/
-
+                        /*把当前进程加入就绪队列*/
+                        rr_sched_enqueue(old);
                         /* LAB 4 TODO END (exercise 4) */
 
                         } else if (!thread_is_ts_blocking(old)
@@ -287,7 +288,7 @@ int rr_sched(void)
         }
 
         BUG_ON(!(new = rr_sched_choose_thread()));
-        switch_to_thread(new);
+        switch_to_thread(new); //执行新线程
 
         return 0;
 }
