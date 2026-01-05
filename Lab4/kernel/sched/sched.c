@@ -10,6 +10,8 @@
  * Mulan PSL v2 for more details.
  */
 
+#include "common/types.h"
+#include "object/thread.h"
 #include <sched/sched.h>
 #include <sched/context.h>
 #include <sched/fpu.h>
@@ -122,12 +124,27 @@ struct thread *find_runnable_thread(struct list_head *thread_list)
 
         /* LAB 4 TODO BEGIN (exercise 3) */
         /* Tip 1: use for_each_in_list to iterate the thread list */
+        /*Tip1:使用for_each_in_list宏去遍历thread_list*/
         /*
          * Tip 2: Find the first thread in the ready queue that
          * satisfies (!thread->thread_ctx->is_suspended && 
          * (thread->thread_ctx->kernel_stack_state == KS_FREE
          * || thread == current_thread))
          */
+        /*
+        Tip2:找到就绪队列中第一个满足可以运行的线程
+        (!thread->thread_ctx->is_suspended && 
+        (thread->thread_ctx->kernel_stack_state == KS_FREE
+        || thread == current_thread))
+        条件翻译过来就是线程没有被挂起并且内核栈状态是空闲的或者线程就是当前线程（如果没有其他线程可以运行
+        那就让当前线程继续运行，这样也是符合逻辑的）
+        */
+        for_each_in_list(thread, struct thread, ready_queue_node, thread_list){
+                  if(!thread->thread_ctx->is_suspended &&
+                  (thread->thread_ctx->kernel_stack_state == KS_FREE|| thread == current_thread)){
+                           return thread;
+                  }
+        }
 
         /* LAB 4 TODO END (exercise 3) */
         return thread;
