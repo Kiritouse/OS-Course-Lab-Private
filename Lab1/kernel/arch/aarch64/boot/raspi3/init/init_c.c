@@ -45,7 +45,8 @@ static void wakeup_other_cores(void)
 	 */
 	// addr = (u64 *)0xd8;
 	// *addr = TEXT_OFFSET;
-	addr = (u64 *)0xe0;
+	//树莓派固件中设置的从核cpu第一次读取地址，我们设置start函数的起始地址放进去，这样从核就可以读取这个地址执行start函数
+	addr = (u64 *)0xe0; 
 	*addr = TEXT_OFFSET;
 	addr = (u64 *)0xe8;
 	*addr = TEXT_OFFSET;
@@ -56,6 +57,9 @@ static void wakeup_other_cores(void)
 	 * Instruction sev (set event) for waking up other (non-primary) cores
 	 * that executes wfe instruction.
 	 */
+	/*函数执行 sev (set event) 指令
+	该指令向系统中所有的 CPU 核心发送一个事件信号。
+	正在执行 wfe (wait for event) 指令的 CPU 核心会被唤醒。*/
 	asm volatile("sev");
 }
 
@@ -78,9 +82,11 @@ void init_c(void)
 {
 	/* Clear the bss area for the kernel image */
 	clear_bss();
+	/*此时全局变量bss_clear_flag=0*/
 
 	/* Initialize UART before enabling MMU. */
 	early_uart_init();
+	//串口初始化
 	uart_send_string("boot: init_c\r\n");
 
 	wakeup_other_cores();
