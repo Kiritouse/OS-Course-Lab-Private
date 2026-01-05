@@ -23,6 +23,7 @@
             "name": "Lab4",
             "includePath": [
                 "${workspaceFolder}/Lab4/kernel/include",
+                "${workspaceFolder}/Lab4/kernel/include/sched",
                 "${workspaceFolder}/Lab4/kernel/user-include",
                 "${workspaceFolder}/Lab4/**",
                 "${workspaceFolder}/Thirdparty/musl-libc/src/internal/"

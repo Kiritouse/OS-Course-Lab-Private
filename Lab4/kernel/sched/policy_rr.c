@@ -29,6 +29,9 @@ struct queue_meta {
         struct list_head queue_head;
         unsigned int queue_len;
         struct lock queue_lock;
+        /*用于填平缓存行，防止与其他cpu元数据共享同一缓存行，导致清空其他元数据的时候
+        使得这个也被清空了
+        */
         char pad[pad_to_cache_line(sizeof(unsigned int)
                                    + sizeof(struct list_head)
                                    + sizeof(struct lock))];
@@ -289,7 +292,13 @@ int rr_sched_init(void)
 {
         /* LAB 4 TODO BEGIN (exercise 1) */
         /* Initial the ready queues (rr_ready_queue_meta) for each CPU core */
-
+        //为每个CPU核心初始化就绪队列
+        for(int i = 0; i < PLAT_CPU_NUM; i++){
+                init_list_head(&rr_ready_queue_meta[i].queue_head);
+                rr_ready_queue_meta[i].queue_len = 0;
+                //初始化锁
+                lock_init(&rr_ready_queue_meta[i].queue_lock);
+        }
         /* LAB 4 TODO END (exercise 1) */
 
         lab4_test_scheduler_meta();
