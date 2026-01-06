@@ -49,10 +49,10 @@ void plat_timer_init(void)
 	asm volatile ("mrs %0, cntfrq_el0":"=r" (cntp_freq)); //获取计数频率
 	/* Calculate the cntp_tval based on TICK_MS and cntp_freq */
 	//注意cntp_freq的单位是HZ,我们要求ms
-	//这里计算的是多少个时钟周期可以出发一个中断
+	//这里计算的是多少个时钟周期可以出发一个时钟中断
 	/* Write cntp_tval to the system register cntp_tval_el0 */
-	cntp_tval = (cntp_freq *TICK_MS/ 1000); //计算多少个计数=一个时钟周期（类比于时钟周期，本质上上时钟滴答数）
-	asm volatile ("msr cntp_tval_el0, %0"::"r" (cntp_tval));//设置一个时钟周期对应于多少个计数到寄存器汇总
+	cntp_tval = (cntp_freq *TICK_MS/ 1000); //计算多少个计数=一个时钟中断（类比于时钟周期，本质上上时钟滴答数）
+	asm volatile ("msr cntp_tval_el0, %0"::"r" (cntp_tval));//设置一个时钟周期对应于多少个计数到寄存器中，便于CPU读取
 	/* LAB 4 TODO END (exercise 5) */
 
 

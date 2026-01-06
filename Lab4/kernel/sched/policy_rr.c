@@ -272,11 +272,11 @@ int rr_sched(void)
                                         switch_to_thread(old); //继续执行旧线程
                                         return 0; /* no schedule needed */
                                 }
-                        /* LAB 4 TODO BEGIN (exercise 4) */
+                        /* LAB 4 TODO BEGIN (exercise 4 and exercise 6) */
                         /* Refill budget for current running thread (old) and enqueue the current thread.*/
-                        /*把当前进程加入就绪队列*/
-                        rr_sched_enqueue(old);
-                        /* LAB 4 TODO END (exercise 4) */
+                        rr_sched_refill_budget(old,DEFAULT_BUDGET);/*重新恢复时间片*/
+                        rr_sched_enqueue(old);/*把当前进程加入就绪队列*/
+                        /* LAB 4 TODO END (exercise 4 and exercise 6) */
 
                         } else if (!thread_is_ts_blocking(old)
                                    && !thread_is_ts_waiting(old)) {
