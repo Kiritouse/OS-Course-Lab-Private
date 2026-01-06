@@ -85,6 +85,7 @@ static int register_server(struct thread *server, unsigned long ipc_routine,
          * Check the passive thread in server for handling
          * client registration.
          */
+        //获取注册回调线程对象，从cap_group中通过cap获取线程对象
         register_cb_thread =
                 obj_get(current_cap_group, register_thread_cap, TYPE_THREAD);
         if (!register_cb_thread) {
@@ -117,10 +118,11 @@ static int register_server(struct thread *server, unsigned long ipc_routine,
         /* LAB 4 TODO BEGIN (exercise 7) */
         /* Complete the config structure, replace xxx with actual values */
         /* Record the ipc_routine_entry  */
-        // config->declared_ipc_routine_entry = xxx;
-
+        //记录服务器线程的IPC服务例程入口地址，即服务器具体的工作线程，即处理客户端请求的线程
+        config->declared_ipc_routine_entry = ipc_routine;
         /* Record the registration cb thread */
-        // config->register_cb_thread = xxx;
+        //记录客户端在服务器激活的处理回调线程，即注册回调线程
+         config->register_cb_thread = register_cb_thread;
         /* LAB 4 TODO END (exercise 7) */
 
         register_cb_config = kmalloc(sizeof(*register_cb_config));
@@ -129,6 +131,10 @@ static int register_server(struct thread *server, unsigned long ipc_routine,
                 obj_put(register_cb_thread);
                 return -ENOMEM;
         }
+        /*
+        注册回调线程的general_ipc_config字段设置为创建的struct ipc_server_register_cb_config
+        其中记录了注册回调线程（在服务器线程）的入口函数和用户态栈地址等信息。
+        */
         register_cb_thread->general_ipc_config = register_cb_config;
 
         /*
@@ -162,6 +168,7 @@ static int register_server(struct thread *server, unsigned long ipc_routine,
          * This field is also treated as the whether the server thread
          * declares an IPC service (or makes the service ready).
          */
+        /*config为服务线程的config，其中配置了注册回调线程和IPC服务线程的入口函数*/
         server->general_ipc_config = config;
 
         return 0;
@@ -267,10 +274,14 @@ static int create_connection(struct thread *client, struct thread *server,
 
         /* LAB 4 TODO BEGIN (exercise 7) */
         /* Complete the following fields of shm, replace xxx with actual values */
-        // conn->shm.client_shm_uaddr = xxx;
-        // conn->shm.shm_size = xxx;
-        // conn->shm.shm_cap_in_client = xxx;
-        // conn->shm.shm_cap_in_server = xxx;
+        //创建连接时，初始化共享内存相关信息
+        //比如共享内存在客户端的虚拟地址、大小以及在客户端和服务器端的cap
+        //这里记录cap是为了方便通过cap号查找对应的pmo对象，从而进行资源回收
+        conn->shm.client_shm_uaddr = shm_addr_client;
+        conn->shm.shm_size = shm_size;
+        conn->shm.shm_cap_in_client = shm_cap_client;
+        conn->shm.shm_cap_in_server = shm_cap_server;
+
         /* LAB 4 TODO END (exercise 7) */
 
         lock_init(&conn->ownership);
@@ -402,14 +413,23 @@ static void ipc_thread_migrate_to_server(struct ipc_connection *conn,
          */
 
         /* Note: see how stack address and ip are get in sys_ipc_register_cb_return */
-        // arch_set_thread_stack(target, xxx);
-        // arch_set_thread_next_ip(target, xxx);
+        // 设置目标线程（服务端）的栈指针 (SP)
+        // handler_config->ipc_routine_stack 是服务端注册服务时保存的初始栈地址
+        arch_set_thread_stack(target, handler_config->ipc_routine_stack);
+      // 设置目标线程（服务端）的指令指针 (IP/PC)
+        // handler_config->ipc_routine_entry 是服务端注册的 IPC 处理函数(即真正处理信息的函数)入口地址
+        arch_set_thread_next_ip(target, handler_config->ipc_routine_entry);
+
 
         /* see server_handler type in uapi/ipc.h */
-        // arch_set_thread_arg0(target, xxx);
-        // arch_set_thread_arg1(target, xxx);
-        // arch_set_thread_arg2(target, xxx);
-        // arch_set_thread_arg3(target, xxx);
+        /* 设置目标线程（服务端）的第0个参数：共享内存地址 */
+        arch_set_thread_arg0(target, shm_addr);
+        /* 设置目标线程（服务端）的第1个参数：共享内存大小 */
+        arch_set_thread_arg1(target, shm_size);
+        /* 设置目标线程（服务端）的第2个参数：传送的cap数量 */
+        arch_set_thread_arg2(target, cap_num);
+        /* 设置目标线程（服务端）的第3个参数：客户端的badge */
+        arch_set_thread_arg3(target, conn->client_badge);
         
         /* LAB 4 TODO END (exercise 7) */
         set_thread_arch_spec_state_ipc(target);
@@ -467,7 +487,7 @@ cap_t sys_register_client(cap_t server_cap, unsigned long shm_config_ptr)
         struct ipc_server_register_cb_config *register_cb_config;
 
         client = current_thread;
-
+        /*获取内核对象*/
         server = obj_get(current_cap_group, server_cap, TYPE_THREAD);
         if (!server) {
                 r = -ECAPBILITY;
@@ -489,7 +509,9 @@ cap_t sys_register_client(cap_t server_cap, unsigned long shm_config_ptr)
          * The whole registration procedure:
          * client thread -> server register_cb_thread -> client threrad
          */
+        /*将服务器线程初始化时的回调函数赋值过来*/
         register_cb_thread = server_config->register_cb_thread;
+        /*获取服务器注册的回调函数线程的通用ipc设置*/
         register_cb_config =
                 (struct ipc_server_register_cb_config
                          *)(register_cb_thread->general_ipc_config);
@@ -546,14 +568,18 @@ cap_t sys_register_client(cap_t server_cap, unsigned long shm_config_ptr)
         /* LAB 4 TODO BEGIN (exercise 7) */
         /* Set target thread SP/IP/arg, replace xxx with actual arguments */
         /* Note: see how stack address and ip are get in sys_register_server */
-        // arch_set_thread_stack(register_cb_thread, xxx);
-        // arch_set_thread_next_ip(register_cb_thread, xxx);
+        /*获取register_cb_thread，即服务器中的回调线程的上下文保存在config中*/
+        arch_set_thread_stack(register_cb_thread, 
+                              register_cb_config->register_cb_stack);
+        arch_set_thread_next_ip(register_cb_thread, 
+                                register_cb_config->register_cb_entry);
+
 
         /*
          * Note: see the parameter of register_cb function defined
          * in user/chcore-libc/musl-libc/src/chcore-port/ipc.c
          */
-        // arch_set_thread_arg0(register_cb_thread, xxx);
+        arch_set_thread_arg0(register_cb_thread, server_config->declared_ipc_routine_entry);
         /* LAB 4 TODO END (exercise 7) */
 
         obj_put(server);
@@ -844,6 +870,13 @@ int sys_ipc_return(unsigned long ret, unsigned int cap_num)
         __builtin_unreachable();
 }
 
+
+// Finish the IPC registration in server side
+// This function is invoked by the register_cb_thread in server process
+// after it is scheduled by the client process.
+//完成服务器端的IPC注册
+//该函数由服务器进程中的register_cb_thread调用
+//在它被客户端进程调度后调用。
 int sys_ipc_register_cb_return(cap_t server_handler_thread_cap,
                                unsigned long server_thread_exit_routine,
                                unsigned long server_shm_addr)
@@ -929,7 +962,8 @@ int sys_ipc_register_cb_return(cap_t server_handler_thread_cap,
 
         /* LAB 4 TODO BEGIN (exercise 7) */
         /* Complete the server_shm_uaddr field of shm, replace xxx with the actual value */
-        // conn->shm.server_shm_uaddr = xxx;
+        //完成连接中共享内存的服务器虚拟地址字段
+         conn->shm.server_shm_uaddr = server_shm_addr;
         /* LAB 4 TODO END (exercise 7) */
         /* Fill the server information in the IPC connection. */
         conn->server_handler_thread = ipc_server_handler_thread;

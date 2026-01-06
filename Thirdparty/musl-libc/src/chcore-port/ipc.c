@@ -396,6 +396,10 @@ void *register_cb_single(void *ipc_handler)
         return NULL;
 }
 
+/// @brief ipc服务器主线程调用此函数声明自己为ipc的服务端
+/// @param server_handler 指向服务器如何具体处理数据的服务函数指针，即用于提供服务的回调函数，由下面的回调函数创建
+/// @param client_register_handler 为客户端提供的在服务器中进行注册函数的回调函数，类似于用于接收connection
+/// @return 返回是否创建成功
 int ipc_register_server(server_handler server_handler,
                         void *(*client_register_handler)(void *))
 {
@@ -407,6 +411,7 @@ int ipc_register_server(server_handler server_handler,
  * Currently, a server thread can only invoke this interface once.
  * But, a server can use another thread to register a new service.
  */
+
 int ipc_register_server_with_destructor(server_handler server_handler,
                                         void *(*client_register_handler)(void *),
                                         server_destructor server_destructor)
@@ -430,6 +435,7 @@ int ipc_register_server_with_destructor(server_handler server_handler,
         /*
          * Kernel will pass server_handler as the argument for the
          * register_cb_thread.
+         * 现在执行系统调用，unsigned long 表示传的参数的地址
          */
         ret = usys_register_server((unsigned long)server_handler,
                                    (unsigned long)register_cb_thread_cap,
@@ -451,6 +457,10 @@ struct client_shm_config {
  * The returned ipc_struct_t is from heap,
  * so the callee needs to free it.
  */
+
+/// @brief 和一个服务线程建立ipc连接
+/// @param server_thread_cap 服务器线程的CAP号
+/// @return ipc数据结构指针
 ipc_struct_t *ipc_register_client(cap_t server_thread_cap)
 {
         cap_t conn_cap;
@@ -463,7 +473,6 @@ ipc_struct_t *ipc_register_client(cap_t server_thread_cap)
         if (client_ipc_struct == NULL) {
                 return NULL;
         }
-
         /*
          * Before registering client on the server,
          * the client allocates the shm (and shares it with
@@ -476,20 +485,16 @@ ipc_struct_t *ipc_register_client(cap_t server_thread_cap)
          * If the SHM becomes larger, we can use PMO_SHM instead.
          * Both types are tested and can work well.
          */
-
         // shm_cap = usys_create_pmo(IPC_PER_SHM_SIZE, PMO_SHM);
         shm_cap = usys_create_pmo(IPC_PER_SHM_SIZE, PMO_DATA);
         if (shm_cap < 0) {
                 printf("usys_create_pmo ret %d\n", shm_cap);
                 goto out_free_client_ipc_struct;
         }
-
         shm_config.shm_cap = shm_cap;
         shm_config.shm_addr = chcore_alloc_vaddr(IPC_PER_SHM_SIZE);
-
         // printf("%s: register_client with shm_addr 0x%lx\n",
         //      __func__, shm_config.shm_addr);
-
         while (1) {
                 conn_cap = usys_register_client(server_thread_cap,
                                                 (unsigned long)&shm_config);

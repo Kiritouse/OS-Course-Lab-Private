@@ -132,6 +132,10 @@ void handle_timer_irq(void)
         /* LAB 4 TODO BEGIN (exercise 6) */
         /* Decrease the budget of current thread by 1 if current thread is not NULL */
         /* We will call the sched_periodic in the caller handle_irq so no need to call sched() now. */
+        /*逐层判断是否为空，然后从PCB中访问调度上下文进行时间片--*/
+        if(current_thread&&(current_thread->thread_ctx)&&current_thread->thread_ctx->sc&&current_thread->thread_ctx->sc->budget){
+                current_thread->thread_ctx->sc->budget--;
+        }
 
         /* LAB 4 TODO END (exercise 6) */
 }
