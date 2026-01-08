@@ -1,0 +1,339 @@
+.
+|-- ./CMakeLists.txt
+|-- ./Makefile
+|-- ./compile_commands.json
+|-- ./config.cmake
+|-- ./filelist.mk
+|-- ./kernel
+|   |-- ./kernel/CMakeLists.txt
+|   |-- ./kernel/arch
+|   |   `-- ./kernel/arch/aarch64
+|   |       |-- ./kernel/arch/aarch64/CMakeLists.txt
+|   |       |-- ./kernel/arch/aarch64/boot
+|   |       |   |-- ./kernel/arch/aarch64/boot/CMakeLists.txt
+|   |       |   |-- ./kernel/arch/aarch64/boot/linker.tpl.ld
+|   |       |   `-- ./kernel/arch/aarch64/boot/raspi3
+|   |       |       |-- ./kernel/arch/aarch64/boot/raspi3/CMakeLists.txt
+|   |       |       |-- ./kernel/arch/aarch64/boot/raspi3/firmware
+|   |       |       |   |-- ./kernel/arch/aarch64/boot/raspi3/firmware/README
+|   |       |       |   |-- ./kernel/arch/aarch64/boot/raspi3/firmware/bootcode.bin
+|   |       |       |   |-- ./kernel/arch/aarch64/boot/raspi3/firmware/config.txt
+|   |       |       |   |-- ./kernel/arch/aarch64/boot/raspi3/firmware/fixup.dat
+|   |       |       |   `-- ./kernel/arch/aarch64/boot/raspi3/firmware/start.elf
+|   |       |       |-- ./kernel/arch/aarch64/boot/raspi3/include
+|   |       |       |   |-- ./kernel/arch/aarch64/boot/raspi3/include/boot.h
+|   |       |       |   |-- ./kernel/arch/aarch64/boot/raspi3/include/consts.h
+|   |       |       |   `-- ./kernel/arch/aarch64/boot/raspi3/include/image.h
+|   |       |       |-- ./kernel/arch/aarch64/boot/raspi3/init
+|   |       |       |   |-- ./kernel/arch/aarch64/boot/raspi3/init/init_c.c.dbg.obj
+|   |       |       |   |-- ./kernel/arch/aarch64/boot/raspi3/init/init_c.c.obj
+|   |       |       |   |-- ./kernel/arch/aarch64/boot/raspi3/init/mmu.c.dbg.obj
+|   |       |       |   |-- ./kernel/arch/aarch64/boot/raspi3/init/mmu.c.obj
+|   |       |       |   |-- ./kernel/arch/aarch64/boot/raspi3/init/start.S.dbg.obj
+|   |       |       |   |-- ./kernel/arch/aarch64/boot/raspi3/init/start.S.obj
+|   |       |       |   |-- ./kernel/arch/aarch64/boot/raspi3/init/tools.S.dbg.obj
+|   |       |       |   `-- ./kernel/arch/aarch64/boot/raspi3/init/tools.S.obj
+|   |       |       `-- ./kernel/arch/aarch64/boot/raspi3/peripherals
+|   |       |           |-- ./kernel/arch/aarch64/boot/raspi3/peripherals/uart.c.dbg.obj
+|   |       |           `-- ./kernel/arch/aarch64/boot/raspi3/peripherals/uart.c.obj
+|   |       |-- ./kernel/arch/aarch64/debug
+|   |       |   |-- ./kernel/arch/aarch64/debug/CMakeLists.txt
+|   |       |   |-- ./kernel/arch/aarch64/debug/backtrace.c.dbg.obj
+|   |       |   |-- ./kernel/arch/aarch64/debug/backtrace.c.obj
+|   |       |   |-- ./kernel/arch/aarch64/debug/ptrace.c.dbg.obj
+|   |       |   `-- ./kernel/arch/aarch64/debug/ptrace.c.obj
+|   |       |-- ./kernel/arch/aarch64/head.S.dbg.obj
+|   |       |-- ./kernel/arch/aarch64/head.S.obj
+|   |       |-- ./kernel/arch/aarch64/irq
+|   |       |   |-- ./kernel/arch/aarch64/irq/CMakeLists.txt
+|   |       |   |-- ./kernel/arch/aarch64/irq/ipi.c.dbg.obj
+|   |       |   |-- ./kernel/arch/aarch64/irq/ipi.c.obj
+|   |       |   |-- ./kernel/arch/aarch64/irq/irq.S.dbg.obj
+|   |       |   |-- ./kernel/arch/aarch64/irq/irq.S.obj
+|   |       |   |-- ./kernel/arch/aarch64/irq/irq_entry.S.dbg.obj
+|   |       |   |-- ./kernel/arch/aarch64/irq/irq_entry.S.obj
+|   |       |   |-- ./kernel/arch/aarch64/irq/irq_entry.c.dbg.obj
+|   |       |   |-- ./kernel/arch/aarch64/irq/irq_entry.c.obj
+|   |       |   |-- ./kernel/arch/aarch64/irq/irq_entry.h
+|   |       |   `-- ./kernel/arch/aarch64/irq/pgfault.c
+|   |       |-- ./kernel/arch/aarch64/machine
+|   |       |   |-- ./kernel/arch/aarch64/machine/CMakeLists.txt
+|   |       |   |-- ./kernel/arch/aarch64/machine/pmu.c.dbg.obj
+|   |       |   |-- ./kernel/arch/aarch64/machine/pmu.c.obj
+|   |       |   |-- ./kernel/arch/aarch64/machine/smp.c.dbg.obj
+|   |       |   `-- ./kernel/arch/aarch64/machine/smp.c.obj
+|   |       |-- ./kernel/arch/aarch64/main.c
+|   |       |-- ./kernel/arch/aarch64/mm
+|   |       |   |-- ./kernel/arch/aarch64/mm/CMakeLists.txt
+|   |       |   |-- ./kernel/arch/aarch64/mm/bzero.S.dbg.obj
+|   |       |   |-- ./kernel/arch/aarch64/mm/bzero.S.obj
+|   |       |   |-- ./kernel/arch/aarch64/mm/cache.c.dbg.obj
+|   |       |   |-- ./kernel/arch/aarch64/mm/cache.c.obj
+|   |       |   |-- ./kernel/arch/aarch64/mm/copy_from_user.S.dbg.obj
+|   |       |   |-- ./kernel/arch/aarch64/mm/copy_from_user.S.obj
+|   |       |   |-- ./kernel/arch/aarch64/mm/copy_to_user.S.dbg.obj
+|   |       |   |-- ./kernel/arch/aarch64/mm/copy_to_user.S.obj
+|   |       |   |-- ./kernel/arch/aarch64/mm/memcpy.S.dbg.obj
+|   |       |   |-- ./kernel/arch/aarch64/mm/memcpy.S.obj
+|   |       |   |-- ./kernel/arch/aarch64/mm/memmove.S.dbg.obj
+|   |       |   |-- ./kernel/arch/aarch64/mm/memmove.S.obj
+|   |       |   |-- ./kernel/arch/aarch64/mm/memset.c.dbg.obj
+|   |       |   |-- ./kernel/arch/aarch64/mm/memset.c.obj
+|   |       |   |-- ./kernel/arch/aarch64/mm/page_table.S.dbg.obj
+|   |       |   |-- ./kernel/arch/aarch64/mm/page_table.S.obj
+|   |       |   |-- ./kernel/arch/aarch64/mm/page_table.c
+|   |       |   |-- ./kernel/arch/aarch64/mm/tlb.c.dbg.obj
+|   |       |   |-- ./kernel/arch/aarch64/mm/tlb.c.obj
+|   |       |   |-- ./kernel/arch/aarch64/mm/uaccess.c.dbg.obj
+|   |       |   |-- ./kernel/arch/aarch64/mm/uaccess.c.obj
+|   |       |   |-- ./kernel/arch/aarch64/mm/vmspace.c.dbg.obj
+|   |       |   `-- ./kernel/arch/aarch64/mm/vmspace.c.obj
+|   |       |-- ./kernel/arch/aarch64/plat
+|   |       |   `-- ./kernel/arch/aarch64/plat/raspi3
+|   |       |       |-- ./kernel/arch/aarch64/plat/raspi3/CMakeLists.txt
+|   |       |       |-- ./kernel/arch/aarch64/plat/raspi3/irq
+|   |       |       |   |-- ./kernel/arch/aarch64/plat/raspi3/irq/irq.c.dbg.obj
+|   |       |       |   |-- ./kernel/arch/aarch64/plat/raspi3/irq/irq.c.obj
+|   |       |       |   |-- ./kernel/arch/aarch64/plat/raspi3/irq/timer.c.dbg.obj
+|   |       |       |   `-- ./kernel/arch/aarch64/plat/raspi3/irq/timer.c.obj
+|   |       |       |-- ./kernel/arch/aarch64/plat/raspi3/mm
+|   |       |       |   |-- ./kernel/arch/aarch64/plat/raspi3/mm/mmparse.c.dbg.obj
+|   |       |       |   `-- ./kernel/arch/aarch64/plat/raspi3/mm/mmparse.c.obj
+|   |       |       |-- ./kernel/arch/aarch64/plat/raspi3/poweroff.c.dbg.obj
+|   |       |       |-- ./kernel/arch/aarch64/plat/raspi3/poweroff.c.obj
+|   |       |       `-- ./kernel/arch/aarch64/plat/raspi3/uart
+|   |       |           |-- ./kernel/arch/aarch64/plat/raspi3/uart/uart.c.dbg.obj
+|   |       |           `-- ./kernel/arch/aarch64/plat/raspi3/uart/uart.c.obj
+|   |       |-- ./kernel/arch/aarch64/sched
+|   |       |   |-- ./kernel/arch/aarch64/sched/CMakeLists.txt
+|   |       |   |-- ./kernel/arch/aarch64/sched/context.c.dbg.obj
+|   |       |   |-- ./kernel/arch/aarch64/sched/context.c.obj
+|   |       |   |-- ./kernel/arch/aarch64/sched/fpu.c.dbg.obj
+|   |       |   |-- ./kernel/arch/aarch64/sched/fpu.c.obj
+|   |       |   |-- ./kernel/arch/aarch64/sched/idle.S.dbg.obj
+|   |       |   |-- ./kernel/arch/aarch64/sched/idle.S.obj
+|   |       |   |-- ./kernel/arch/aarch64/sched/sched.c.dbg.obj
+|   |       |   `-- ./kernel/arch/aarch64/sched/sched.c.obj
+|   |       |-- ./kernel/arch/aarch64/sync
+|   |       |   |-- ./kernel/arch/aarch64/sync/CMakeLists.txt
+|   |       |   |-- ./kernel/arch/aarch64/sync/rwlock.c.dbg.obj
+|   |       |   |-- ./kernel/arch/aarch64/sync/rwlock.c.obj
+|   |       |   |-- ./kernel/arch/aarch64/sync/ticket.c.dbg.obj
+|   |       |   `-- ./kernel/arch/aarch64/sync/ticket.c.obj
+|   |       |-- ./kernel/arch/aarch64/tools.S.dbg.obj
+|   |       `-- ./kernel/arch/aarch64/tools.S.obj
+|   |-- ./kernel/config.cmake
+|   |-- ./kernel/incbin.tpl.S
+|   |-- ./kernel/include
+|   |   |-- ./kernel/include/arch
+|   |   |   `-- ./kernel/include/arch/aarch64
+|   |   |       |-- ./kernel/include/arch/aarch64/arch
+|   |   |       |   |-- ./kernel/include/arch/aarch64/arch/boot.h
+|   |   |       |   |-- ./kernel/include/arch/aarch64/arch/context.h
+|   |   |       |   |-- ./kernel/include/arch/aarch64/arch/ipi.h
+|   |   |       |   |-- ./kernel/include/arch/aarch64/arch/machine
+|   |   |       |   |   |-- ./kernel/include/arch/aarch64/arch/machine/esr.h
+|   |   |       |   |   |-- ./kernel/include/arch/aarch64/arch/machine/pmu.h
+|   |   |       |   |   |-- ./kernel/include/arch/aarch64/arch/machine/registers.h
+|   |   |       |   |   `-- ./kernel/include/arch/aarch64/arch/machine/smp.h
+|   |   |       |   |-- ./kernel/include/arch/aarch64/arch/mm
+|   |   |       |   |   `-- ./kernel/include/arch/aarch64/arch/mm/page_table.h
+|   |   |       |   |-- ./kernel/include/arch/aarch64/arch/mmu.h
+|   |   |       |   |-- ./kernel/include/arch/aarch64/arch/sched
+|   |   |       |   |   `-- ./kernel/include/arch/aarch64/arch/sched/arch_sched.h
+|   |   |       |   |-- ./kernel/include/arch/aarch64/arch/sync.h
+|   |   |       |   |-- ./kernel/include/arch/aarch64/arch/time.h
+|   |   |       |   |-- ./kernel/include/arch/aarch64/arch/tools.h
+|   |   |       |   `-- ./kernel/include/arch/aarch64/arch/trustzone
+|   |   |       |       |-- ./kernel/include/arch/aarch64/arch/trustzone/smc.h
+|   |   |       |       |-- ./kernel/include/arch/aarch64/arch/trustzone/spd
+|   |   |       |       |   |-- ./kernel/include/arch/aarch64/arch/trustzone/spd/opteed
+|   |   |       |       |   |   `-- ./kernel/include/arch/aarch64/arch/trustzone/spd/opteed/smc_num.h
+|   |   |       |       |   `-- ./kernel/include/arch/aarch64/arch/trustzone/spd/teed
+|   |   |       |       |       `-- ./kernel/include/arch/aarch64/arch/trustzone/spd/teed/smc_num.h
+|   |   |       |       `-- ./kernel/include/arch/aarch64/arch/trustzone/tlogger.h
+|   |   |       `-- ./kernel/include/arch/aarch64/plat
+|   |   |           |-- ./kernel/include/arch/aarch64/plat/ft2000
+|   |   |           |   |-- ./kernel/include/arch/aarch64/plat/ft2000/irq_num.h
+|   |   |           |   `-- ./kernel/include/arch/aarch64/plat/ft2000/machine.h
+|   |   |           |-- ./kernel/include/arch/aarch64/plat/hikey970
+|   |   |           |   |-- ./kernel/include/arch/aarch64/plat/hikey970/irq_num.h
+|   |   |           |   `-- ./kernel/include/arch/aarch64/plat/hikey970/machine.h
+|   |   |           |-- ./kernel/include/arch/aarch64/plat/raspi3
+|   |   |           |   |-- ./kernel/include/arch/aarch64/plat/raspi3/irq_num.h
+|   |   |           |   |-- ./kernel/include/arch/aarch64/plat/raspi3/machine.h
+|   |   |           |   `-- ./kernel/include/arch/aarch64/plat/raspi3/mailbox.h
+|   |   |           `-- ./kernel/include/arch/aarch64/plat/raspi4
+|   |   |               |-- ./kernel/include/arch/aarch64/plat/raspi4/irq_num.h
+|   |   |               `-- ./kernel/include/arch/aarch64/plat/raspi4/machine.h
+|   |   |-- ./kernel/include/common
+|   |   |   |-- ./kernel/include/common/asm.h
+|   |   |   |-- ./kernel/include/common/backtrace.h
+|   |   |   |-- ./kernel/include/common/bitops.h
+|   |   |   |-- ./kernel/include/common/debug.h
+|   |   |   |-- ./kernel/include/common/endianness.h
+|   |   |   |-- ./kernel/include/common/errno.h
+|   |   |   |-- ./kernel/include/common/hashtable.h
+|   |   |   |-- ./kernel/include/common/kprint.h
+|   |   |   |-- ./kernel/include/common/list.h
+|   |   |   |-- ./kernel/include/common/lock.h
+|   |   |   |-- ./kernel/include/common/lock.md
+|   |   |   |-- ./kernel/include/common/macro.h
+|   |   |   |-- ./kernel/include/common/poweroff.h
+|   |   |   |-- ./kernel/include/common/radix.h
+|   |   |   |-- ./kernel/include/common/rbtree.h
+|   |   |   |-- ./kernel/include/common/rbtree_impl.h
+|   |   |   |-- ./kernel/include/common/sync.h
+|   |   |   |-- ./kernel/include/common/tee_uuid.h
+|   |   |   |-- ./kernel/include/common/types.h
+|   |   |   |-- ./kernel/include/common/util.h
+|   |   |   `-- ./kernel/include/common/vars.h
+|   |   |-- ./kernel/include/io
+|   |   |   `-- ./kernel/include/io/uart.h
+|   |   |-- ./kernel/include/ipc
+|   |   |   |-- ./kernel/include/ipc/channel.h
+|   |   |   |-- ./kernel/include/ipc/connection.h
+|   |   |   |-- ./kernel/include/ipc/futex.h
+|   |   |   `-- ./kernel/include/ipc/notification.h
+|   |   |-- ./kernel/include/irq
+|   |   |   |-- ./kernel/include/irq/ipi.h
+|   |   |   |-- ./kernel/include/irq/irq.h
+|   |   |   `-- ./kernel/include/irq/timer.h
+|   |   |-- ./kernel/include/lib
+|   |   |   |-- ./kernel/include/lib/efi.h
+|   |   |   |-- ./kernel/include/lib/krand.h
+|   |   |   |-- ./kernel/include/lib/mem_usage_info_tool.h
+|   |   |   |-- ./kernel/include/lib/printk.h
+|   |   |   `-- ./kernel/include/lib/ring_buffer.h
+|   |   |-- ./kernel/include/mm
+|   |   |   |-- ./kernel/include/mm/buddy.h
+|   |   |   |-- ./kernel/include/mm/cache.h
+|   |   |   |-- ./kernel/include/mm/common_pte.h
+|   |   |   |-- ./kernel/include/mm/extable.h
+|   |   |   |-- ./kernel/include/mm/kmalloc.h
+|   |   |   |-- ./kernel/include/mm/mm.h
+|   |   |   |-- ./kernel/include/mm/page_fault.h
+|   |   |   |-- ./kernel/include/mm/slab.h
+|   |   |   |-- ./kernel/include/mm/uaccess.h
+|   |   |   `-- ./kernel/include/mm/vmspace.h
+|   |   |-- ./kernel/include/object
+|   |   |   |-- ./kernel/include/object/cap_group.h
+|   |   |   |-- ./kernel/include/object/irq.h
+|   |   |   |-- ./kernel/include/object/memory.h
+|   |   |   |-- ./kernel/include/object/object.h
+|   |   |   |-- ./kernel/include/object/ptrace.h
+|   |   |   |-- ./kernel/include/object/recycle.h
+|   |   |   |-- ./kernel/include/object/thread.h
+|   |   |   `-- ./kernel/include/object/user_fault.h
+|   |   |-- ./kernel/include/sched
+|   |   |   |-- ./kernel/include/sched/context.h
+|   |   |   |-- ./kernel/include/sched/fpu.h
+|   |   |   `-- ./kernel/include/sched/sched.h
+|   |   `-- ./kernel/include/syscall
+|   |       |-- ./kernel/include/syscall/opentrustee.h
+|   |       `-- ./kernel/include/syscall/syscall_hooks.h
+|   |-- ./kernel/ipc
+|   |   |-- ./kernel/ipc/CMakeLists.txt
+|   |   |-- ./kernel/ipc/connection.c.dbg.obj
+|   |   |-- ./kernel/ipc/connection.c.obj
+|   |   |-- ./kernel/ipc/futex.c.dbg.obj
+|   |   |-- ./kernel/ipc/futex.c.obj
+|   |   |-- ./kernel/ipc/notification.c.dbg.obj
+|   |   `-- ./kernel/ipc/notification.c.obj
+|   |-- ./kernel/irq
+|   |   |-- ./kernel/irq/CMakeLists.txt
+|   |   |-- ./kernel/irq/ipi.c.dbg.obj
+|   |   |-- ./kernel/irq/ipi.c.obj
+|   |   |-- ./kernel/irq/timer.c.dbg.obj
+|   |   `-- ./kernel/irq/timer.c.obj
+|   |-- ./kernel/kernel-unit-tests-config.cmake
+|   |-- ./kernel/lib
+|   |   |-- ./kernel/lib/CMakeLists.txt
+|   |   |-- ./kernel/lib/krand_stub.c.dbg.obj
+|   |   |-- ./kernel/lib/krand_stub.c.obj
+|   |   |-- ./kernel/lib/mem_usage_info_tool.c.dbg.obj
+|   |   |-- ./kernel/lib/mem_usage_info_tool.c.obj
+|   |   |-- ./kernel/lib/printk.c.dbg.obj
+|   |   |-- ./kernel/lib/printk.c.obj
+|   |   |-- ./kernel/lib/radix.c.dbg.obj
+|   |   |-- ./kernel/lib/radix.c.obj
+|   |   |-- ./kernel/lib/rbtree.c
+|   |   |-- ./kernel/lib/ring_buffer.c.dbg.obj
+|   |   `-- ./kernel/lib/ring_buffer.c.obj
+|   |-- ./kernel/mm
+|   |   |-- ./kernel/mm/CMakeLists.txt
+|   |   |-- ./kernel/mm/buddy.c
+|   |   |-- ./kernel/mm/extable.c.dbg.obj
+|   |   |-- ./kernel/mm/extable.c.obj
+|   |   |-- ./kernel/mm/kmalloc.c
+|   |   |-- ./kernel/mm/mm.c
+|   |   |-- ./kernel/mm/pgfault_handler.c
+|   |   |-- ./kernel/mm/slab.c
+|   |   |-- ./kernel/mm/uaccess.c.dbg.obj
+|   |   |-- ./kernel/mm/uaccess.c.obj
+|   |   `-- ./kernel/mm/vmspace.c
+|   |-- ./kernel/object
+|   |   |-- ./kernel/object/CMakeLists.txt
+|   |   |-- ./kernel/object/cap_group.c.dbg.obj
+|   |   |-- ./kernel/object/cap_group.c.obj
+|   |   |-- ./kernel/object/capability.c.dbg.obj
+|   |   |-- ./kernel/object/capability.c.obj
+|   |   |-- ./kernel/object/irq.c.dbg.obj
+|   |   |-- ./kernel/object/irq.c.obj
+|   |   |-- ./kernel/object/memory.c.dbg.obj
+|   |   |-- ./kernel/object/memory.c.obj
+|   |   |-- ./kernel/object/ptrace.c.dbg.obj
+|   |   |-- ./kernel/object/ptrace.c.obj
+|   |   |-- ./kernel/object/recycle.c.dbg.obj
+|   |   |-- ./kernel/object/recycle.c.obj
+|   |   |-- ./kernel/object/set_thread_env.c.dbg.obj
+|   |   |-- ./kernel/object/set_thread_env.c.obj
+|   |   |-- ./kernel/object/thread.c.dbg.obj
+|   |   |-- ./kernel/object/thread.c.obj
+|   |   |-- ./kernel/object/user_fault.c.dbg.obj
+|   |   `-- ./kernel/object/user_fault.c.obj
+|   |-- ./kernel/sched
+|   |   |-- ./kernel/sched/CMakeLists.txt
+|   |   |-- ./kernel/sched/context.c.dbg.obj
+|   |   |-- ./kernel/sched/context.c.obj
+|   |   |-- ./kernel/sched/policy_pb.c.dbg.obj
+|   |   |-- ./kernel/sched/policy_pb.c.obj
+|   |   |-- ./kernel/sched/policy_rr.c.dbg.obj
+|   |   |-- ./kernel/sched/policy_rr.c.obj
+|   |   |-- ./kernel/sched/sched.c.dbg.obj
+|   |   `-- ./kernel/sched/sched.c.obj
+|   |-- ./kernel/syscall
+|   |   |-- ./kernel/syscall/CMakeLists.txt
+|   |   |-- ./kernel/syscall/syscall.c.dbg.obj
+|   |   |-- ./kernel/syscall/syscall.c.obj
+|   |   |-- ./kernel/syscall/syscall_get_system_info.c.dbg.obj
+|   |   |-- ./kernel/syscall/syscall_get_system_info.c.obj
+|   |   |-- ./kernel/syscall/syscall_hooks.c.dbg.obj
+|   |   |-- ./kernel/syscall/syscall_hooks.c.obj
+|   |   |-- ./kernel/syscall/syscall_opentrustee.c.dbg.obj
+|   |   `-- ./kernel/syscall/syscall_opentrustee.c.obj
+|   |-- ./kernel/tests
+|   |   `-- ./kernel/tests/runtime
+|   |       |-- ./kernel/tests/runtime/CMakeLists.txt
+|   |       |-- ./kernel/tests/runtime/tests.c
+|   |       `-- ./kernel/tests/runtime/tests.h
+|   `-- ./kernel/user-include
+|       `-- ./kernel/user-include/uapi
+|           |-- ./kernel/user-include/uapi/cache.h
+|           |-- ./kernel/user-include/uapi/get_system_info.h
+|           |-- ./kernel/user-include/uapi/ipc.h
+|           |-- ./kernel/user-include/uapi/memory.h
+|           |-- ./kernel/user-include/uapi/object.h
+|           |-- ./kernel/user-include/uapi/opentrustee
+|           |   |-- ./kernel/user-include/uapi/opentrustee/ipc.h
+|           |   |-- ./kernel/user-include/uapi/opentrustee/smc.h
+|           |   `-- ./kernel/user-include/uapi/opentrustee/syscall_num.h
+|           |-- ./kernel/user-include/uapi/ptrace.h
+|           |-- ./kernel/user-include/uapi/syscall_num.h
+|           `-- ./kernel/user-include/uapi/types.h
+|-- ./output.txt
+|-- ./scores.json
+`-- ./user
+    `-- ./user/procmgr
+
+58 directories, 278 files

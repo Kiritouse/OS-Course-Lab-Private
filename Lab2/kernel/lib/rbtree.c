@@ -266,6 +266,10 @@ static void __rb_insert_color(struct rb_root *root, struct rb_node *node)
         }
 }
 
+/// @brief 红黑树节点插入
+/// @param this 红黑树根节点
+/// @param data 数据节点
+/// @param less 比较函数
 void rb_insert(struct rb_root *this, struct rb_node *data, less_func less)
 {
         struct rb_node **new_link = &this->root_node;
@@ -287,6 +291,10 @@ void rb_insert(struct rb_root *this, struct rb_node *data, less_func less)
         __rb_insert_color(this, data);
 }
 
+/// @brief 红黑树节点替换
+/// @param this 红黑树根节点
+/// @param old 旧节点
+/// @param new 新节点
 void rb_replace_node(struct rb_root *this, struct rb_node *old,
                      struct rb_node *new)
 {

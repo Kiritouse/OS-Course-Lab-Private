@@ -45,7 +45,7 @@ extern struct test_count count;
 /* Indicates whether a certain fs has been mounted */
 extern bool mounted;
 extern bool using_page_cache;
-extern struct fs_server_ops server_ops;
+extern struct fs_server_ops server_ops;//定义了文件系统的所有操作options
 
 /* +++++++++++++++++++++++++++ FID Mapping ++++++++++++++++++++++++++++++++ */
 
@@ -58,8 +58,8 @@ struct server_entry_node {
         struct list_head node;
 };
 
-extern struct list_head server_entry_mapping;
-extern pthread_spinlock_t server_entry_mapping_lock;
+extern struct list_head server_entry_mapping;//链表
+extern pthread_spinlock_t server_entry_mapping_lock;//自旋锁
 
 void init_fs_wrapper(void);
 int fs_wrapper_get_server_entry(badge_t client_badge, int fd);

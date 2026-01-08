@@ -28,8 +28,8 @@
 struct mount_point_info_node {
         cap_t fs_cap;
         char path[MAX_MOUNT_POINT_LEN + 1];
-        int path_len;
-        ipc_struct_t *_fs_ipc_struct;
+        int path_len;//挂载深度指的是路径长度而不是字符串长度
+        ipc_struct_t *_fs_ipc_struct; //内部使用的ipc通信结构体
         int refcnt;
 
         struct list_head node;

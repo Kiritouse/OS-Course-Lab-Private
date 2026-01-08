@@ -1,0 +1,647 @@
+.
+|-- ./CMakeLists.txt
+|-- ./Makefile
+|-- ./compile_commands.json
+|-- ./config.cmake
+|-- ./filelist.mk
+|-- ./kernel
+|   |-- ./kernel/CMakeLists.txt
+|   |-- ./kernel/arch
+|   |   `-- ./kernel/arch/aarch64
+|   |       |-- ./kernel/arch/aarch64/CMakeLists.txt
+|   |       |-- ./kernel/arch/aarch64/boot
+|   |       |   |-- ./kernel/arch/aarch64/boot/CMakeLists.txt
+|   |       |   |-- ./kernel/arch/aarch64/boot/linker.tpl.ld
+|   |       |   `-- ./kernel/arch/aarch64/boot/raspi3
+|   |       |       |-- ./kernel/arch/aarch64/boot/raspi3/CMakeLists.txt
+|   |       |       |-- ./kernel/arch/aarch64/boot/raspi3/firmware
+|   |       |       |   |-- ./kernel/arch/aarch64/boot/raspi3/firmware/README
+|   |       |       |   |-- ./kernel/arch/aarch64/boot/raspi3/firmware/bootcode.bin
+|   |       |       |   |-- ./kernel/arch/aarch64/boot/raspi3/firmware/config.txt
+|   |       |       |   |-- ./kernel/arch/aarch64/boot/raspi3/firmware/fixup.dat
+|   |       |       |   `-- ./kernel/arch/aarch64/boot/raspi3/firmware/start.elf
+|   |       |       |-- ./kernel/arch/aarch64/boot/raspi3/include
+|   |       |       |   |-- ./kernel/arch/aarch64/boot/raspi3/include/boot.h
+|   |       |       |   |-- ./kernel/arch/aarch64/boot/raspi3/include/consts.h
+|   |       |       |   `-- ./kernel/arch/aarch64/boot/raspi3/include/image.h
+|   |       |       |-- ./kernel/arch/aarch64/boot/raspi3/init
+|   |       |       |   |-- ./kernel/arch/aarch64/boot/raspi3/init/init_c.c.dbg.obj
+|   |       |       |   |-- ./kernel/arch/aarch64/boot/raspi3/init/init_c.c.obj
+|   |       |       |   |-- ./kernel/arch/aarch64/boot/raspi3/init/mmu.c.dbg.obj
+|   |       |       |   |-- ./kernel/arch/aarch64/boot/raspi3/init/mmu.c.obj
+|   |       |       |   |-- ./kernel/arch/aarch64/boot/raspi3/init/start.S.dbg.obj
+|   |       |       |   |-- ./kernel/arch/aarch64/boot/raspi3/init/start.S.obj
+|   |       |       |   |-- ./kernel/arch/aarch64/boot/raspi3/init/tools.S.dbg.obj
+|   |       |       |   `-- ./kernel/arch/aarch64/boot/raspi3/init/tools.S.obj
+|   |       |       `-- ./kernel/arch/aarch64/boot/raspi3/peripherals
+|   |       |           |-- ./kernel/arch/aarch64/boot/raspi3/peripherals/uart.c.dbg.obj
+|   |       |           |-- ./kernel/arch/aarch64/boot/raspi3/peripherals/uart.c.obj
+|   |       |           `-- ./kernel/arch/aarch64/boot/raspi3/peripherals/uart.h
+|   |       |-- ./kernel/arch/aarch64/debug
+|   |       |   |-- ./kernel/arch/aarch64/debug/CMakeLists.txt
+|   |       |   |-- ./kernel/arch/aarch64/debug/backtrace.c.dbg.obj
+|   |       |   |-- ./kernel/arch/aarch64/debug/backtrace.c.obj
+|   |       |   |-- ./kernel/arch/aarch64/debug/ptrace.c.dbg.obj
+|   |       |   `-- ./kernel/arch/aarch64/debug/ptrace.c.obj
+|   |       |-- ./kernel/arch/aarch64/head.S.dbg.obj
+|   |       |-- ./kernel/arch/aarch64/head.S.obj
+|   |       |-- ./kernel/arch/aarch64/irq
+|   |       |   |-- ./kernel/arch/aarch64/irq/CMakeLists.txt
+|   |       |   |-- ./kernel/arch/aarch64/irq/ipi.c.dbg.obj
+|   |       |   |-- ./kernel/arch/aarch64/irq/ipi.c.obj
+|   |       |   |-- ./kernel/arch/aarch64/irq/irq.S.dbg.obj
+|   |       |   |-- ./kernel/arch/aarch64/irq/irq.S.obj
+|   |       |   |-- ./kernel/arch/aarch64/irq/irq_entry.S.dbg.obj
+|   |       |   |-- ./kernel/arch/aarch64/irq/irq_entry.S.obj
+|   |       |   |-- ./kernel/arch/aarch64/irq/irq_entry.c.dbg.obj
+|   |       |   |-- ./kernel/arch/aarch64/irq/irq_entry.c.obj
+|   |       |   |-- ./kernel/arch/aarch64/irq/pgfault.c.dbg.obj
+|   |       |   `-- ./kernel/arch/aarch64/irq/pgfault.c.obj
+|   |       |-- ./kernel/arch/aarch64/machine
+|   |       |   |-- ./kernel/arch/aarch64/machine/CMakeLists.txt
+|   |       |   |-- ./kernel/arch/aarch64/machine/pmu.c.dbg.obj
+|   |       |   |-- ./kernel/arch/aarch64/machine/pmu.c.obj
+|   |       |   |-- ./kernel/arch/aarch64/machine/smp.c.dbg.obj
+|   |       |   `-- ./kernel/arch/aarch64/machine/smp.c.obj
+|   |       |-- ./kernel/arch/aarch64/main.c.dbg.obj
+|   |       |-- ./kernel/arch/aarch64/main.c.obj
+|   |       |-- ./kernel/arch/aarch64/mm
+|   |       |   |-- ./kernel/arch/aarch64/mm/CMakeLists.txt
+|   |       |   |-- ./kernel/arch/aarch64/mm/bzero.S.dbg.obj
+|   |       |   |-- ./kernel/arch/aarch64/mm/bzero.S.obj
+|   |       |   |-- ./kernel/arch/aarch64/mm/cache.c.dbg.obj
+|   |       |   |-- ./kernel/arch/aarch64/mm/cache.c.obj
+|   |       |   |-- ./kernel/arch/aarch64/mm/copy_from_user.S.dbg.obj
+|   |       |   |-- ./kernel/arch/aarch64/mm/copy_from_user.S.obj
+|   |       |   |-- ./kernel/arch/aarch64/mm/copy_to_user.S.dbg.obj
+|   |       |   |-- ./kernel/arch/aarch64/mm/copy_to_user.S.obj
+|   |       |   |-- ./kernel/arch/aarch64/mm/memcpy.S.dbg.obj
+|   |       |   |-- ./kernel/arch/aarch64/mm/memcpy.S.obj
+|   |       |   |-- ./kernel/arch/aarch64/mm/memmove.S.dbg.obj
+|   |       |   |-- ./kernel/arch/aarch64/mm/memmove.S.obj
+|   |       |   |-- ./kernel/arch/aarch64/mm/memset.c.dbg.obj
+|   |       |   |-- ./kernel/arch/aarch64/mm/memset.c.obj
+|   |       |   |-- ./kernel/arch/aarch64/mm/page_table.S.dbg.obj
+|   |       |   |-- ./kernel/arch/aarch64/mm/page_table.S.obj
+|   |       |   |-- ./kernel/arch/aarch64/mm/page_table.c.dbg.obj
+|   |       |   |-- ./kernel/arch/aarch64/mm/page_table.c.obj
+|   |       |   |-- ./kernel/arch/aarch64/mm/tlb.c.dbg.obj
+|   |       |   |-- ./kernel/arch/aarch64/mm/tlb.c.obj
+|   |       |   |-- ./kernel/arch/aarch64/mm/uaccess.c.dbg.obj
+|   |       |   |-- ./kernel/arch/aarch64/mm/uaccess.c.obj
+|   |       |   |-- ./kernel/arch/aarch64/mm/vmspace.c.dbg.obj
+|   |       |   `-- ./kernel/arch/aarch64/mm/vmspace.c.obj
+|   |       |-- ./kernel/arch/aarch64/plat
+|   |       |   `-- ./kernel/arch/aarch64/plat/raspi3
+|   |       |       |-- ./kernel/arch/aarch64/plat/raspi3/CMakeLists.txt
+|   |       |       |-- ./kernel/arch/aarch64/plat/raspi3/irq
+|   |       |       |   |-- ./kernel/arch/aarch64/plat/raspi3/irq/irq.c.dbg.obj
+|   |       |       |   |-- ./kernel/arch/aarch64/plat/raspi3/irq/irq.c.obj
+|   |       |       |   |-- ./kernel/arch/aarch64/plat/raspi3/irq/timer.c.dbg.obj
+|   |       |       |   `-- ./kernel/arch/aarch64/plat/raspi3/irq/timer.c.obj
+|   |       |       |-- ./kernel/arch/aarch64/plat/raspi3/mm
+|   |       |       |   |-- ./kernel/arch/aarch64/plat/raspi3/mm/mmparse.c.dbg.obj
+|   |       |       |   `-- ./kernel/arch/aarch64/plat/raspi3/mm/mmparse.c.obj
+|   |       |       |-- ./kernel/arch/aarch64/plat/raspi3/poweroff.c.dbg.obj
+|   |       |       |-- ./kernel/arch/aarch64/plat/raspi3/poweroff.c.obj
+|   |       |       `-- ./kernel/arch/aarch64/plat/raspi3/uart
+|   |       |           |-- ./kernel/arch/aarch64/plat/raspi3/uart/uart.c.dbg.obj
+|   |       |           `-- ./kernel/arch/aarch64/plat/raspi3/uart/uart.c.obj
+|   |       |-- ./kernel/arch/aarch64/sched
+|   |       |   |-- ./kernel/arch/aarch64/sched/CMakeLists.txt
+|   |       |   |-- ./kernel/arch/aarch64/sched/context.c.dbg.obj
+|   |       |   |-- ./kernel/arch/aarch64/sched/context.c.obj
+|   |       |   |-- ./kernel/arch/aarch64/sched/fpu.c.dbg.obj
+|   |       |   |-- ./kernel/arch/aarch64/sched/fpu.c.obj
+|   |       |   |-- ./kernel/arch/aarch64/sched/idle.S.dbg.obj
+|   |       |   |-- ./kernel/arch/aarch64/sched/idle.S.obj
+|   |       |   |-- ./kernel/arch/aarch64/sched/sched.c.dbg.obj
+|   |       |   `-- ./kernel/arch/aarch64/sched/sched.c.obj
+|   |       |-- ./kernel/arch/aarch64/sync
+|   |       |   |-- ./kernel/arch/aarch64/sync/CMakeLists.txt
+|   |       |   |-- ./kernel/arch/aarch64/sync/rwlock.c.dbg.obj
+|   |       |   |-- ./kernel/arch/aarch64/sync/rwlock.c.obj
+|   |       |   |-- ./kernel/arch/aarch64/sync/ticket.c.dbg.obj
+|   |       |   `-- ./kernel/arch/aarch64/sync/ticket.c.obj
+|   |       |-- ./kernel/arch/aarch64/tools.S.dbg.obj
+|   |       `-- ./kernel/arch/aarch64/tools.S.obj
+|   |-- ./kernel/config.cmake
+|   |-- ./kernel/incbin.tpl.S
+|   |-- ./kernel/include
+|   |   |-- ./kernel/include/arch
+|   |   |   `-- ./kernel/include/arch/aarch64
+|   |   |       |-- ./kernel/include/arch/aarch64/arch
+|   |   |       |   |-- ./kernel/include/arch/aarch64/arch/boot.h
+|   |   |       |   |-- ./kernel/include/arch/aarch64/arch/context.h
+|   |   |       |   |-- ./kernel/include/arch/aarch64/arch/ipi.h
+|   |   |       |   |-- ./kernel/include/arch/aarch64/arch/machine
+|   |   |       |   |   |-- ./kernel/include/arch/aarch64/arch/machine/esr.h
+|   |   |       |   |   |-- ./kernel/include/arch/aarch64/arch/machine/pmu.h
+|   |   |       |   |   |-- ./kernel/include/arch/aarch64/arch/machine/registers.h
+|   |   |       |   |   `-- ./kernel/include/arch/aarch64/arch/machine/smp.h
+|   |   |       |   |-- ./kernel/include/arch/aarch64/arch/mm
+|   |   |       |   |   `-- ./kernel/include/arch/aarch64/arch/mm/page_table.h
+|   |   |       |   |-- ./kernel/include/arch/aarch64/arch/mmu.h
+|   |   |       |   |-- ./kernel/include/arch/aarch64/arch/sched
+|   |   |       |   |   `-- ./kernel/include/arch/aarch64/arch/sched/arch_sched.h
+|   |   |       |   |-- ./kernel/include/arch/aarch64/arch/sync.h
+|   |   |       |   |-- ./kernel/include/arch/aarch64/arch/time.h
+|   |   |       |   |-- ./kernel/include/arch/aarch64/arch/tools.h
+|   |   |       |   `-- ./kernel/include/arch/aarch64/arch/trustzone
+|   |   |       |       |-- ./kernel/include/arch/aarch64/arch/trustzone/smc.h
+|   |   |       |       |-- ./kernel/include/arch/aarch64/arch/trustzone/spd
+|   |   |       |       |   |-- ./kernel/include/arch/aarch64/arch/trustzone/spd/opteed
+|   |   |       |       |   |   `-- ./kernel/include/arch/aarch64/arch/trustzone/spd/opteed/smc_num.h
+|   |   |       |       |   `-- ./kernel/include/arch/aarch64/arch/trustzone/spd/teed
+|   |   |       |       |       `-- ./kernel/include/arch/aarch64/arch/trustzone/spd/teed/smc_num.h
+|   |   |       |       `-- ./kernel/include/arch/aarch64/arch/trustzone/tlogger.h
+|   |   |       `-- ./kernel/include/arch/aarch64/plat
+|   |   |           |-- ./kernel/include/arch/aarch64/plat/ft2000
+|   |   |           |   |-- ./kernel/include/arch/aarch64/plat/ft2000/irq_num.h
+|   |   |           |   `-- ./kernel/include/arch/aarch64/plat/ft2000/machine.h
+|   |   |           |-- ./kernel/include/arch/aarch64/plat/hikey970
+|   |   |           |   |-- ./kernel/include/arch/aarch64/plat/hikey970/irq_num.h
+|   |   |           |   `-- ./kernel/include/arch/aarch64/plat/hikey970/machine.h
+|   |   |           |-- ./kernel/include/arch/aarch64/plat/raspi3
+|   |   |           |   |-- ./kernel/include/arch/aarch64/plat/raspi3/irq_num.h
+|   |   |           |   |-- ./kernel/include/arch/aarch64/plat/raspi3/machine.h
+|   |   |           |   `-- ./kernel/include/arch/aarch64/plat/raspi3/mailbox.h
+|   |   |           `-- ./kernel/include/arch/aarch64/plat/raspi4
+|   |   |               |-- ./kernel/include/arch/aarch64/plat/raspi4/irq_num.h
+|   |   |               `-- ./kernel/include/arch/aarch64/plat/raspi4/machine.h
+|   |   |-- ./kernel/include/common
+|   |   |   |-- ./kernel/include/common/asm.h
+|   |   |   |-- ./kernel/include/common/backtrace.h
+|   |   |   |-- ./kernel/include/common/bitops.h
+|   |   |   |-- ./kernel/include/common/debug.h
+|   |   |   |-- ./kernel/include/common/endianness.h
+|   |   |   |-- ./kernel/include/common/errno.h
+|   |   |   |-- ./kernel/include/common/hashtable.h
+|   |   |   |-- ./kernel/include/common/kprint.h
+|   |   |   |-- ./kernel/include/common/list.h
+|   |   |   |-- ./kernel/include/common/lock.h
+|   |   |   |-- ./kernel/include/common/lock.md
+|   |   |   |-- ./kernel/include/common/macro.h
+|   |   |   |-- ./kernel/include/common/poweroff.h
+|   |   |   |-- ./kernel/include/common/radix.h
+|   |   |   |-- ./kernel/include/common/rbtree.h
+|   |   |   |-- ./kernel/include/common/rbtree_impl.h
+|   |   |   |-- ./kernel/include/common/sync.h
+|   |   |   |-- ./kernel/include/common/tee_uuid.h
+|   |   |   |-- ./kernel/include/common/types.h
+|   |   |   |-- ./kernel/include/common/util.h
+|   |   |   `-- ./kernel/include/common/vars.h
+|   |   |-- ./kernel/include/io
+|   |   |   `-- ./kernel/include/io/uart.h
+|   |   |-- ./kernel/include/ipc
+|   |   |   |-- ./kernel/include/ipc/channel.h
+|   |   |   |-- ./kernel/include/ipc/connection.h
+|   |   |   |-- ./kernel/include/ipc/futex.h
+|   |   |   `-- ./kernel/include/ipc/notification.h
+|   |   |-- ./kernel/include/irq
+|   |   |   |-- ./kernel/include/irq/ipi.h
+|   |   |   |-- ./kernel/include/irq/irq.h
+|   |   |   `-- ./kernel/include/irq/timer.h
+|   |   |-- ./kernel/include/lib
+|   |   |   |-- ./kernel/include/lib/efi.h
+|   |   |   |-- ./kernel/include/lib/krand.h
+|   |   |   |-- ./kernel/include/lib/mem_usage_info_tool.h
+|   |   |   |-- ./kernel/include/lib/printk.h
+|   |   |   `-- ./kernel/include/lib/ring_buffer.h
+|   |   |-- ./kernel/include/mm
+|   |   |   |-- ./kernel/include/mm/buddy.h
+|   |   |   |-- ./kernel/include/mm/cache.h
+|   |   |   |-- ./kernel/include/mm/common_pte.h
+|   |   |   |-- ./kernel/include/mm/extable.h
+|   |   |   |-- ./kernel/include/mm/kmalloc.h
+|   |   |   |-- ./kernel/include/mm/mm.h
+|   |   |   |-- ./kernel/include/mm/page_fault.h
+|   |   |   |-- ./kernel/include/mm/slab.h
+|   |   |   |-- ./kernel/include/mm/uaccess.h
+|   |   |   `-- ./kernel/include/mm/vmspace.h
+|   |   |-- ./kernel/include/object
+|   |   |   |-- ./kernel/include/object/cap_group.h
+|   |   |   |-- ./kernel/include/object/irq.h
+|   |   |   |-- ./kernel/include/object/memory.h
+|   |   |   |-- ./kernel/include/object/object.h
+|   |   |   |-- ./kernel/include/object/ptrace.h
+|   |   |   |-- ./kernel/include/object/recycle.h
+|   |   |   |-- ./kernel/include/object/thread.h
+|   |   |   `-- ./kernel/include/object/user_fault.h
+|   |   |-- ./kernel/include/sched
+|   |   |   |-- ./kernel/include/sched/context.h
+|   |   |   |-- ./kernel/include/sched/fpu.h
+|   |   |   `-- ./kernel/include/sched/sched.h
+|   |   `-- ./kernel/include/syscall
+|   |       |-- ./kernel/include/syscall/opentrustee.h
+|   |       `-- ./kernel/include/syscall/syscall_hooks.h
+|   |-- ./kernel/ipc
+|   |   |-- ./kernel/ipc/CMakeLists.txt
+|   |   |-- ./kernel/ipc/connection.c.dbg.obj
+|   |   |-- ./kernel/ipc/connection.c.obj
+|   |   |-- ./kernel/ipc/futex.c.dbg.obj
+|   |   |-- ./kernel/ipc/futex.c.obj
+|   |   |-- ./kernel/ipc/notification.c.dbg.obj
+|   |   `-- ./kernel/ipc/notification.c.obj
+|   |-- ./kernel/irq
+|   |   |-- ./kernel/irq/CMakeLists.txt
+|   |   |-- ./kernel/irq/ipi.c.dbg.obj
+|   |   |-- ./kernel/irq/ipi.c.obj
+|   |   |-- ./kernel/irq/timer.c.dbg.obj
+|   |   `-- ./kernel/irq/timer.c.obj
+|   |-- ./kernel/kernel-unit-tests-config.cmake
+|   |-- ./kernel/lib
+|   |   |-- ./kernel/lib/CMakeLists.txt
+|   |   |-- ./kernel/lib/krand_stub.c.dbg.obj
+|   |   |-- ./kernel/lib/krand_stub.c.obj
+|   |   |-- ./kernel/lib/mem_usage_info_tool.c.dbg.obj
+|   |   |-- ./kernel/lib/mem_usage_info_tool.c.obj
+|   |   |-- ./kernel/lib/printk.c.dbg.obj
+|   |   |-- ./kernel/lib/printk.c.obj
+|   |   |-- ./kernel/lib/radix.c.dbg.obj
+|   |   |-- ./kernel/lib/radix.c.obj
+|   |   |-- ./kernel/lib/rbtree.c.dbg.obj
+|   |   |-- ./kernel/lib/rbtree.c.obj
+|   |   |-- ./kernel/lib/ring_buffer.c.dbg.obj
+|   |   `-- ./kernel/lib/ring_buffer.c.obj
+|   |-- ./kernel/mm
+|   |   |-- ./kernel/mm/CMakeLists.txt
+|   |   |-- ./kernel/mm/buddy.c.dbg.obj
+|   |   |-- ./kernel/mm/buddy.c.obj
+|   |   |-- ./kernel/mm/extable.c.dbg.obj
+|   |   |-- ./kernel/mm/extable.c.obj
+|   |   |-- ./kernel/mm/kmalloc.c.dbg.obj
+|   |   |-- ./kernel/mm/kmalloc.c.obj
+|   |   |-- ./kernel/mm/mm.c.dbg.obj
+|   |   |-- ./kernel/mm/mm.c.obj
+|   |   |-- ./kernel/mm/pgfault_handler.c.dbg.obj
+|   |   |-- ./kernel/mm/pgfault_handler.c.obj
+|   |   |-- ./kernel/mm/slab.c.dbg.obj
+|   |   |-- ./kernel/mm/slab.c.obj
+|   |   |-- ./kernel/mm/uaccess.c.dbg.obj
+|   |   |-- ./kernel/mm/uaccess.c.obj
+|   |   |-- ./kernel/mm/vmspace.c.dbg.obj
+|   |   `-- ./kernel/mm/vmspace.c.obj
+|   |-- ./kernel/object
+|   |   |-- ./kernel/object/CMakeLists.txt
+|   |   |-- ./kernel/object/cap_group.c.dbg.obj
+|   |   |-- ./kernel/object/cap_group.c.obj
+|   |   |-- ./kernel/object/capability.c.dbg.obj
+|   |   |-- ./kernel/object/capability.c.obj
+|   |   |-- ./kernel/object/irq.c.dbg.obj
+|   |   |-- ./kernel/object/irq.c.obj
+|   |   |-- ./kernel/object/memory.c.dbg.obj
+|   |   |-- ./kernel/object/memory.c.obj
+|   |   |-- ./kernel/object/ptrace.c.dbg.obj
+|   |   |-- ./kernel/object/ptrace.c.obj
+|   |   |-- ./kernel/object/recycle.c.dbg.obj
+|   |   |-- ./kernel/object/recycle.c.obj
+|   |   |-- ./kernel/object/set_thread_env.c.dbg.obj
+|   |   |-- ./kernel/object/set_thread_env.c.obj
+|   |   |-- ./kernel/object/thread.c.dbg.obj
+|   |   |-- ./kernel/object/thread.c.obj
+|   |   |-- ./kernel/object/user_fault.c
+|   |   |-- ./kernel/object/user_fault.c.dbg.obj
+|   |   `-- ./kernel/object/user_fault.c.obj
+|   |-- ./kernel/sched
+|   |   |-- ./kernel/sched/CMakeLists.txt
+|   |   |-- ./kernel/sched/context.c.dbg.obj
+|   |   |-- ./kernel/sched/context.c.obj
+|   |   |-- ./kernel/sched/policy_pb.c.dbg.obj
+|   |   |-- ./kernel/sched/policy_pb.c.obj
+|   |   |-- ./kernel/sched/policy_rr.c.dbg.obj
+|   |   |-- ./kernel/sched/policy_rr.c.obj
+|   |   |-- ./kernel/sched/sched.c.dbg.obj
+|   |   `-- ./kernel/sched/sched.c.obj
+|   |-- ./kernel/syscall
+|   |   |-- ./kernel/syscall/CMakeLists.txt
+|   |   |-- ./kernel/syscall/syscall.c.dbg.obj
+|   |   |-- ./kernel/syscall/syscall.c.obj
+|   |   |-- ./kernel/syscall/syscall_get_system_info.c.dbg.obj
+|   |   |-- ./kernel/syscall/syscall_get_system_info.c.obj
+|   |   |-- ./kernel/syscall/syscall_hooks.c.dbg.obj
+|   |   |-- ./kernel/syscall/syscall_hooks.c.obj
+|   |   |-- ./kernel/syscall/syscall_opentrustee.c.dbg.obj
+|   |   `-- ./kernel/syscall/syscall_opentrustee.c.obj
+|   `-- ./kernel/user-include
+|       `-- ./kernel/user-include/uapi
+|           |-- ./kernel/user-include/uapi/cache.h
+|           |-- ./kernel/user-include/uapi/get_system_info.h
+|           |-- ./kernel/user-include/uapi/ipc.h
+|           |-- ./kernel/user-include/uapi/memory.h
+|           |-- ./kernel/user-include/uapi/object.h
+|           |-- ./kernel/user-include/uapi/opentrustee
+|           |   |-- ./kernel/user-include/uapi/opentrustee/ipc.h
+|           |   |-- ./kernel/user-include/uapi/opentrustee/smc.h
+|           |   `-- ./kernel/user-include/uapi/opentrustee/syscall_num.h
+|           |-- ./kernel/user-include/uapi/ptrace.h
+|           |-- ./kernel/user-include/uapi/syscall_num.h
+|           `-- ./kernel/user-include/uapi/types.h
+|-- ./output.txt
+|-- ./ramdisk
+|   |-- ./ramdisk/chcore_shell.bin
+|   `-- ./ramdisk/test_llm.bin
+|-- ./scores-part1.json
+|-- ./scores-part2.json
+|-- ./scores-part3.json
+|-- ./scores-part4.json
+`-- ./user
+    |-- ./user/chcore-libc
+    |   |-- ./user/chcore-libc/CMakeLists.txt
+    |   `-- ./user/chcore-libc/libchcore
+    |       |-- ./user/chcore-libc/libchcore/arch
+    |       |   `-- ./user/chcore-libc/libchcore/arch/aarch64
+    |       |       |-- ./user/chcore-libc/libchcore/arch/aarch64/debug_lock.h
+    |       |       `-- ./user/chcore-libc/libchcore/arch/aarch64/raw_syscall.h
+    |       |-- ./user/chcore-libc/libchcore/cmake
+    |       |   |-- ./user/chcore-libc/libchcore/cmake/PortingTools.cmake
+    |       |   |-- ./user/chcore-libc/libchcore/cmake/do_cleanup.sh
+    |       |   |-- ./user/chcore-libc/libchcore/cmake/do_override_dir.sh
+    |       |   `-- ./user/chcore-libc/libchcore/cmake/do_patch_dir.sh
+    |       `-- ./user/chcore-libc/libchcore/porting
+    |           |-- ./user/chcore-libc/libchcore/porting/README.md
+    |           |-- ./user/chcore-libc/libchcore/porting/overrides
+    |           |   |-- ./user/chcore-libc/libchcore/porting/overrides/Makefile
+    |           |   |-- ./user/chcore-libc/libchcore/porting/overrides/arch
+    |           |   |   |-- ./user/chcore-libc/libchcore/porting/overrides/arch/aarch64
+    |           |   |   |   `-- ./user/chcore-libc/libchcore/porting/overrides/arch/aarch64/syscall_arch.h
+    |           |   |   |-- ./user/chcore-libc/libchcore/porting/overrides/arch/generic
+    |           |   |   |   `-- ./user/chcore-libc/libchcore/porting/overrides/arch/generic/bits
+    |           |   |   |       `-- ./user/chcore-libc/libchcore/porting/overrides/arch/generic/bits/errno.h
+    |           |   |   `-- ./user/chcore-libc/libchcore/porting/overrides/arch/remove_bak.sh
+    |           |   |-- ./user/chcore-libc/libchcore/porting/overrides/configure
+    |           |   |-- ./user/chcore-libc/libchcore/porting/overrides/include
+    |           |   |   |-- ./user/chcore-libc/libchcore/porting/overrides/include/chcore
+    |           |   |   |   |-- ./user/chcore-libc/libchcore/porting/overrides/include/chcore/aslr.h
+    |           |   |   |   |-- ./user/chcore-libc/libchcore/porting/overrides/include/chcore/bug.h
+    |           |   |   |   |-- ./user/chcore-libc/libchcore/porting/overrides/include/chcore/container
+    |           |   |   |   |   |-- ./user/chcore-libc/libchcore/porting/overrides/include/chcore/container/hashtable.h
+    |           |   |   |   |   |-- ./user/chcore-libc/libchcore/porting/overrides/include/chcore/container/list.h
+    |           |   |   |   |   |-- ./user/chcore-libc/libchcore/porting/overrides/include/chcore/container/radix.h
+    |           |   |   |   |   |-- ./user/chcore-libc/libchcore/porting/overrides/include/chcore/container/rbtree.h
+    |           |   |   |   |   |-- ./user/chcore-libc/libchcore/porting/overrides/include/chcore/container/rbtree_impl.h
+    |           |   |   |   |   `-- ./user/chcore-libc/libchcore/porting/overrides/include/chcore/container/rbtree_plus.h
+    |           |   |   |   |-- ./user/chcore-libc/libchcore/porting/overrides/include/chcore/cpio.h
+    |           |   |   |   |-- ./user/chcore-libc/libchcore/porting/overrides/include/chcore/defs.h
+    |           |   |   |   |-- ./user/chcore-libc/libchcore/porting/overrides/include/chcore/error.h
+    |           |   |   |   |-- ./user/chcore-libc/libchcore/porting/overrides/include/chcore/falloc.h
+    |           |   |   |   |-- ./user/chcore-libc/libchcore/porting/overrides/include/chcore/idman.h
+    |           |   |   |   |-- ./user/chcore-libc/libchcore/porting/overrides/include/chcore/ipc.h
+    |           |   |   |   |-- ./user/chcore-libc/libchcore/porting/overrides/include/chcore/launcher.h
+    |           |   |   |   |-- ./user/chcore-libc/libchcore/porting/overrides/include/chcore/memory.h
+    |           |   |   |   |-- ./user/chcore-libc/libchcore/porting/overrides/include/chcore/oh_vfs.h
+    |           |   |   |   |-- ./user/chcore-libc/libchcore/porting/overrides/include/chcore/opentrustee
+    |           |   |   |   |   `-- ./user/chcore-libc/libchcore/porting/overrides/include/chcore/opentrustee/syscall.h
+    |           |   |   |   |-- ./user/chcore-libc/libchcore/porting/overrides/include/chcore/pmo.h
+    |           |   |   |   |-- ./user/chcore-libc/libchcore/porting/overrides/include/chcore/pmu.h
+    |           |   |   |   |-- ./user/chcore-libc/libchcore/porting/overrides/include/chcore/proc.h
+    |           |   |   |   |-- ./user/chcore-libc/libchcore/porting/overrides/include/chcore/pthread.h
+    |           |   |   |   |-- ./user/chcore-libc/libchcore/porting/overrides/include/chcore/ring_buffer.h
+    |           |   |   |   |-- ./user/chcore-libc/libchcore/porting/overrides/include/chcore/services.h
+    |           |   |   |   |-- ./user/chcore-libc/libchcore/porting/overrides/include/chcore/string.h
+    |           |   |   |   |-- ./user/chcore-libc/libchcore/porting/overrides/include/chcore/syscall.h
+    |           |   |   |   |-- ./user/chcore-libc/libchcore/porting/overrides/include/chcore/thread.h
+    |           |   |   |   `-- ./user/chcore-libc/libchcore/porting/overrides/include/chcore/type.h
+    |           |   |   |-- ./user/chcore-libc/libchcore/porting/overrides/include/chcore-internal
+    |           |   |   |   |-- ./user/chcore-libc/libchcore/porting/overrides/include/chcore-internal/audio_defs.h
+    |           |   |   |   |-- ./user/chcore-libc/libchcore/porting/overrides/include/chcore-internal/chanmgr_defs.h
+    |           |   |   |   |-- ./user/chcore-libc/libchcore/porting/overrides/include/chcore-internal/configurable_servers.h
+    |           |   |   |   |-- ./user/chcore-libc/libchcore/porting/overrides/include/chcore-internal/cpu_driver_defs.h
+    |           |   |   |   |-- ./user/chcore-libc/libchcore/porting/overrides/include/chcore-internal/flash_defs.h
+    |           |   |   |   |-- ./user/chcore-libc/libchcore/porting/overrides/include/chcore-internal/fs_debug.h
+    |           |   |   |   |-- ./user/chcore-libc/libchcore/porting/overrides/include/chcore-internal/fs_defs.h
+    |           |   |   |   |-- ./user/chcore-libc/libchcore/porting/overrides/include/chcore-internal/gpio_defs.h
+    |           |   |   |   |-- ./user/chcore-libc/libchcore/porting/overrides/include/chcore-internal/hdmi_defs.h
+    |           |   |   |   |-- ./user/chcore-libc/libchcore/porting/overrides/include/chcore-internal/lwip_defs.h
+    |           |   |   |   |-- ./user/chcore-libc/libchcore/porting/overrides/include/chcore-internal/net_interface.h
+    |           |   |   |   |-- ./user/chcore-libc/libchcore/porting/overrides/include/chcore-internal/opentrustee_defs.h
+    |           |   |   |   |-- ./user/chcore-libc/libchcore/porting/overrides/include/chcore-internal/procmgr_defs.h
+    |           |   |   |   |-- ./user/chcore-libc/libchcore/porting/overrides/include/chcore-internal/sd_defs.h
+    |           |   |   |   |-- ./user/chcore-libc/libchcore/porting/overrides/include/chcore-internal/serial_defs.h
+    |           |   |   |   |-- ./user/chcore-libc/libchcore/porting/overrides/include/chcore-internal/shell_defs.h
+    |           |   |   |   |-- ./user/chcore-libc/libchcore/porting/overrides/include/chcore-internal/shmmgr_defs.h
+    |           |   |   |   |-- ./user/chcore-libc/libchcore/porting/overrides/include/chcore-internal/terminal_defs.h
+    |           |   |   |   `-- ./user/chcore-libc/libchcore/porting/overrides/include/chcore-internal/usb_devmgr_defs.h
+    |           |   |   `-- ./user/chcore-libc/libchcore/porting/overrides/include/sys
+    |           |   |       `-- ./user/chcore-libc/libchcore/porting/overrides/include/sys/mman.h
+    |           |   |-- ./user/chcore-libc/libchcore/porting/overrides/ldso
+    |           |   |   `-- ./user/chcore-libc/libchcore/porting/overrides/ldso/dynlink.c
+    |           |   |-- ./user/chcore-libc/libchcore/porting/overrides/src
+    |           |   |   |-- ./user/chcore-libc/libchcore/porting/overrides/src/chcore-port
+    |           |   |   |   |-- ./user/chcore-libc/libchcore/porting/overrides/src/chcore-port/CMakeLists.txt
+    |           |   |   |   |-- ./user/chcore-libc/libchcore/porting/overrides/src/chcore-port/chcore_kill.c
+    |           |   |   |   |-- ./user/chcore-libc/libchcore/porting/overrides/src/chcore-port/chcore_kill.h
+    |           |   |   |   |-- ./user/chcore-libc/libchcore/porting/overrides/src/chcore-port/chcore_mman.h
+    |           |   |   |   |-- ./user/chcore-libc/libchcore/porting/overrides/src/chcore-port/chcore_mmap.c
+    |           |   |   |   |-- ./user/chcore-libc/libchcore/porting/overrides/src/chcore-port/chcore_shm.c
+    |           |   |   |   |-- ./user/chcore-libc/libchcore/porting/overrides/src/chcore-port/chcore_shm.h
+    |           |   |   |   |-- ./user/chcore-libc/libchcore/porting/overrides/src/chcore-port/cpio.c
+    |           |   |   |   |-- ./user/chcore-libc/libchcore/porting/overrides/src/chcore-port/eventfd.c
+    |           |   |   |   |-- ./user/chcore-libc/libchcore/porting/overrides/src/chcore-port/eventfd.h
+    |           |   |   |   |-- ./user/chcore-libc/libchcore/porting/overrides/src/chcore-port/fd.c
+    |           |   |   |   |-- ./user/chcore-libc/libchcore/porting/overrides/src/chcore-port/fd.h
+    |           |   |   |   |-- ./user/chcore-libc/libchcore/porting/overrides/src/chcore-port/file.c
+    |           |   |   |   |-- ./user/chcore-libc/libchcore/porting/overrides/src/chcore-port/file.h
+    |           |   |   |   |-- ./user/chcore-libc/libchcore/porting/overrides/src/chcore-port/fs_client.c
+    |           |   |   |   |-- ./user/chcore-libc/libchcore/porting/overrides/src/chcore-port/fs_client_defs.h
+    |           |   |   |   |-- ./user/chcore-libc/libchcore/porting/overrides/src/chcore-port/futex.h
+    |           |   |   |   |-- ./user/chcore-libc/libchcore/porting/overrides/src/chcore-port/ipc.c
+    |           |   |   |   |-- ./user/chcore-libc/libchcore/porting/overrides/src/chcore-port/liblauncher.c
+    |           |   |   |   |-- ./user/chcore-libc/libchcore/porting/overrides/src/chcore-port/libshell.c
+    |           |   |   |   |-- ./user/chcore-libc/libchcore/porting/overrides/src/chcore-port/memory.c
+    |           |   |   |   |-- ./user/chcore-libc/libchcore/porting/overrides/src/chcore-port/oh_vfs.c
+    |           |   |   |   |-- ./user/chcore-libc/libchcore/porting/overrides/src/chcore-port/ot_syscall.c
+    |           |   |   |   |-- ./user/chcore-libc/libchcore/porting/overrides/src/chcore-port/pipe.c
+    |           |   |   |   |-- ./user/chcore-libc/libchcore/porting/overrides/src/chcore-port/pipe.h
+    |           |   |   |   |-- ./user/chcore-libc/libchcore/porting/overrides/src/chcore-port/poll.c
+    |           |   |   |   |-- ./user/chcore-libc/libchcore/porting/overrides/src/chcore-port/poll.h
+    |           |   |   |   |-- ./user/chcore-libc/libchcore/porting/overrides/src/chcore-port/rbtree.c
+    |           |   |   |   |-- ./user/chcore-libc/libchcore/porting/overrides/src/chcore-port/rbtree_plus.c
+    |           |   |   |   |-- ./user/chcore-libc/libchcore/porting/overrides/src/chcore-port/ring_buffer.c
+    |           |   |   |   |-- ./user/chcore-libc/libchcore/porting/overrides/src/chcore-port/services.c
+    |           |   |   |   |-- ./user/chcore-libc/libchcore/porting/overrides/src/chcore-port/socket.c
+    |           |   |   |   |-- ./user/chcore-libc/libchcore/porting/overrides/src/chcore-port/socket.h
+    |           |   |   |   |-- ./user/chcore-libc/libchcore/porting/overrides/src/chcore-port/stdio.c
+    |           |   |   |   |-- ./user/chcore-libc/libchcore/porting/overrides/src/chcore-port/syscall.c
+    |           |   |   |   |-- ./user/chcore-libc/libchcore/porting/overrides/src/chcore-port/syscall_dispatcher.c
+    |           |   |   |   |-- ./user/chcore-libc/libchcore/porting/overrides/src/chcore-port/timerfd.c
+    |           |   |   |   `-- ./user/chcore-libc/libchcore/porting/overrides/src/chcore-port/timerfd.h
+    |           |   |   |-- ./user/chcore-libc/libchcore/porting/overrides/src/ipc
+    |           |   |   |   |-- ./user/chcore-libc/libchcore/porting/overrides/src/ipc/shmat.c
+    |           |   |   |   |-- ./user/chcore-libc/libchcore/porting/overrides/src/ipc/shmctl.c
+    |           |   |   |   |-- ./user/chcore-libc/libchcore/porting/overrides/src/ipc/shmdt.c
+    |           |   |   |   `-- ./user/chcore-libc/libchcore/porting/overrides/src/ipc/shmget.c
+    |           |   |   |-- ./user/chcore-libc/libchcore/porting/overrides/src/malloc
+    |           |   |   |   `-- ./user/chcore-libc/libchcore/porting/overrides/src/malloc/oldmalloc
+    |           |   |   |       `-- ./user/chcore-libc/libchcore/porting/overrides/src/malloc/oldmalloc/malloc.c
+    |           |   |   |-- ./user/chcore-libc/libchcore/porting/overrides/src/process
+    |           |   |   |   `-- ./user/chcore-libc/libchcore/porting/overrides/src/process/waitpid.c
+    |           |   |   `-- ./user/chcore-libc/libchcore/porting/overrides/src/thread
+    |           |   |       |-- ./user/chcore-libc/libchcore/porting/overrides/src/thread/aarch64
+    |           |   |       |   |-- ./user/chcore-libc/libchcore/porting/overrides/src/thread/aarch64/CMakeLists.txt
+    |           |   |       |   |-- ./user/chcore-libc/libchcore/porting/overrides/src/thread/aarch64/__thread_exit.s
+    |           |   |       |   `-- ./user/chcore-libc/libchcore/porting/overrides/src/thread/aarch64/__unmapself.s
+    |           |   |       |-- ./user/chcore-libc/libchcore/porting/overrides/src/thread/pthread_cancel.c
+    |           |   |       |-- ./user/chcore-libc/libchcore/porting/overrides/src/thread/pthread_create.c
+    |           |   |       |-- ./user/chcore-libc/libchcore/porting/overrides/src/thread/pthread_mutex_lock.c
+    |           |   |       |-- ./user/chcore-libc/libchcore/porting/overrides/src/thread/pthread_mutex_setprioceiling.c
+    |           |   |       |-- ./user/chcore-libc/libchcore/porting/overrides/src/thread/pthread_mutex_timedlock.c
+    |           |   |       `-- ./user/chcore-libc/libchcore/porting/overrides/src/thread/pthread_mutex_unlock.c
+    |           |   `-- ./user/chcore-libc/libchcore/porting/overrides/tools
+    |           |       |-- ./user/chcore-libc/libchcore/porting/overrides/tools/ld.musl-clang.in
+    |           |       `-- ./user/chcore-libc/libchcore/porting/overrides/tools/musl-clang.in
+    |           |-- ./user/chcore-libc/libchcore/porting/patches
+    |           |   |-- ./user/chcore-libc/libchcore/porting/patches/include
+    |           |   |   |-- ./user/chcore-libc/libchcore/porting/patches/include/PTHREAD_MUTEX_INITIALIZER.ceiling
+    |           |   |   |-- ./user/chcore-libc/libchcore/porting/patches/include/alltypes.h.in.sh
+    |           |   |   |-- ./user/chcore-libc/libchcore/porting/patches/include/pthread.h.sh
+    |           |   |   `-- ./user/chcore-libc/libchcore/porting/patches/include/pthread_mutex.ceiling
+    |           |   `-- ./user/chcore-libc/libchcore/porting/patches/src
+    |           |       `-- ./user/chcore-libc/libchcore/porting/patches/src/internal
+    |           |           |-- ./user/chcore-libc/libchcore/porting/patches/src/internal/pthread_impl.h.sh
+    |           |           `-- ./user/chcore-libc/libchcore/porting/patches/src/internal/pthread_t.struct
+    |           `-- ./user/chcore-libc/libchcore/porting/symbols
+    |               |-- ./user/chcore-libc/libchcore/porting/symbols/CMakeLists.txt
+    |               `-- ./user/chcore-libc/libchcore/porting/symbols/src
+    |                   |-- ./user/chcore-libc/libchcore/porting/symbols/src/CMakeLists.txt
+    |                   |-- ./user/chcore-libc/libchcore/porting/symbols/src/process
+    |                   |   |-- ./user/chcore-libc/libchcore/porting/symbols/src/process/CMakeLists.txt
+    |                   |   `-- ./user/chcore-libc/libchcore/porting/symbols/src/process/waitpid.c
+    |                   `-- ./user/chcore-libc/libchcore/porting/symbols/src/thread
+    |                       |-- ./user/chcore-libc/libchcore/porting/symbols/src/thread/CMakeLists.txt
+    |                       |-- ./user/chcore-libc/libchcore/porting/symbols/src/thread/aarch64
+    |                       |   |-- ./user/chcore-libc/libchcore/porting/symbols/src/thread/aarch64/CMakeLists.txt
+    |                       |   `-- ./user/chcore-libc/libchcore/porting/symbols/src/thread/aarch64/__unmapself.s
+    |                       |-- ./user/chcore-libc/libchcore/porting/symbols/src/thread/pthread_cancel.c
+    |                       |-- ./user/chcore-libc/libchcore/porting/symbols/src/thread/riscv64
+    |                       |   |-- ./user/chcore-libc/libchcore/porting/symbols/src/thread/riscv64/CMakeLists.txt
+    |                       |   `-- ./user/chcore-libc/libchcore/porting/symbols/src/thread/riscv64/__unmapself.S
+    |                       `-- ./user/chcore-libc/libchcore/porting/symbols/src/thread/x86_64
+    |                           |-- ./user/chcore-libc/libchcore/porting/symbols/src/thread/x86_64/CMakeLists.txt
+    |                           |-- ./user/chcore-libc/libchcore/porting/symbols/src/thread/x86_64/__set_thread_area.s
+    |                           `-- ./user/chcore-libc/libchcore/porting/symbols/src/thread/x86_64/__unmapself.S
+    |-- ./user/system-services
+    |   |-- ./user/system-services/CMakeLists.txt
+    |   `-- ./user/system-services/system-servers
+    |       |-- ./user/system-services/system-servers/CMakeLists.txt
+    |       |-- ./user/system-services/system-servers/fs_base
+    |       |   |-- ./user/system-services/system-servers/fs_base/CMakeLists.txt
+    |       |   |-- ./user/system-services/system-servers/fs_base/CMakeLists.txt.bak
+    |       |   |-- ./user/system-services/system-servers/fs_base/fs_page_cache.c
+    |       |   |-- ./user/system-services/system-servers/fs_base/fs_page_cache.h
+    |       |   |-- ./user/system-services/system-servers/fs_base/fs_page_fault.c
+    |       |   |-- ./user/system-services/system-servers/fs_base/fs_page_fault.h
+    |       |   |-- ./user/system-services/system-servers/fs_base/fs_vnode.c
+    |       |   |-- ./user/system-services/system-servers/fs_base/fs_vnode.c.obj
+    |       |   |-- ./user/system-services/system-servers/fs_base/fs_vnode.h
+    |       |   |-- ./user/system-services/system-servers/fs_base/fs_wrapper.c
+    |       |   |-- ./user/system-services/system-servers/fs_base/fs_wrapper.c.obj
+    |       |   |-- ./user/system-services/system-servers/fs_base/fs_wrapper_defs.h
+    |       |   |-- ./user/system-services/system-servers/fs_base/fs_wrapper_ops.c
+    |       |   `-- ./user/system-services/system-servers/fs_base/fs_wrapper_ops.c.obj
+    |       |-- ./user/system-services/system-servers/fsm
+    |       |   |-- ./user/system-services/system-servers/fsm/CMakeLists.txt
+    |       |   |-- ./user/system-services/system-servers/fsm/CMakeLists.txt.bak
+    |       |   |-- ./user/system-services/system-servers/fsm/defs.h
+    |       |   |-- ./user/system-services/system-servers/fsm/device.c
+    |       |   |-- ./user/system-services/system-servers/fsm/device.h
+    |       |   |-- ./user/system-services/system-servers/fsm/fsm.c
+    |       |   |-- ./user/system-services/system-servers/fsm/fsm.c.obj
+    |       |   |-- ./user/system-services/system-servers/fsm/fsm.h
+    |       |   |-- ./user/system-services/system-servers/fsm/fsm_client_cap.c
+    |       |   |-- ./user/system-services/system-servers/fsm/fsm_client_cap.c.obj
+    |       |   |-- ./user/system-services/system-servers/fsm/fsm_client_cap.h
+    |       |   |-- ./user/system-services/system-servers/fsm/libs
+    |       |   |   `-- ./user/system-services/system-servers/fsm/libs/libyaml.a
+    |       |   |-- ./user/system-services/system-servers/fsm/mount_disk_fs.c
+    |       |   |-- ./user/system-services/system-servers/fsm/mount_disk_fs.h
+    |       |   |-- ./user/system-services/system-servers/fsm/mount_info.c
+    |       |   |-- ./user/system-services/system-servers/fsm/mount_info.h
+    |       |   `-- ./user/system-services/system-servers/fsm/yaml.h
+    |       |-- ./user/system-services/system-servers/procmgr
+    |       |   |-- ./user/system-services/system-servers/procmgr/CMakeLists.txt
+    |       |   |-- ./user/system-services/system-servers/procmgr/Makefile
+    |       |   |-- ./user/system-services/system-servers/procmgr/incbin_basic_srv.tpl.S
+    |       |   |-- ./user/system-services/system-servers/procmgr/include
+    |       |   |   |-- ./user/system-services/system-servers/procmgr/include/cyaml
+    |       |   |   |   |-- ./user/system-services/system-servers/procmgr/include/cyaml/cyaml.h
+    |       |   |   |   `-- ./user/system-services/system-servers/procmgr/include/cyaml/private.h
+    |       |   |   |-- ./user/system-services/system-servers/procmgr/include/libchcoreelf.h
+    |       |   |   |-- ./user/system-services/system-servers/procmgr/include/liblaunch.h
+    |       |   |   |-- ./user/system-services/system-servers/procmgr/include/librefcnt.h
+    |       |   |   |-- ./user/system-services/system-servers/procmgr/include/loader.h
+    |       |   |   |-- ./user/system-services/system-servers/procmgr/include/oh_mem_ops.h
+    |       |   |   |-- ./user/system-services/system-servers/procmgr/include/proc_node.h
+    |       |   |   |-- ./user/system-services/system-servers/procmgr/include/procmgr_dbg.h
+    |       |   |   |-- ./user/system-services/system-servers/procmgr/include/readyaml_conf.h
+    |       |   |   |-- ./user/system-services/system-servers/procmgr/include/shell_msg_handler.h
+    |       |   |   |-- ./user/system-services/system-servers/procmgr/include/srvmgr.h
+    |       |   |   `-- ./user/system-services/system-servers/procmgr/include/uthash.h
+    |       |   |-- ./user/system-services/system-servers/procmgr/libs
+    |       |   |   |-- ./user/system-services/system-servers/procmgr/libs/CMakeLists.txt
+    |       |   |   |-- ./user/system-services/system-servers/procmgr/libs/libchcoreelf
+    |       |   |   |   |-- ./user/system-services/system-servers/procmgr/libs/libchcoreelf/CMakeLists.txt
+    |       |   |   |   `-- ./user/system-services/system-servers/procmgr/libs/libchcoreelf/libchcoreelf.c
+    |       |   |   |-- ./user/system-services/system-servers/procmgr/libs/libcyaml.a
+    |       |   |   |-- ./user/system-services/system-servers/procmgr/libs/liblaunch
+    |       |   |   |   |-- ./user/system-services/system-servers/procmgr/libs/liblaunch/CMakeLists.txt
+    |       |   |   |   `-- ./user/system-services/system-servers/procmgr/libs/liblaunch/liblaunch.c
+    |       |   |   |-- ./user/system-services/system-servers/procmgr/libs/librefcnt
+    |       |   |   |   |-- ./user/system-services/system-servers/procmgr/libs/librefcnt/CMakeLists.txt
+    |       |   |   |   `-- ./user/system-services/system-servers/procmgr/libs/librefcnt/librefcnt.c
+    |       |   |   `-- ./user/system-services/system-servers/procmgr/libs/libyaml.a
+    |       |   |-- ./user/system-services/system-servers/procmgr/linker.ld
+    |       |   |-- ./user/system-services/system-servers/procmgr/loader.c
+    |       |   |-- ./user/system-services/system-servers/procmgr/oh_mem_ops.c
+    |       |   |-- ./user/system-services/system-servers/procmgr/proc_node.c
+    |       |   |-- ./user/system-services/system-servers/procmgr/procmgr.c
+    |       |   |-- ./user/system-services/system-servers/procmgr/recycle.c
+    |       |   |-- ./user/system-services/system-servers/procmgr/shell_msg_handler.c
+    |       |   |-- ./user/system-services/system-servers/procmgr/srvmgr.c
+    |       |   |-- ./user/system-services/system-servers/procmgr/srvmgr_config_generator
+    |       |   |   |-- ./user/system-services/system-servers/procmgr/srvmgr_config_generator/generate_config.py
+    |       |   |   `-- ./user/system-services/system-servers/procmgr/srvmgr_config_generator/template.yaml
+    |       |   `-- ./user/system-services/system-servers/procmgr/start_daemon_service.c
+    |       `-- ./user/system-services/system-servers/tmpfs
+    |           |-- ./user/system-services/system-servers/tmpfs/CMakeLists.txt
+    |           |-- ./user/system-services/system-servers/tmpfs/cpio.c
+    |           |-- ./user/system-services/system-servers/tmpfs/cpio.h
+    |           |-- ./user/system-services/system-servers/tmpfs/defs.h
+    |           |-- ./user/system-services/system-servers/tmpfs/incbin_ramdisk.tpl.S
+    |           |-- ./user/system-services/system-servers/tmpfs/internal_ops.c
+    |           |-- ./user/system-services/system-servers/tmpfs/main.c
+    |           |-- ./user/system-services/system-servers/tmpfs/mem_usage_tool.c
+    |           |-- ./user/system-services/system-servers/tmpfs/namei.c
+    |           |-- ./user/system-services/system-servers/tmpfs/namei.h
+    |           |-- ./user/system-services/system-servers/tmpfs/tests
+    |           |   |-- ./user/system-services/system-servers/tmpfs/tests/CMakeLists.txt
+    |           |   |-- ./user/system-services/system-servers/tmpfs/tests/include
+    |           |   |   |-- ./user/system-services/system-servers/tmpfs/tests/include/chcore -> ../../../../chcore-libc/libchcore/porting/overrides/include/chcore
+    |           |   |   |-- ./user/system-services/system-servers/tmpfs/tests/include/minunit.h
+    |           |   |   `-- ./user/system-services/system-servers/tmpfs/tests/include/tmpfs_test.h
+    |           |   `-- ./user/system-services/system-servers/tmpfs/tests/tmpfs
+    |           |       |-- ./user/system-services/system-servers/tmpfs/tests/tmpfs/CMakeLists.txt
+    |           |       |-- ./user/system-services/system-servers/tmpfs/tests/tmpfs/internal_ops_tests.c
+    |           |       `-- ./user/system-services/system-servers/tmpfs/tests/tmpfs/namei_tests.c
+    |           `-- ./user/system-services/system-servers/tmpfs/tmpfs.c
+    `-- ./user/tests
+        |-- ./user/tests/CMakeLists.txt
+        `-- ./user/tests/fs_tests
+            |-- ./user/tests/fs_tests/CMakeLists.txt
+            |-- ./user/tests/fs_tests/fs_test_full.c
+            |-- ./user/tests/fs_tests/fs_test_mmap.c
+            `-- ./user/tests/fs_tests/fs_tools
+                |-- ./user/tests/fs_tests/fs_tools/fs_test.h
+                |-- ./user/tests/fs_tests/fs_tools/fs_test_helper.c
+                |-- ./user/tests/fs_tests/fs_tools/fs_test_lib.c
+                |-- ./user/tests/fs_tests/fs_tools/fs_test_lib.h
+                |-- ./user/tests/fs_tests/fs_tools/fstest.h
+                |-- ./user/tests/fs_tests/fs_tools/fstest_utils.c
+                |-- ./user/tests/fs_tests/fs_tools/fstest_utils.h
+                |-- ./user/tests/fs_tests/fs_tools/tst_content.c
+                |-- ./user/tests/fs_tests/fs_tools/tst_dup.c
+                |-- ./user/tests/fs_tests/fs_tools/tst_lseek.c
+                |-- ./user/tests/fs_tests/fs_tools/tst_mmap.c
+                `-- ./user/tests/fs_tests/fs_tools/tst_open.c
+
+115 directories, 529 files
