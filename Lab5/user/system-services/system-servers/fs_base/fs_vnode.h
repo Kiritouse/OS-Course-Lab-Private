@@ -34,16 +34,15 @@ enum fs_vnode_type { FS_NODE_RESERVED = 0, FS_NODE_REG, FS_NODE_DIR };
 #define PC_HASH_SIZE 512
 struct fs_vnode {
         ino_t vnode_id; /* identifier */
-        struct rb_node node; /* rbtree node */
+        struct rb_node node; /* rbtree node */ /*红黑树钩子节点*/
 
-        enum fs_vnode_type type; /* regular or directory */
-        int refcnt; /* reference count */
-        off_t size; /* file size or directory entry number */
-        struct page_cache_entity_of_inode *page_cache;
-        cap_t pmo_cap; /* fmap fault is handled by this */
-        void *private;
-
-        pthread_rwlock_t rwlock; /* vnode rwlock */
+        enum fs_vnode_type type; /* regular or directory */ /*常规或者文件夹*/
+        int refcnt; /* reference count */ /*引用计数*/
+        off_t size; /* file size or directory entry number */ /*文件大小或者目录项数量*/
+        struct page_cache_entity_of_inode *page_cache; /* 内存中的page_cache*/
+        cap_t pmo_cap; /* fmap fault is handled by this */ /*根据这个的值来决定是否进行缺页异常处理*/
+        void *private;/*表示文件系统特定的私有数据，例如对 inode 的引用，这里指向的实际的数据*/
+        pthread_rwlock_t rwlock; /* vnode rwlock */ /*vnode读写锁*/
 };
 
 /*
@@ -81,6 +80,7 @@ extern void assign_entry(struct server_entry *e, u64 f, off_t o, int t, void *p,
  * key: ino_t vnode_id
  * value: struct fs_vnode *vnode
  */
+/*vnode红黑树节点池*/
 extern struct rb_root *fs_vnode_list;
 
 extern void fs_vnode_init(void);
