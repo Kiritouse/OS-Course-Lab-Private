@@ -149,11 +149,6 @@ int usys_register_server(unsigned long callback,
 
 cap_t usys_register_client(cap_t server_cap, unsigned long vm_config_ptr)
 {
-        /*隐式系统调用函数，实际上是调用sys_register_client函数*/
-        //这种时候需要我们去内核态代码中去找sys_register_client函数的实现
-        //其本质就是把参数传递给几个寄存器，然后触发软中断进入内核态
-        //内核态的sys_register_client函数会读取这些寄存器的值作为参数来使用
-        //sys_register_client函数的实现见Lab4/kernel/ipc/connection.c
         return chcore_syscall2(
                 CHCORE_SYS_register_client, server_cap, vm_config_ptr);
 }
@@ -270,6 +265,19 @@ int usys_user_fault_map(badge_t client_badge, vaddr_t fault_va,
                                remap_va,
                                copy,
                                perm);
+}
+
+int usys_user_fault_map_batched(badge_t client_badge, vaddr_t fault_va,
+                        vaddr_t remap_va, bool copy, vmr_prop_t perm, bool completed, vaddr_t orig_fault_va)
+{
+        return chcore_syscall7(CHCORE_SYS_user_fault_map_batched,
+                               client_badge,
+                               fault_va,
+                               remap_va,
+                               copy,
+                               perm,
+                               completed,
+                               orig_fault_va);
 }
 
 int usys_map_pmo_with_length(cap_t pmo_cap, vaddr_t addr, unsigned long perm,

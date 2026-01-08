@@ -26,7 +26,26 @@ int fsm_set_client_cap(badge_t client_badge, cap_t cap)
          * should allocate the node if it's not present or get the
          * fs_client_cap_node. Iterate through the cap_table and place the cap
          * in an empty slot of the cap_table and returns its ordinal.*/
-        return 0;
+        struct fsm_client_cap_node * node = NULL;
+        for_each_in_list(node, struct fsm_client_cap_node, node, &fsm_client_cap_table)
+        {
+                if(node -> client_badge == client_badge)
+                {
+                        node->cap_table[node->cap_num] = cap;
+                        node -> cap_num ++;
+                        return node -> cap_num - 1;
+                }
+        }
+        // 接后半部分
+        // 续前半部分
+        node = (struct fsm_client_cap_node *) malloc (sizeof(struct fsm_client_cap_node)); // 首先创建挂载文件系统对应节点。
+        if(!node) return -1;    // means no memory.
+        node -> client_badge = client_badge;    // 给该节点填充badge表明对象。
+        memset(node -> cap_table, 0, sizeof(node -> cap_table));        // 初始化
+        node -> cap_table[0] = cap;        // 新的能力组的新的能力！
+        node -> cap_num = 1;
+        list_append(&node -> node, &fsm_client_cap_table); // 不要忘记讲节点加入到虚拟文件系统的能力组表中！
+        return 0;   // 第一个（0）节点。
         /* Lab 5 TODO End (Part 1) */
 }
 
@@ -36,6 +55,16 @@ int fsm_get_client_cap(badge_t client_badge, cap_t cap)
         /* Lab 5 TODO Begin (Part 1) */
         /* HINT: Perform the same behavior as fsm_set_client_cap and gets the
          * cap from the cap_table if it exists. */
+        struct fsm_client_cap_node * node = NULL;
+        for_each_in_list(node, struct fsm_client_cap_node, node, &fsm_client_cap_table)
+        {
+                if(node -> client_badge == client_badge)
+                {
+                        for (int i = 0; i < node->cap_num; i++)
+                                if (node->cap_table[i] == cap)
+                                        return i;
+                }
+        }
         return -1;
         /* Lab 5 TODO End (Part 1) */
 }
