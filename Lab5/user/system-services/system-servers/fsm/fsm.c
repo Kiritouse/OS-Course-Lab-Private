@@ -140,6 +140,7 @@ int fsm_mount_fs(const char *path, const char *mount_point)
                         goto out;
                 }
                 pthread_rwlock_wrlock(&mount_point_infos_rwlock);
+                //根据传入的挂载点，获取对应的挂载信息节点，这样就能获取到底是哪个文件系统服务器
                 mp_node = set_mount_point(
                         mount_point, strlen(mount_point), fs_cap);
         }
@@ -147,15 +148,14 @@ int fsm_mount_fs(const char *path, const char *mount_point)
         /* Lab 5 TODO Begin (Part 1) */
         /* HINT: fsm has the ability to request page_cache syncing and mount and
          * unmount request to the corresponding filesystem. Register an ipc client for each node*/
-        
         /* mp_node->_fs_ipc_struct = ipc_register_client(...) */
-
+        mp_node -> _fs_ipc_struct = ipc_register_client(mp_node -> fs_cap);
+        strlcpy(mp_node->path, mount_point, sizeof(mp_node->path));
         /* Increment the fs_num */
-
+        fs_num++;
         /* Set the correct return value */
-
-        UNUSED(mp_node);
-
+        ret = 0;
+        // UNUSED(mp_node);
         pthread_rwlock_unlock(&mount_point_infos_rwlock);
         /* Lab 5 TODO End (Part 1) */
 
@@ -248,7 +248,7 @@ DEFINE_SERVER_HANDLER(fsm_dispatch)
         switch (fsm_req->req) {
         case FSM_REQ_PARSE_PATH: {
                 /* Lab 5 TODO Begin (Part 1) */
-
+ 
                 /* HINT: MountInfo is the info node that records each mount
                  * point and actual path*/
                 /* It also contains a ipc_client that delegates the actual
@@ -260,32 +260,49 @@ DEFINE_SERVER_HANDLER(fsm_dispatch)
                  * mount_info(/mnt/1/123) node that represents /dev/sda2.*/
                 /* You should use get_mount_info to get the mount_info and set
                  * the fsm_req ipc_msg with mount_id*/
-
+                
                 /* lock the mount_info with rdlock */
-
+                pthread_rwlock_rdlock(&mount_point_infos_rwlock);
                 /* mpinfo = get_mount_point(..., ...) */
-
+                // printf("[INFO_H] fsm_req -> path: %s, length: %ld\n", fsm_req -> path, strlen(fsm_req -> path));
+                mpinfo = get_mount_point(fsm_req -> path, strlen(fsm_req -> path));
+                // printf("[INFO_H] mpinfo -> path: %s, length: %ld\n", mpinfo -> path, strlen(mpinfo -> path));
                 /* lock the client_cap_table with mutex */
-
+                pthread_mutex_lock(&fsm_client_cap_table_lock);
                 /* mount_id = fsm_get_client_cap(...) */
-
+                // printf("[INFO_H] get with cap: %d, conn_cap: %d\n", mpinfo -> fs_cap, mpinfo -> _fs_ipc_struct -> conn_cap);
+                /*传入客户的badge，一个badge等价于一个cap_group，然后通过遍历client cap_group中找到group中的group[i]==fs_cap，即指向文件系统对象的index*/
+                /*所谓的mount_id就是client的cap_group中的指向文件系统的index*/
+                mount_id = fsm_get_client_cap(client_badge, mpinfo -> fs_cap);
+                // printf("[INFO_H] get mount_id: %d\n", mount_id);
                 /* if mount_id is not present, we first register the cap set the
                  * cap and get mount_id */
-
+                if(mount_id == -1) //发现没有对应的cap组，需要新建一个cap组
+                {
+                        // printf("[INFO_H] set with cap: %d", mpinfo -> fs_cap);
+                        mount_id = fsm_set_client_cap(client_badge, mpinfo -> fs_cap);
+                        // printf("[INFO_H] set mount_id: %d\n", mount_id);
+                        ret_with_cap = true;    // 需要返回新的能力组。
+                        ipc_set_msg_return_cap_num(ipc_msg, 1);
+                        ipc_set_msg_cap(ipc_msg, 0, mpinfo->fs_cap);
+                }
                 /* set the mount_id, mount_path, mount_path_len in the fsm_req
                  */
-
+                fsm_req -> mount_id = mount_id;
+                fsm_req -> mount_path_len = mpinfo -> path_len;
+                strcpy(fsm_req -> mount_path, mpinfo -> path);
                 /* Specifically if we register a new fs_cap in the cap_table, we
                  * should let the caller know with a fsm_req->new_cap_flag and
                  * then return fs_cap (noted above from mount_id) to the
                  * caller*/
-
+                fsm_req -> new_cap_flag = ret_with_cap;
                 /* Before returning to the caller , unlock the client_cap_table
                  * and mount_info_table */
-
-                UNUSED(mpinfo);
-
-                UNUSED(mount_id);
+                pthread_mutex_unlock(&fsm_client_cap_table_lock);
+                pthread_rwlock_unlock(&mount_point_infos_rwlock);
+                // UNUSED(mpinfo);
+ 
+                // UNUSED(mount_id);
                 /* Lab 5 TODO End (Part 1) */
                 break;
         }

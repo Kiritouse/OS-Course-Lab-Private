@@ -892,6 +892,13 @@ int chcore_fdatasync(int fd)
 }
 
 /* When open we need to alloco fd number first and call to fs server */
+
+/// @brief 打开一个系统路径下的文件，并返回其一个文件描述符号
+/// @param dirfd 如果 pathname 是绝对路径，则忽略该参数,反之表示相对路径相对于哪儿解析。AT_FDCWD 表示当前工作目录，AT_FDROOT 表示根目录
+/// @param pathname 要打开的文件路径，可以是相对路径也可以是绝对路径
+/// @param flags 语义同 open(2) 的 flags 参数，比如 O_CREAT, O_RDONLY 等
+/// @param mode 权限位，表示新建文件的权限
+/// @return 返回文件描述符，失败返回负数错误码
 int chcore_openat(int dirfd, const char *pathname, int flags, mode_t mode)
 {
         struct fd_record_extension *fd_ext;
@@ -908,21 +915,27 @@ int chcore_openat(int dirfd, const char *pathname, int flags, mode_t mode)
          * Allocate a fd number first,
          * The fd will be send to fs_server to construct fd->fid mapping
          */
+        // 分配一个文件描述符号，失败则返回错误码，文件描述符号将会被送往文件系统服务器去构建 fd->fid 映射
         if ((fd = alloc_fd()) < 0)
                 return fd;
 
         /* Prepare full_path for IPC arguments, don't forget free(full_path) */
+        /*将相对路径解析为绝对路径*/
         ret = generate_full_path(dirfd, pathname, &full_path);
         if (ret)
                 return ret;
 
         /* Send IPC to FSM and parse full_path */
+        /**/
+        /*第一次进行ipc通信，从我们的虚拟路径获取真实的路径和挂载id*/
+         /*比如tmps文件系统挂载到tmp,full_path = /tmp/a.txt */
+        /*那么此时server_path = /a.txt，即我们可以忽略文件系统服务器的前缀，由mount_id来担任识别前缀*/ 
         if (parse_full_path(full_path, &mount_id, server_path) != 0) {
                 free(full_path);
                 return -EINVAL;
         }
-
         /* Send IPC to fs_server */
+        /*利用mount_id打开对应的文件系统服务器，获取ipc通信句柄*/
         mounted_fs_ipc_struct = get_ipc_struct_by_mount_id(mount_id);
         // Fill fd record with IPC information */
         fd_ext = (struct fd_record_extension *)fd_dic[fd]->private_data;
@@ -932,12 +945,14 @@ int chcore_openat(int dirfd, const char *pathname, int flags, mode_t mode)
                 free(full_path);
                 return -EBADF;
         }
+        /*下面的操作均为填充ipc信息*/
         ipc_msg = ipc_create_msg(mounted_fs_ipc_struct,
                                  sizeof(struct fs_request));
         fr_ptr = (struct fs_request *)ipc_get_msg_data(ipc_msg);
 
-        fr_ptr->req = FS_REQ_OPEN;
-        fr_ptr->open.new_fd = fd;
+        fr_ptr->req = FS_REQ_OPEN;//这是一条打开文件的请求
+        fr_ptr->open.new_fd = fd;//告诉文件系统服务器，我们希望打开的文件描述符号是fd
+        //填充要打开的文件路径
         if (pathcpy(fr_ptr->open.pathname,
                     FS_REQ_PATH_BUF_LEN,
                     server_path,
@@ -947,9 +962,11 @@ int chcore_openat(int dirfd, const char *pathname, int flags, mode_t mode)
                 free(full_path);
                 return -EBADF;
         }
+        //填充打开文件的标志位和权限位
         fr_ptr->open.flags = flags;
         fr_ptr->open.mode = mode;
-
+        /*上面的操作均为填充ipc信息*/
+        //利用ipc句柄发送ipc请求
         ret = ipc_call(mounted_fs_ipc_struct, ipc_msg);
 
         if (ret >= 0) {
