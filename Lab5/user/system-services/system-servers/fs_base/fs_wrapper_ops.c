@@ -14,6 +14,7 @@
 #include "fcntl.h"
 #include "sys/stat.h"
 #include <errno.h>
+#include <fcntl.h>
 #include <pthread.h>
 #include <chcore/bug.h>
 #include <chcore/type.h>
@@ -119,23 +120,73 @@ int fs_wrapper_open(badge_t client_badge, ipc_msg_t *ipc_msg,
                     struct fs_request *fr)
 {
         /* Lab 5 TODO Begin (Part 4)*/
+        /*获取fr中的信息，保存在变量中*/
+        int new_fd = fr->open.new_fd;
+        char *path = fr->open.pathname;
+        int flags = fr->open.flags;
+        mode_t mode = fr->open.mode;
         /* Check the fr permission and open flag if necessary */
-
+        //根据open文档要求检查是否创造已经存在的文件
+        if((flags&O_CREAT)&&(flags&O_EXCL)){
+            struct stat status;
+            if(server_ops.fstatat(path,&status,AT_SYMLINK_NOFOLLOW)==0){
+                //文件已经存在，返回错误码EEXIST
+                return -EEXIST;
+            }
+        }
+        //检查文件类型
+        if((
+                flags&
+                (O_WRONLY|O_RDWR) )
+        &&S_ISDIR(mode)){
+            //试图以写入方式打开目录，返回错误码EISDIR
+            return -EISDIR;
+        }
+        if((flags&O_DIRECTORY)&&!S_ISDIR(mode)){
+            //试图以目录方式打开非目录文件，返回错误码ENOTDIR
+            return -ENOTDIR;
+        }
         /* Use server_ops to open the file */
-
+        ino_t vnode_id;
+        off_t vnode_size;
+        int vnode_type;
+        void *private;
+        //调用vfs的open操作打开文件
+        int ret=server_ops.open(path,flags,mode,&vnode_id,&vnode_size,&vnode_type,&private);
+        if(ret!=0){
+            return -EINVAL;//打开文件失败，返回错误码,参数错误
+        }
         /* Check if the vnode_id is in rb tree.*/
-
+        struct fs_vnode* vnode =get_fs_vnode_by_id(vnode_id);
+        
+       
         /* If not, create a new vnode and insert it into the tree. */
-
+        if(vnode==NULL){
+                //说明这个文件之前没有被打开过，需要创建一个新的vnode并插入
+                vnode = alloc_fs_vnode(vnode_id,vnode_type,vnode_size,private);
+                push_fs_vnode(vnode);//把vnode加入红黑树
+        }
         /* If yes, then close the newly opened vnode and increment the refcnt of
          * present vnode */
-
+        else{//说明已经有人打开过这个文件了，那么我们就需要关闭
+                inc_ref_fs_vnode(vnode);//增加引用计数
+                server_ops.close(private,(vnode_type==FS_NODE_DIR),true);//关闭新打开的vnode
+        }
         /* Alloc a server_entry and assign the vnode and client generated
          * fd(fr->xxx) to it (Part3 Server fid)*/
-
+        int entry_index= alloc_entry();
+        fr->open.fid=entry_index;//把文件表项的index返回给客户端
+        off_t offset = 0;
+        //offset 文件游标设定
+        if((flags&O_APPEND)&&S_ISREG(mode)){
+            offset=vnode_size;//如果是以追加方式打开的文件，文件游标设定在文件末尾
+        }
+        //将下标指派给vnode并设定，这里需要创建新的字符串防止引用相同的字符串对象
+        assign_entry(server_entrys[entry_index],flags,offset,1,(void*)strdup(path),vnode);
+        //设定server_entry,建立映射
+        fs_wrapper_set_server_entry(client_badge,new_fd,entry_index);
         /* Return the client fd */
-
-        return 0;
+        return new_fd;
         /* Lab 5 TODO End (Part 4)*/
 }
 
@@ -143,14 +194,24 @@ int fs_wrapper_close(badge_t client_badge, ipc_msg_t *ipc_msg,
                      struct fs_request *fr)
 {
         /* Lab 5 TODO Begin (Part 4)*/
-
+        int fd = fr->close.fd;
         /* Find the server_entry by client fd and client badge */
-
+        //根据ipc信息中的客户传过来的文件描述符(index)，获取server_entry中表项指针
+        struct server_entry * entry = server_entrys[fd];
+        if(!entry){
+            return -EBADF;//没有找到对应的表项，返回错误码
+        }
+        pthread_mutex_lock(&entry->lock);//加锁
         /* Decrement the server_entry refcnt */
-
+        entry->refcnt--;
         /* If refcnt is 0, free the server_entry and decrement the vnode
          * refcnt*/
-
+        if(entry->refcnt==0){
+             dec_ref_fs_vnode((void*)entry->vnode);
+             fs_wrapper_clear_server_entry(client_badge, fr->close.fd);
+             free_entry(fr->close.fd);
+        }
+        pthread_mutex_unlock(&entry->lock);//解锁
         return 0;
         /* Lab 5 TODO End (Part 4)*/
 }
@@ -166,11 +227,27 @@ static int __fs_wrapper_read_core(struct server_entry *server_entry, void *buf,
                                   size_t size, off_t offset)
 {
         /* Lab 5 TODO Begin (Part 4)*/
+        if(server_entry->flags&O_WRONLY){
+            return -EBADF;//文件不可读，返回错误码
+        }
+        struct fs_vnode*vnode=server_entry->vnode;
         /* Use server_ops to read the file into buf. */
+        ssize_t off = server_ops.read(vnode->private,offset,size,buf);
         /* Do check the boundary of the file and file permission correctly Check
          * Posix Standard for further references. */
+        if(off<0){
+            return -EBADF;//读取文件失败，返回错误码
+        }
+        if(off==0){
+            return 0;//读到文件末尾，返回0
+        }
+        if(off>size){
+            return -EFBIG;//读取文件过大，返回错误码
+        }
         /* You also should update the offset of the server_entry offset */
-        return 0;
+        /*注：这里注释似乎有点问题，我们是不需要的，因为是调用fs_wrapper_read_core，即在外层我们才需要*/
+        //返回读取的偏移，也就是字节数
+        return off;
         /* Lab 5 TODO End (Part 4)*/
 }
 
@@ -249,11 +326,26 @@ static int __fs_wrapper_write_core(struct server_entry *server_entry, void *buf,
                                    size_t size, off_t offset)
 {
         /* Lab 5 TODO Begin (Part 4)*/
+        if((server_entry->flags&O_RDONLY)){
+            return -EBADF;//文件不可写，返回错误码
+        }
+        struct fs_vnode*vnode=server_entry->vnode;
         /* Use server_ops to write the file from buf. */
+        ssize_t off = server_ops.write(vnode->private,offset,size,buf);
         /* Do check the boundary of the file and file permission correctly Check
          * Posix Standard for further references. */
+        if(off<0){
+            return -EBADF;//写入文件失败，返回错误码
+        }
+        if(off==0){
+            return -ENOSPC;//没有空间写入，返回错误码
+        }
+        if(off>size){
+            return -EFBIG;//写入文件过大，返回错误码
+        }
         /* You also should update the offset of the server_entry offset */
-        return 0;
+        //返回写后的偏移指针
+        return off;
         /* Lab 5 TODO End (Part 4)*/
 }
 
@@ -370,6 +462,32 @@ int fs_wrapper_lseek(ipc_msg_t *ipc_msg, struct fs_request *fr)
 {
         /* Lab 5 TODO Begin (Part 4)*/
         /* Check the posix standard. Adjust the server_entry content.*/
+        off_t offset=fr->lseek.offset;
+        int whence=fr->lseek.whence;
+        int fd=fr->lseek.fd;
+        switch(whence){
+            case SEEK_SET:
+                if(offset<0){
+                    return -EINVAL;//偏移量不能为负，返回错误码
+                }
+                server_entrys[fd]->offset=offset;
+                break;
+            case SEEK_CUR:
+                if(server_entrys[fd]->offset+offset<0){
+                    return -EINVAL;//偏移量不能为负，返回错误码
+                }
+                server_entrys[fd]->offset+=offset;
+                break;
+            case SEEK_END:
+                if(server_entrys[fd]->vnode->size+offset<0){
+                    return -EINVAL;//偏移量不能为负，返回错误码
+                }
+                server_entrys[fd]->offset=server_entrys[fd]->vnode->size+offset;
+                break;
+            default:
+                return -EINVAL;//whence参数错误，返回错误码
+        }
+        fr->lseek.ret = server_entrys[fd]->offset;
         return 0;
         /* Lab 5 TODO End (Part 4)*/
 }

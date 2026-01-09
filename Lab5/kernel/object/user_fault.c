@@ -251,6 +251,15 @@ int sys_user_fault_map(badge_t client_badge, vaddr_t fault_va, vaddr_t remap_va,
 }
 
 /* Only for Lab7. Enqueue pending thread only if completed=true */
+//实现预取多个page，最后一个page_fault时才唤醒线程
+/*
+1. handle_user_fault(页面0) → 线程阻塞，发通知给FS
+2. FS分析访问模式，决定预取页面1,2,3  
+3. FS调用: batched(页面0, completed=false) → 映射页面0，线程继续阻塞
+4. FS调用: batched(页面1, completed=false) → 映射页面1，线程继续阻塞
+5. FS调用: batched(页面2, completed=false) → 映射页面2，线程继续阻塞  
+6. FS调用: batched(页面3, completed=true)  → 映射页面3，唤醒线程
+*/
 int sys_user_fault_map_batched(badge_t client_badge, vaddr_t fault_va, vaddr_t remap_va,
         bool copy, unsigned long perm, bool completed, vaddr_t orig_fault_va)
 {
@@ -275,18 +284,19 @@ int sys_user_fault_map_batched(badge_t client_badge, vaddr_t fault_va, vaddr_t r
         if (!current_pool) {
                 return -EINVAL;
         }
-
+        
+        /*这里是向下取地址到页基地址*/
         fault_va = ROUND_DOWN(fault_va, PAGE_SIZE);
         remap_va = ROUND_DOWN(remap_va, PAGE_SIZE);
-
+        /*查找*/
         /* Find corresponding pending thread */
-        lock(&current_pool->lock);
-        pending_thread = get_current_pending_thread(client_badge, orig_fault_va);
+        lock(&current_pool->lock);//先对因为page_fault而阻塞的线程列表加锁
+        pending_thread = get_current_pending_thread(client_badge, orig_fault_va);//获取对应的阻塞线程
         if (!pending_thread) {
                 unlock(&current_pool->lock);
                 return -EINVAL;
         }
-        if (completed)
+        if (completed)//如果是最后一个page_fault,那么就把这个阻塞线程从列表中删除
                 list_del(&pending_thread->node);
         unlock(&current_pool->lock);
 
@@ -295,6 +305,7 @@ int sys_user_fault_map_batched(badge_t client_badge, vaddr_t fault_va, vaddr_t r
                 kfree(pending_thread);
 
         /* Get handler space va, which page will be mapped in fault va */
+        //获取处理fault_va的线程所在的vmspace
         if (remap_va) {
                 handler_vmspace = obj_get(
                         current_cap_group, VMSPACE_OBJ_ID, TYPE_VMSPACE);
@@ -313,7 +324,7 @@ int sys_user_fault_map_batched(badge_t client_badge, vaddr_t fault_va, vaddr_t r
                 unlock(&handler_vmspace->pgtbl_lock);
                 obj_put(handler_vmspace);
         }
-
+        //决定是否copy还是share物理页
         /* Decide whether copy the physical page or share */
         if (!copy) {
                 if (!remap_va)
@@ -381,6 +392,7 @@ int sys_user_fault_map_batched(badge_t client_badge, vaddr_t fault_va, vaddr_t r
         if (!is_same_llm_page_found) {
                 if (fault_vmr->num_llm_pages == MAX_LLM_PAGE_NUM) {
                         // printk("unmap 0x%lx\n", llm_page->vaddr);
+                        // 达到16页上限，踢出最老的页面（LRU链表头部）
                         llm_page = container_of(fault_vmr->llm_pages.next, struct llm_page, node);
                         rss = 0;
                         ret = unmap_range_in_pgtbl(fault_vmspace->pgtbl, llm_page->vaddr, PAGE_SIZE, &rss);
@@ -423,7 +435,8 @@ void handle_user_fault(struct pmobject *pmo, vaddr_t fault_va)
                fault_pool->cap_group_badge,
                fault_va);
 
-        
+        //用于Lab7的测试，跟踪指定pmo的页面错误次数
+        //主要发送了一次页缺，调用这个函数处理页缺失的时候就会数量++
         /* Lab7 test, track page faults for specified pmo */
         if (pmo->page_faults >= 0) {
                 pmo->page_faults++;

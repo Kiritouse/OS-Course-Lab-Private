@@ -221,6 +221,7 @@ int translate_fd_to_fid(badge_t client_badge, struct fs_request *fr)
         case FS_REQ_FSTAT:
         case FS_REQ_FSTATFS:
         case FS_REQ_STATFS:
+                //调用这个函数将fd转化为fid,即文件表项的index
                 fr->stat.dirfd = fs_wrapper_get_server_entry(client_badge,
                                                              fr->stat.dirfd);
                 fr->stat.fd =
