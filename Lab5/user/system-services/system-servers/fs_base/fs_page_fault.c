@@ -76,8 +76,24 @@ static int predict_prefetch_pages(int fault_page_id,
                                   int prefetch_page_ids[MAX_LLM_PAGE_NUM]) 
 {
 	/* LAB7 TODO BEGIN */
-        prefetch_page_ids[0] = fault_page_id;
-        return 0;
+        /* Simple sequential prefetching strategy starting from fault page */
+        int prefetch_count = 0;
+        
+        /* Start from the fault page and prefetch sequentially */
+        for (int i = 0; i < MAX_LLM_PAGE_NUM && prefetch_count < MAX_LLM_PAGE_NUM; i++) {
+                int page_id = fault_page_id + i;
+                /* Basic sanity check to avoid extremely large page ids */
+                //BUG:这里或许以后可能会有问题，这里我们限制了page_id的最大范围
+                if (page_id >= 0 && page_id < (1 << 20)) { /* Limit to reasonable range */
+                        prefetch_page_ids[prefetch_count] = page_id;
+                        prefetch_count++;
+                } else {
+                        break; /* Stop if page id becomes unreasonable */
+                }
+        }
+        
+        /* Return actual number of pages to prefetch */
+        return prefetch_count > 0 ? prefetch_count : -1;
 	/* LAB7 TODO END */
 }
 
