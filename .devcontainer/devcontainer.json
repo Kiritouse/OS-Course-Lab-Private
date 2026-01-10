@@ -1,19 +1,34 @@
 {
-	"name": "OS-Course-Lab-Dev",
-	"build": { "dockerfile": "Dockerfile" },
-	"remoteUser": "stu",
-	"updateRemoteUserUID": true,
-	"runArgs": ["--hostname", "Chcore"],
-	"customizations": {
-		"vscode": {
-		"extensions": [
-			"ms-vscode.cpptools",
-			"ms-vscode.hexeditor",
-			"llvm-vs-code-extensions.vscode-clangd",
-			"ms-vscode.makefile-tools",
-			"twxs.cmake",
-			"dan-c-underwood.arm"
-		]
-	}
-  }
+    "name": "OS-Course-Lab-ARM",
+    "build": {
+        "dockerfile": "Dockerfile"
+    },
+    // 强制指定容器内的用户
+    "remoteUser": "stu",
+    
+    // 关键改动：手动指定挂载源和目标路径
+    "workspaceMount": "source=${localWorkspaceFolder},target=/workspace/OS-Course-Lab,type=bind",
+    
+    // 关键改动：VS Code 打开后的默认目录
+    "workspaceFolder": "/workspace/OS-Course-Lab",
+
+    "updateRemoteUserUID": true,
+    "runArgs": [
+        "--hostname", "Chcore",
+        "--cap-add=SYS_PTRACE",
+        "--security-opt", "seccomp=unconfined",
+        "--privileged"
+    ],
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "ms-vscode.cpptools",
+                "ms-vscode.hexeditor",
+                "llvm-vs-code-extensions.vscode-clangd",
+                "ms-vscode.makefile-tools",
+                "twxs.cmake",
+                "dan-c-underwood.arm"
+            ]
+        }
+    }
 }
