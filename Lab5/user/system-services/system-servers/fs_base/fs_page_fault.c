@@ -280,6 +280,7 @@ int fs_page_fault_init(void)
         pthread_rwlock_init(&fmap_area_lock, NULL);
 
         /* Create fault handler to do user-level page fault */
+        /*创建页*/
         ret = pthread_create(&fh, NULL, user_fault_handler, NULL);
         if (ret < 0) {
                 free_ringbuffer(fault_msg_buffer);
