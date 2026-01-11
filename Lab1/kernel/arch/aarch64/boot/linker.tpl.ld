@@ -23,13 +23,16 @@ SECTIONS
 {
     DWARF_DEBUG
 
-    . = TEXT_OFFSET;
+    . = TEXT_OFFSET; /*更新第一行代码为0x8000...之类的*/
 
-    img_start = .;
+    img_start = .; /*更新img_start为0x8000...之类的*/
+
+    /*内核初始化部分*/
 
     init : {
         ${init_objects}(.text* .data* .rodata* .bss* .extable*)
     }
+    
 
     . = ALIGN(4K);
     init_end = ABSOLUTE(.);

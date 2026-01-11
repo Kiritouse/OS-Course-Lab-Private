@@ -101,7 +101,7 @@ void init_c(void)
 
 	/* Call Kernel Main. */
 	uart_send_string("[BOOT] Jump to kernel main\r\n");
-	start_kernel(secondary_boot_flag);
+	start_kernel(secondary_boot_flag);//注意这个函数的起始地址已经变成了0xffff_ff00_0000_0000+偏移量
 
 	/* Never reach here */
 }
