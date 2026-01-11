@@ -1,5 +1,5 @@
 set architecture aarch64
 target remote localhost:1234
-layout split
+# layout split  # 注释掉，GDB 13.2 的 TUI 模式有 bug 会崩溃
 
 file ./build/kernel.img
