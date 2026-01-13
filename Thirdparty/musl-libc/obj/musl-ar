@@ -1,2 +1,0 @@
-#!/bin/sh
-exec "${REALAR:-aarch64-linux-gnu-ar}"  "$@"

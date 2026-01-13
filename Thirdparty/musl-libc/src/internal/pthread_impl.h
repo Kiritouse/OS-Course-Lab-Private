@@ -15,7 +15,6 @@
 
 #define pthread __pthread
 
-#include <chcore/ipc.h>
 struct pthread {
 	/* Part 1 -- these fields may be external or
 	 * internal (accessed via asm) ABI. Do not change. */
@@ -60,9 +59,6 @@ struct pthread {
 	char *dlerror_buf;
 	void *stdio_locks;
 
-	ipc_struct_t system_ipc_fsm;
-	ipc_struct_t system_ipc_net;
-	ipc_struct_t system_ipc_procmgr;
 	/* Part 3 -- the positions of these fields relative to
 	 * the end of the structure is external and internal ABI. */
 #ifdef TLS_ABOVE_TP
