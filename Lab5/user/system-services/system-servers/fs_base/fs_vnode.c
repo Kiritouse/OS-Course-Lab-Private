@@ -96,22 +96,20 @@ struct fs_vnode *alloc_fs_vnode(ino_t id, enum fs_vnode_type type, off_t size,
                                 void *private)
 {
         /* Lab 5 TODO Begin (Part 2) */
-        /*接下来我们的任务就是把新建的fs_vnode的每一个字段都初始化一遍*/
-        struct fs_vnode *new_one = (struct fs_vnode*)malloc(sizeof(*new_one));//解引用获取size
-        new_one->vnode_id = id;
-        new_one->type = type;
-        new_one->size = size;
-        new_one->private = private;
-        new_one->refcnt = 1;
-        new_one->pmo_cap = -1;//为-1代表需要进行缺页异常处理，新的节点一定不在内存中，故初始化为1
-        if(using_page_cache){ //外部定义的变量，如果使用了页缓存机制
-                new_one->page_cache = new_page_cache_entity_of_inode(new_one->vnode_id,new_one); //为新创建的节点建立页缓存
-                //注意new_page_cache_entity_of_inode的第二个参数是void* private,我们应该传fs_vnode类型的
-                //因为在fs_wrapper.c文件中的real_file_reader()，我们会将void* private转为struct fs_vnode*类型的
-                //你在下面的inc_ref_fs_vnode也可以看到
-        }
-        pthread_rwlock_init(&new_one->rwlock,NULL);
-        return new_one;
+        struct fs_vnode *ret = (struct fs_vnode *)malloc(sizeof(*ret));
+        if (ret == NULL)
+                return NULL;    // 分配空间不足就返回空。
+
+        ret->vnode_id = id;
+        ret->type = type;
+        ret->size = size;
+        ret->private = private;
+        ret->refcnt = 1;
+        ret->pmo_cap = -1;
+        if (using_page_cache)
+                ret->page_cache = new_page_cache_entity_of_inode(ret->vnode_id, ret);
+        pthread_rwlock_init(&ret->rwlock, NULL);
+        return ret;
         /* Lab 5 TODO End (Part 2) */
 }
 
@@ -134,11 +132,11 @@ struct fs_vnode *get_fs_vnode_by_id(ino_t vnode_id)
 {
         /* Lab 5 TODO Begin (Part 2) */
         /* Use the rb_xxx api */
-        struct rb_node *node = rb_search(fs_vnode_list,&vnode_id,comp_vnode_key);
-        if(node==NULL){
+        struct rb_node *node =
+                rb_search(fs_vnode_list, &vnode_id, comp_vnode_key);
+        if (node == NULL)
                 return NULL;
-        }
-        return rb_entry(node,struct fs_vnode,node);//从钩子移动到整体vnode的开头
+        return rb_entry(node, struct fs_vnode, node);
         /* Lab 5 TODO End (Part 2) */
 }
 
@@ -147,7 +145,7 @@ int inc_ref_fs_vnode(void *private)
 {
         /* Lab 5 TODO Begin (Part 2) */
         /* Private is a fs_vnode */
-        ((struct fs_vnode*)private)->refcnt++;
+        ((struct fs_vnode *)private)->refcnt++;
         return 0;
         /* Lab 5 TODO End (Part 2) */
 }
@@ -156,16 +154,17 @@ int dec_ref_fs_vnode(void *private)
 {
         /* Lab 5 TODO Begin (Part 2) */
         /* Private is a fs_vnode Decrement its refcnt */
-        int ret = 0;
-        struct fs_vnode*vnode = (struct fs_vnode*)private;
-        vnode->refcnt--;
-        if(vnode->refcnt==0){
-                ret = server_ops.close(vnode->private,(vnode->type==FS_NODE_DIR),true);
-                //关闭虚拟节点背后指向的实际的节点资源
-                if(ret)return ret;
-                pop_free_fs_vnode(vnode);
-                //再释放vnode本身
-        }        
+        int ret;
+        struct fs_vnode * node = (struct fs_vnode *)private;
+        node->refcnt--;
+        if (node->refcnt == 0) {
+                ret = server_ops.close(
+                        node->private, (node->type == FS_NODE_DIR), true);
+                if (ret) 
+                        return ret;
+ 
+                pop_free_fs_vnode(node);
+        }
         return 0;
         /* Lab 5 TODO End (Part 2) */
 }

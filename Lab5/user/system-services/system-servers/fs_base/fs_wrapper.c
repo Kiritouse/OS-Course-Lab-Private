@@ -113,24 +113,23 @@ void init_fs_wrapper(void)
 int fs_wrapper_get_server_entry(badge_t client_badge, int fd)
 {
         /* Lab 5 TODO Begin (Part 3)*/
-        //当fd为根目录的时候直接返回根目录的fd
-        struct server_entry_node* n;
-        if(fd==AT_FDROOT) return AT_FDROOT;
-        //fd本质上就是数组的索引号
-        //然后每个客户进程所映射的fd数不能超过最大的服务表项数
-        //因为这个表项fid和fd是一一对应的
-        if(fd<0||fd>=MAX_SERVER_ENTRY_PER_CLIENT){
+        struct server_entry_node *n;
+        if (fd == AT_FDROOT)
+                return AT_FDROOT;
+
+        if (fd < 0 || fd >= MAX_SERVER_ENTRY_PER_CLIENT)
                 return -1;
-        }
+
         pthread_spin_lock(&server_entry_mapping_lock);
-        
-        for_each_in_list(n,struct server_entry_node,node,&server_entry_mapping){
-                if(n->client_badge==client_badge){
+        for_each_in_list (n, struct server_entry_node, node, &server_entry_mapping)
+        {
+                if (n->client_badge == client_badge) 
+                {
                         pthread_spin_unlock(&server_entry_mapping_lock);
                         return n->fd_to_fid[fd];
                 }
         }
-        pthread_spin_unlock(&server_entry_mapping_lock);//解锁这个表项
+        pthread_spin_unlock(&server_entry_mapping_lock);
         return -1;
         /* Lab 5 TODO End (Part 3)*/
 }
@@ -139,31 +138,40 @@ int fs_wrapper_get_server_entry(badge_t client_badge, int fd)
 int fs_wrapper_set_server_entry(badge_t client_badge, int fd, int fid)
 {
         /* Lab 5 TODO Begin (Part 3)*/
-        struct server_entry_node* private_iter;
+                struct server_entry_node *private_iter;
         int ret = 0;
-        if(fd<0||fd>=MAX_SERVER_ENTRY_PER_CLIENT){
-                return -EFAULT;//访问到了错误的地址
-        }
-        pthread_spin_lock(&server_entry_mapping_lock);//对该表项加锁
-        //第一个参数是迭代变量，用于指明实际每次遍历需要的实际的数据结构
-        //第二个参数是要迭代的结构体类型，等于迭代变量的数据结构，用于当我们访问侵入式链表节点时能够正确的转换回整体结构体
-        //第三个参数是链表节点在整体结构体中的成员名字，比如这里server_entry_node结构体中的node成员
-        //第四个参数是要遍历的链表头指针
-        for_each_in_list(private_iter,struct server_entry_node,node,&server_entry_mapping){
-                if(private_iter->client_badge==client_badge){
-                        private_iter->fd_to_fid[fd]=fid;
+ 
+        // 检查我们的fd是否符合标准。
+        if(fd < 0 || fd >= MAX_SERVER_ENTRY_PER_CLIENT)
+                return -EFAULT;
+ 
+        // 寻找。
+        pthread_spin_lock(&server_entry_mapping_lock);
+        for_each_in_list (private_iter,
+                          struct server_entry_node,
+                          node,
+                          &server_entry_mapping) {
+                if (private_iter->client_badge == client_badge) {
+                        private_iter->fd_to_fid[fd] = fid;
                         pthread_spin_unlock(&server_entry_mapping_lock);
                         return ret;
                 }
         }
-        struct server_entry_node* new_node = (struct server_entry_node*)malloc(sizeof(*new_node));
-        new_node->client_badge = client_badge;//必须要初始化才能知道到底是谁在和我们通信
-        for(int i=0;i<MAX_SERVER_ENTRY_PER_CLIENT;i++){
-                new_node->fd_to_fid[i]=-1;//初始化为-1表示没有映射
-        }
-        /*我们的组织方式是用把表项用链表给组织起来，每个entry,即表项node里面都有一个数组，用于存储实际的映射*/
-        new_node->fd_to_fid[fd]=fid;//设置映射
-        list_append(&new_node->node,&server_entry_mapping);//加入链表
+                // 新的节点。
+        struct server_entry_node *n = (struct server_entry_node *)malloc(sizeof(*n));
+        n->client_badge = client_badge;
+ 
+        // 初始化所有映射。
+        for (int i = 0; i < MAX_SERVER_ENTRY_PER_CLIENT; i++)
+                n->fd_to_fid[i] = -1;
+ 
+        // 添加映射。
+        n->fd_to_fid[fd] = fid;
+ 
+        // 加入表节点。
+        list_append(&n->node, &server_entry_mapping);
+ 
+        // 不忘初心。
         pthread_spin_unlock(&server_entry_mapping_lock);
         return ret;
         /* Lab 5 TODO End (Part 3)*/
