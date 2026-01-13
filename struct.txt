@@ -1,0 +1,1712 @@
+.
+|-- .clang-format
+|-- .clang-tidy
+|-- .clangd
+|-- .config
+|-- .gdbinit
+|-- .vscode
+|   |-- launch.json
+|   |-- settings.json
+|   `-- tasks.json
+|-- CMakeLists.txt
+|-- Makefile
+|-- build
+|   |-- CMakeCache.txt
+|   |-- CMakeFiles
+|   |   |-- 3.16.3
+|   |   |   |-- CMakeCCompiler.cmake
+|   |   |   |-- CMakeCXXCompiler.cmake
+|   |   |   |-- CMakeDetermineCompilerABI_C.bin
+|   |   |   |-- CMakeDetermineCompilerABI_CXX.bin
+|   |   |   |-- CMakeSystem.cmake
+|   |   |   |-- CompilerIdC
+|   |   |   |   |-- CMakeCCompilerId.c
+|   |   |   |   |-- a.out
+|   |   |   |   `-- tmp
+|   |   |   `-- CompilerIdCXX
+|   |   |       |-- CMakeCXXCompilerId.cpp
+|   |   |       |-- a.out
+|   |   |       `-- tmp
+|   |   |-- CMakeDirectoryInformation.cmake
+|   |   |-- CMakeOutput.log
+|   |   |-- CMakeRuleHashes.txt
+|   |   |-- CMakeTmp
+|   |   |-- Makefile.cmake
+|   |   |-- Makefile2
+|   |   |-- TargetDirectories.txt
+|   |   |-- clean-all.dir
+|   |   |   |-- DependInfo.cmake
+|   |   |   |-- build.make
+|   |   |   |-- cmake_clean.cmake
+|   |   |   `-- progress.make
+|   |   |-- cmake.check_cache
+|   |   |-- kernel-clean-incbin.dir
+|   |   |   |-- DependInfo.cmake
+|   |   |   |-- build.make
+|   |   |   |-- cmake_clean.cmake
+|   |   |   |-- depend.internal
+|   |   |   |-- depend.make
+|   |   |   `-- progress.make
+|   |   |-- kernel-complete
+|   |   |-- kernel.dir
+|   |   |   |-- DependInfo.cmake
+|   |   |   |-- Labels.json
+|   |   |   |-- Labels.txt
+|   |   |   |-- build.make
+|   |   |   |-- cmake_clean.cmake
+|   |   |   |-- depend.internal
+|   |   |   |-- depend.make
+|   |   |   `-- progress.make
+|   |   |-- libc-clean-trigger.dir
+|   |   |   |-- DependInfo.cmake
+|   |   |   |-- build.make
+|   |   |   |-- cmake_clean.cmake
+|   |   |   `-- progress.make
+|   |   |-- libc-complete
+|   |   |-- libc.dir
+|   |   |   |-- DependInfo.cmake
+|   |   |   |-- Labels.json
+|   |   |   |-- Labels.txt
+|   |   |   |-- build.make
+|   |   |   |-- cmake_clean.cmake
+|   |   |   |-- depend.internal
+|   |   |   |-- depend.make
+|   |   |   `-- progress.make
+|   |   |-- progress.marks
+|   |   |-- system-services-clean-incbin.dir
+|   |   |   |-- DependInfo.cmake
+|   |   |   |-- build.make
+|   |   |   |-- cmake_clean.cmake
+|   |   |   |-- depend.internal
+|   |   |   |-- depend.make
+|   |   |   `-- progress.make
+|   |   |-- system-services-clean-trigger.dir
+|   |   |   |-- DependInfo.cmake
+|   |   |   |-- build.make
+|   |   |   |-- cmake_clean.cmake
+|   |   |   `-- progress.make
+|   |   |-- system-services-complete
+|   |   |-- system-services.dir
+|   |   |   |-- DependInfo.cmake
+|   |   |   |-- Labels.json
+|   |   |   |-- Labels.txt
+|   |   |   |-- build.make
+|   |   |   |-- cmake_clean.cmake
+|   |   |   |-- depend.internal
+|   |   |   |-- depend.make
+|   |   |   `-- progress.make
+|   |   |-- tests-complete
+|   |   `-- tests.dir
+|   |       |-- DependInfo.cmake
+|   |       |-- Labels.json
+|   |       |-- Labels.txt
+|   |       |-- build.make
+|   |       |-- cmake_clean.cmake
+|   |       |-- depend.internal
+|   |       |-- depend.make
+|   |       `-- progress.make
+|   |-- Makefile
+|   |-- chcore-libc
+|   |   |-- bin
+|   |   |   |-- musl-ar
+|   |   |   |-- musl-gcc
+|   |   |   `-- musl-strip
+|   |   |-- include
+|   |   |   |-- aio.h
+|   |   |   |-- alloca.h
+|   |   |   |-- ar.h
+|   |   |   |-- arpa
+|   |   |   |   |-- ftp.h
+|   |   |   |   |-- inet.h
+|   |   |   |   |-- nameser.h
+|   |   |   |   |-- nameser_compat.h
+|   |   |   |   |-- telnet.h
+|   |   |   |   `-- tftp.h
+|   |   |   |-- assert.h
+|   |   |   |-- bits
+|   |   |   |   |-- alltypes.h
+|   |   |   |   |-- dirent.h
+|   |   |   |   |-- errno.h
+|   |   |   |   |-- fcntl.h
+|   |   |   |   |-- fenv.h
+|   |   |   |   |-- float.h
+|   |   |   |   |-- hwcap.h
+|   |   |   |   |-- io.h
+|   |   |   |   |-- ioctl.h
+|   |   |   |   |-- ioctl_fix.h
+|   |   |   |   |-- ipc.h
+|   |   |   |   |-- ipcstat.h
+|   |   |   |   |-- kd.h
+|   |   |   |   |-- limits.h
+|   |   |   |   |-- link.h
+|   |   |   |   |-- mman.h
+|   |   |   |   |-- msg.h
+|   |   |   |   |-- poll.h
+|   |   |   |   |-- posix.h
+|   |   |   |   |-- ptrace.h
+|   |   |   |   |-- reg.h
+|   |   |   |   |-- resource.h
+|   |   |   |   |-- sem.h
+|   |   |   |   |-- setjmp.h
+|   |   |   |   |-- shm.h
+|   |   |   |   |-- signal.h
+|   |   |   |   |-- socket.h
+|   |   |   |   |-- soundcard.h
+|   |   |   |   |-- stat.h
+|   |   |   |   |-- statfs.h
+|   |   |   |   |-- stdint.h
+|   |   |   |   |-- syscall.h
+|   |   |   |   |-- termios.h
+|   |   |   |   |-- user.h
+|   |   |   |   `-- vt.h
+|   |   |   |-- byteswap.h
+|   |   |   |-- chcore
+|   |   |   |   |-- aslr.h
+|   |   |   |   |-- bug.h
+|   |   |   |   |-- container
+|   |   |   |   |   |-- hashtable.h
+|   |   |   |   |   |-- list.h
+|   |   |   |   |   |-- radix.h
+|   |   |   |   |   |-- rbtree.h
+|   |   |   |   |   |-- rbtree_impl.h
+|   |   |   |   |   `-- rbtree_plus.h
+|   |   |   |   |-- cpio.h
+|   |   |   |   |-- defs.h
+|   |   |   |   |-- error.h
+|   |   |   |   |-- falloc.h
+|   |   |   |   |-- idman.h
+|   |   |   |   |-- ipc.h
+|   |   |   |   |-- launcher.h
+|   |   |   |   |-- memory.h
+|   |   |   |   |-- oh_vfs.h
+|   |   |   |   |-- opentrustee
+|   |   |   |   |   `-- syscall.h
+|   |   |   |   |-- pmo.h
+|   |   |   |   |-- pmu.h
+|   |   |   |   |-- proc.h
+|   |   |   |   |-- pthread.h
+|   |   |   |   |-- ring_buffer.h
+|   |   |   |   |-- services.h
+|   |   |   |   |-- string.h
+|   |   |   |   |-- syscall.h
+|   |   |   |   |-- thread.h
+|   |   |   |   `-- type.h
+|   |   |   |-- chcore-internal
+|   |   |   |   |-- audio_defs.h
+|   |   |   |   |-- chanmgr_defs.h
+|   |   |   |   |-- configurable_servers.h
+|   |   |   |   |-- cpu_driver_defs.h
+|   |   |   |   |-- flash_defs.h
+|   |   |   |   |-- fs_debug.h
+|   |   |   |   |-- fs_defs.h
+|   |   |   |   |-- gpio_defs.h
+|   |   |   |   |-- hdmi_defs.h
+|   |   |   |   |-- lwip_defs.h
+|   |   |   |   |-- net_interface.h
+|   |   |   |   |-- opentrustee_defs.h
+|   |   |   |   |-- procmgr_defs.h
+|   |   |   |   |-- sd_defs.h
+|   |   |   |   |-- serial_defs.h
+|   |   |   |   |-- shell_defs.h
+|   |   |   |   |-- shmmgr_defs.h
+|   |   |   |   |-- terminal_defs.h
+|   |   |   |   `-- usb_devmgr_defs.h
+|   |   |   |-- complex.h
+|   |   |   |-- cpio.h
+|   |   |   |-- crypt.h
+|   |   |   |-- ctype.h
+|   |   |   |-- dirent.h
+|   |   |   |-- dlfcn.h
+|   |   |   |-- elf.h
+|   |   |   |-- endian.h
+|   |   |   |-- err.h
+|   |   |   |-- errno.h
+|   |   |   |-- fcntl.h
+|   |   |   |-- features.h
+|   |   |   |-- fenv.h
+|   |   |   |-- float.h
+|   |   |   |-- fmtmsg.h
+|   |   |   |-- fnmatch.h
+|   |   |   |-- ftw.h
+|   |   |   |-- getopt.h
+|   |   |   |-- glob.h
+|   |   |   |-- grp.h
+|   |   |   |-- iconv.h
+|   |   |   |-- ifaddrs.h
+|   |   |   |-- inttypes.h
+|   |   |   |-- iso646.h
+|   |   |   |-- langinfo.h
+|   |   |   |-- lastlog.h
+|   |   |   |-- libgen.h
+|   |   |   |-- libintl.h
+|   |   |   |-- limits.h
+|   |   |   |-- link.h
+|   |   |   |-- locale.h
+|   |   |   |-- malloc.h
+|   |   |   |-- math.h
+|   |   |   |-- memory.h
+|   |   |   |-- mntent.h
+|   |   |   |-- monetary.h
+|   |   |   |-- mqueue.h
+|   |   |   |-- net
+|   |   |   |   |-- ethernet.h
+|   |   |   |   |-- if.h
+|   |   |   |   |-- if_arp.h
+|   |   |   |   `-- route.h
+|   |   |   |-- netdb.h
+|   |   |   |-- netinet
+|   |   |   |   |-- ether.h
+|   |   |   |   |-- icmp6.h
+|   |   |   |   |-- if_ether.h
+|   |   |   |   |-- igmp.h
+|   |   |   |   |-- in.h
+|   |   |   |   |-- in_systm.h
+|   |   |   |   |-- ip.h
+|   |   |   |   |-- ip6.h
+|   |   |   |   |-- ip_icmp.h
+|   |   |   |   |-- tcp.h
+|   |   |   |   `-- udp.h
+|   |   |   |-- netpacket
+|   |   |   |   `-- packet.h
+|   |   |   |-- nl_types.h
+|   |   |   |-- paths.h
+|   |   |   |-- poll.h
+|   |   |   |-- pthread.h
+|   |   |   |-- pty.h
+|   |   |   |-- pwd.h
+|   |   |   |-- regex.h
+|   |   |   |-- resolv.h
+|   |   |   |-- sched.h
+|   |   |   |-- scsi
+|   |   |   |   |-- scsi.h
+|   |   |   |   |-- scsi_ioctl.h
+|   |   |   |   `-- sg.h
+|   |   |   |-- search.h
+|   |   |   |-- semaphore.h
+|   |   |   |-- setjmp.h
+|   |   |   |-- shadow.h
+|   |   |   |-- signal.h
+|   |   |   |-- spawn.h
+|   |   |   |-- stdalign.h
+|   |   |   |-- stdarg.h
+|   |   |   |-- stdbool.h
+|   |   |   |-- stdc-predef.h
+|   |   |   |-- stddef.h
+|   |   |   |-- stdint.h
+|   |   |   |-- stdio.h
+|   |   |   |-- stdio_ext.h
+|   |   |   |-- stdlib.h
+|   |   |   |-- stdnoreturn.h
+|   |   |   |-- string.h
+|   |   |   |-- strings.h
+|   |   |   |-- stropts.h
+|   |   |   |-- sys
+|   |   |   |   |-- acct.h
+|   |   |   |   |-- auxv.h
+|   |   |   |   |-- cachectl.h
+|   |   |   |   |-- dir.h
+|   |   |   |   |-- epoll.h
+|   |   |   |   |-- errno.h
+|   |   |   |   |-- eventfd.h
+|   |   |   |   |-- fanotify.h
+|   |   |   |   |-- fcntl.h
+|   |   |   |   |-- file.h
+|   |   |   |   |-- fsuid.h
+|   |   |   |   |-- inotify.h
+|   |   |   |   |-- io.h
+|   |   |   |   |-- ioctl.h
+|   |   |   |   |-- ipc.h
+|   |   |   |   |-- kd.h
+|   |   |   |   |-- klog.h
+|   |   |   |   |-- membarrier.h
+|   |   |   |   |-- mman.h
+|   |   |   |   |-- mount.h
+|   |   |   |   |-- msg.h
+|   |   |   |   |-- mtio.h
+|   |   |   |   |-- param.h
+|   |   |   |   |-- personality.h
+|   |   |   |   |-- poll.h
+|   |   |   |   |-- prctl.h
+|   |   |   |   |-- procfs.h
+|   |   |   |   |-- ptrace.h
+|   |   |   |   |-- quota.h
+|   |   |   |   |-- random.h
+|   |   |   |   |-- reboot.h
+|   |   |   |   |-- reg.h
+|   |   |   |   |-- resource.h
+|   |   |   |   |-- select.h
+|   |   |   |   |-- sem.h
+|   |   |   |   |-- sendfile.h
+|   |   |   |   |-- shm.h
+|   |   |   |   |-- signal.h
+|   |   |   |   |-- signalfd.h
+|   |   |   |   |-- socket.h
+|   |   |   |   |-- soundcard.h
+|   |   |   |   |-- stat.h
+|   |   |   |   |-- statfs.h
+|   |   |   |   |-- statvfs.h
+|   |   |   |   |-- stropts.h
+|   |   |   |   |-- swap.h
+|   |   |   |   |-- syscall.h
+|   |   |   |   |-- sysinfo.h
+|   |   |   |   |-- syslog.h
+|   |   |   |   |-- sysmacros.h
+|   |   |   |   |-- termios.h
+|   |   |   |   |-- time.h
+|   |   |   |   |-- timeb.h
+|   |   |   |   |-- timerfd.h
+|   |   |   |   |-- times.h
+|   |   |   |   |-- timex.h
+|   |   |   |   |-- ttydefaults.h
+|   |   |   |   |-- types.h
+|   |   |   |   |-- ucontext.h
+|   |   |   |   |-- uio.h
+|   |   |   |   |-- un.h
+|   |   |   |   |-- user.h
+|   |   |   |   |-- utsname.h
+|   |   |   |   |-- vfs.h
+|   |   |   |   |-- vt.h
+|   |   |   |   |-- wait.h
+|   |   |   |   `-- xattr.h
+|   |   |   |-- syscall.h
+|   |   |   |-- sysexits.h
+|   |   |   |-- syslog.h
+|   |   |   |-- tar.h
+|   |   |   |-- termios.h
+|   |   |   |-- tgmath.h
+|   |   |   |-- threads.h
+|   |   |   |-- time.h
+|   |   |   |-- uapi
+|   |   |   |   |-- cache.h
+|   |   |   |   |-- get_system_info.h
+|   |   |   |   |-- ipc.h
+|   |   |   |   |-- memory.h
+|   |   |   |   |-- object.h
+|   |   |   |   |-- opentrustee
+|   |   |   |   |   |-- ipc.h
+|   |   |   |   |   |-- smc.h
+|   |   |   |   |   `-- syscall_num.h
+|   |   |   |   |-- ptrace.h
+|   |   |   |   |-- syscall_num.h
+|   |   |   |   `-- types.h
+|   |   |   |-- uchar.h
+|   |   |   |-- ucontext.h
+|   |   |   |-- ulimit.h
+|   |   |   |-- unistd.h
+|   |   |   |-- utime.h
+|   |   |   |-- utmp.h
+|   |   |   |-- utmpx.h
+|   |   |   |-- values.h
+|   |   |   |-- wait.h
+|   |   |   |-- wchar.h
+|   |   |   |-- wctype.h
+|   |   |   `-- wordexp.h
+|   |   `-- lib
+|   |       |-- Scrt1.o
+|   |       |-- crt1.o
+|   |       |-- crti.o
+|   |       |-- crtn.o
+|   |       |-- ld-musl-aarch64.so.1 -> /workspaces/OS-Course-Lab/Lab5/build/chcore-libc/lib/libc.so
+|   |       |-- libc.a
+|   |       |-- libc.so
+|   |       |-- libcrypt.a
+|   |       |-- libdl.a
+|   |       |-- libm.a
+|   |       |-- libpthread.a
+|   |       |-- libresolv.a
+|   |       |-- librt.a
+|   |       |-- libutil.a
+|   |       |-- libxnet.a
+|   |       |-- musl-gcc.specs
+|   |       `-- rcrt1.o
+|   |-- cmake_install.cmake
+|   |-- kernel
+|   |   |-- CMakeCache.txt
+|   |   |-- CMakeFiles
+|   |   |   |-- 3.16.3
+|   |   |   |   |-- CMakeASMCompiler.cmake
+|   |   |   |   |-- CMakeCCompiler.cmake
+|   |   |   |   |-- CMakeDetermineCompilerABI_C.bin
+|   |   |   |   |-- CMakeSystem.cmake
+|   |   |   |   |-- CompilerIdASM
+|   |   |   |   `-- CompilerIdC
+|   |   |   |       |-- CMakeCCompilerId.c
+|   |   |   |       |-- a.out
+|   |   |   |       `-- tmp
+|   |   |   |-- CMakeDirectoryInformation.cmake
+|   |   |   |-- CMakeOutput.log
+|   |   |   |-- CMakeRuleHashes.txt
+|   |   |   |-- CMakeTmp
+|   |   |   |-- Makefile.cmake
+|   |   |   |-- Makefile2
+|   |   |   |-- TargetDirectories.txt
+|   |   |   |-- cmake.check_cache
+|   |   |   |-- kernel.img.dir
+|   |   |   |   |-- ASM.includecache
+|   |   |   |   |-- DependInfo.cmake
+|   |   |   |   |-- build.make
+|   |   |   |   |-- cmake_clean.cmake
+|   |   |   |   |-- depend.internal
+|   |   |   |   |-- depend.make
+|   |   |   |   |-- flags.make
+|   |   |   |   |-- incbin_procmgr_bin.S.obj
+|   |   |   |   |-- link.txt
+|   |   |   |   `-- progress.make
+|   |   |   |-- progress.marks
+|   |   |   |-- rebuildkernel.dir
+|   |   |   |   |-- DependInfo.cmake
+|   |   |   |   |-- build.make
+|   |   |   |   |-- cmake_clean.cmake
+|   |   |   |   `-- progress.make
+|   |   |   `-- touch-inc-procmgr.dir
+|   |   |       |-- DependInfo.cmake
+|   |   |       |-- build.make
+|   |   |       |-- cmake_clean.cmake
+|   |   |       |-- depend.internal
+|   |   |       |-- depend.make
+|   |   |       `-- progress.make
+|   |   |-- Makefile
+|   |   |-- arch
+|   |   |   `-- aarch64
+|   |   |       |-- CMakeFiles
+|   |   |       |   |-- CMakeDirectoryInformation.cmake
+|   |   |       |   `-- progress.marks
+|   |   |       |-- Makefile
+|   |   |       |-- boot
+|   |   |       |   |-- CMakeFiles
+|   |   |       |   |   |-- CMakeDirectoryInformation.cmake
+|   |   |       |   |   |-- linker.ld.dir
+|   |   |       |   |   |   |-- DependInfo.cmake
+|   |   |       |   |   |   |-- build.make
+|   |   |       |   |   |   |-- cmake_clean.cmake
+|   |   |       |   |   |   |-- depend.internal
+|   |   |       |   |   |   |-- depend.make
+|   |   |       |   |   |   `-- progress.make
+|   |   |       |   |   `-- progress.marks
+|   |   |       |   |-- Makefile
+|   |   |       |   |-- cmake_install.cmake
+|   |   |       |   |-- linker.ld
+|   |   |       |   |-- linker.ld.S
+|   |   |       |   `-- raspi3
+|   |   |       |       |-- CMakeFiles
+|   |   |       |       |   |-- CMakeDirectoryInformation.cmake
+|   |   |       |       |   |-- kernel8.img.dir
+|   |   |       |       |   |   |-- DependInfo.cmake
+|   |   |       |       |   |   |-- build.make
+|   |   |       |       |   |   |-- cmake_clean.cmake
+|   |   |       |       |   |   |-- depend.internal
+|   |   |       |       |   |   |-- depend.make
+|   |   |       |       |   |   `-- progress.make
+|   |   |       |       |   `-- progress.marks
+|   |   |       |       |-- Makefile
+|   |   |       |       |-- cmake_install.cmake
+|   |   |       |       `-- kernel8.img
+|   |   |       |-- cmake_install.cmake
+|   |   |       |-- debug
+|   |   |       |   |-- CMakeFiles
+|   |   |       |   |   |-- CMakeDirectoryInformation.cmake
+|   |   |       |   |   `-- progress.marks
+|   |   |       |   |-- Makefile
+|   |   |       |   `-- cmake_install.cmake
+|   |   |       |-- irq
+|   |   |       |   |-- CMakeFiles
+|   |   |       |   |   |-- CMakeDirectoryInformation.cmake
+|   |   |       |   |   `-- progress.marks
+|   |   |       |   |-- Makefile
+|   |   |       |   `-- cmake_install.cmake
+|   |   |       |-- machine
+|   |   |       |   |-- CMakeFiles
+|   |   |       |   |   |-- CMakeDirectoryInformation.cmake
+|   |   |       |   |   `-- progress.marks
+|   |   |       |   |-- Makefile
+|   |   |       |   `-- cmake_install.cmake
+|   |   |       |-- mm
+|   |   |       |   |-- CMakeFiles
+|   |   |       |   |   |-- CMakeDirectoryInformation.cmake
+|   |   |       |   |   `-- progress.marks
+|   |   |       |   |-- Makefile
+|   |   |       |   `-- cmake_install.cmake
+|   |   |       |-- plat
+|   |   |       |   `-- raspi3
+|   |   |       |       |-- CMakeFiles
+|   |   |       |       |   |-- CMakeDirectoryInformation.cmake
+|   |   |       |       |   `-- progress.marks
+|   |   |       |       |-- Makefile
+|   |   |       |       `-- cmake_install.cmake
+|   |   |       |-- sched
+|   |   |       |   |-- CMakeFiles
+|   |   |       |   |   |-- CMakeDirectoryInformation.cmake
+|   |   |       |   |   `-- progress.marks
+|   |   |       |   |-- Makefile
+|   |   |       |   `-- cmake_install.cmake
+|   |   |       `-- sync
+|   |   |           |-- CMakeFiles
+|   |   |           |   |-- CMakeDirectoryInformation.cmake
+|   |   |           |   `-- progress.marks
+|   |   |           |-- Makefile
+|   |   |           `-- cmake_install.cmake
+|   |   |-- cmake_install.cmake
+|   |   |-- incbin_procmgr_bin.S
+|   |   |-- install_manifest.txt
+|   |   |-- ipc
+|   |   |   |-- CMakeFiles
+|   |   |   |   |-- CMakeDirectoryInformation.cmake
+|   |   |   |   `-- progress.marks
+|   |   |   |-- Makefile
+|   |   |   `-- cmake_install.cmake
+|   |   |-- irq
+|   |   |   |-- CMakeFiles
+|   |   |   |   |-- CMakeDirectoryInformation.cmake
+|   |   |   |   `-- progress.marks
+|   |   |   |-- Makefile
+|   |   |   `-- cmake_install.cmake
+|   |   |-- kernel.img
+|   |   |-- lib
+|   |   |   |-- CMakeFiles
+|   |   |   |   |-- CMakeDirectoryInformation.cmake
+|   |   |   |   `-- progress.marks
+|   |   |   |-- Makefile
+|   |   |   `-- cmake_install.cmake
+|   |   |-- mm
+|   |   |   |-- CMakeFiles
+|   |   |   |   |-- CMakeDirectoryInformation.cmake
+|   |   |   |   `-- progress.marks
+|   |   |   |-- Makefile
+|   |   |   `-- cmake_install.cmake
+|   |   |-- object
+|   |   |   |-- CMakeFiles
+|   |   |   |   |-- CMakeDirectoryInformation.cmake
+|   |   |   |   `-- progress.marks
+|   |   |   |-- Makefile
+|   |   |   `-- cmake_install.cmake
+|   |   |-- sched
+|   |   |   |-- CMakeFiles
+|   |   |   |   |-- CMakeDirectoryInformation.cmake
+|   |   |   |   `-- progress.marks
+|   |   |   |-- Makefile
+|   |   |   `-- cmake_install.cmake
+|   |   `-- syscall
+|   |       |-- CMakeFiles
+|   |       |   |-- CMakeDirectoryInformation.cmake
+|   |       |   `-- progress.marks
+|   |       |-- Makefile
+|   |       `-- cmake_install.cmake
+|   |-- kernel-prefix
+|   |   |-- src
+|   |   |   `-- kernel-stamp
+|   |   |       |-- kernel-configure
+|   |   |       |-- kernel-done
+|   |   |       |-- kernel-download
+|   |   |       |-- kernel-install
+|   |   |       |-- kernel-mkdir
+|   |   |       |-- kernel-patch
+|   |   |       `-- kernel-update
+|   |   `-- tmp
+|   |       |-- kernel-cache-.cmake
+|   |       |-- kernel-cfgcmd.txt
+|   |       `-- kernel-cfgcmd.txt.in
+|   |-- kernel.img
+|   |-- kernel8.img
+|   |-- libc-prefix
+|   |   |-- src
+|   |   |   `-- libc-stamp
+|   |   |       |-- libc-configure
+|   |   |       |-- libc-done
+|   |   |       |-- libc-download
+|   |   |       |-- libc-install
+|   |   |       |-- libc-mkdir
+|   |   |       |-- libc-patch
+|   |   |       `-- libc-update
+|   |   `-- tmp
+|   |       |-- libc-cache-.cmake
+|   |       |-- libc-cfgcmd.txt
+|   |       `-- libc-cfgcmd.txt.in
+|   |-- ramdisk
+|   |   |-- chcore_shell.bin
+|   |   |-- etc
+|   |   |   `-- resolv.conf
+|   |   |-- fs_test_full.bin
+|   |   |-- fs_test_mmap.bin
+|   |   |-- libc.so
+|   |   |-- ramdisk.cpio
+|   |   |-- server_configure.yaml
+|   |   `-- test_llm.bin
+|   |-- system-services-prefix
+|   |   |-- src
+|   |   |   `-- system-services-stamp
+|   |   |       |-- system-services-configure
+|   |   |       |-- system-services-done
+|   |   |       |-- system-services-download
+|   |   |       |-- system-services-install
+|   |   |       |-- system-services-mkdir
+|   |   |       |-- system-services-patch
+|   |   |       `-- system-services-update
+|   |   `-- tmp
+|   |       |-- system-services-cache-.cmake
+|   |       |-- system-services-cfgcmd.txt
+|   |       `-- system-services-cfgcmd.txt.in
+|   |-- tests-prefix
+|   |   |-- src
+|   |   |   `-- tests-stamp
+|   |   |       |-- tests-configure
+|   |   |       |-- tests-done
+|   |   |       |-- tests-download
+|   |   |       |-- tests-install
+|   |   |       |-- tests-mkdir
+|   |   |       |-- tests-patch
+|   |   |       `-- tests-update
+|   |   `-- tmp
+|   |       |-- tests-cache-.cmake
+|   |       |-- tests-cfgcmd.txt
+|   |       `-- tests-cfgcmd.txt.in
+|   |-- toolchain.cmake
+|   `-- user
+|       |-- chcore-libc
+|       |   |-- CMakeCache.txt
+|       |   |-- CMakeFiles
+|       |   |   |-- 3.16.3
+|       |   |   |   |-- CMakeASMCompiler.cmake
+|       |   |   |   |-- CMakeCCompiler.cmake
+|       |   |   |   |-- CMakeDetermineCompilerABI_C.bin
+|       |   |   |   |-- CMakeSystem.cmake
+|       |   |   |   |-- CompilerIdASM
+|       |   |   |   `-- CompilerIdC
+|       |   |   |       |-- CMakeCCompilerId.c
+|       |   |   |       |-- a.out
+|       |   |   |       `-- tmp
+|       |   |   |-- CMakeDirectoryInformation.cmake
+|       |   |   |-- CMakeOutput.log
+|       |   |   |-- CMakeRuleHashes.txt
+|       |   |   |-- CMakeTmp
+|       |   |   |-- Makefile.cmake
+|       |   |   |-- Makefile2
+|       |   |   |-- TargetDirectories.txt
+|       |   |   |-- cmake.check_cache
+|       |   |   |-- libc-build.dir
+|       |   |   |   |-- DependInfo.cmake
+|       |   |   |   |-- build.make
+|       |   |   |   |-- cmake_clean.cmake
+|       |   |   |   |-- depend.internal
+|       |   |   |   |-- depend.make
+|       |   |   |   `-- progress.make
+|       |   |   |-- libc-clean.dir
+|       |   |   |   |-- DependInfo.cmake
+|       |   |   |   |-- build.make
+|       |   |   |   |-- cmake_clean.cmake
+|       |   |   |   `-- progress.make
+|       |   |   |-- libc-configure.dir
+|       |   |   |   |-- DependInfo.cmake
+|       |   |   |   |-- build.make
+|       |   |   |   |-- cmake_clean.cmake
+|       |   |   |   |-- depend.internal
+|       |   |   |   |-- depend.make
+|       |   |   |   `-- progress.make
+|       |   |   |-- libc-install.dir
+|       |   |   |   |-- DependInfo.cmake
+|       |   |   |   |-- build.make
+|       |   |   |   |-- cmake_clean.cmake
+|       |   |   |   |-- depend.internal
+|       |   |   |   |-- depend.make
+|       |   |   |   `-- progress.make
+|       |   |   `-- progress.marks
+|       |   |-- Makefile
+|       |   `-- cmake_install.cmake
+|       |-- system-services
+|       |   |-- CMakeCache.txt
+|       |   |-- CMakeFiles
+|       |   |   |-- 3.16.3
+|       |   |   |   |-- CMakeASMCompiler.cmake
+|       |   |   |   |-- CMakeCCompiler.cmake
+|       |   |   |   |-- CMakeDetermineCompilerABI_C.bin
+|       |   |   |   |-- CMakeSystem.cmake
+|       |   |   |   |-- CompilerIdASM
+|       |   |   |   `-- CompilerIdC
+|       |   |   |       |-- CMakeCCompilerId.c
+|       |   |   |       |-- a.out
+|       |   |   |       `-- tmp
+|       |   |   |-- CMakeDirectoryInformation.cmake
+|       |   |   |-- CMakeOutput.log
+|       |   |   |-- CMakeRuleHashes.txt
+|       |   |   |-- CMakeTmp
+|       |   |   |-- Makefile.cmake
+|       |   |   |-- Makefile2
+|       |   |   |-- TargetDirectories.txt
+|       |   |   |-- cmake.check_cache
+|       |   |   |-- custom-clean.dir
+|       |   |   |   |-- DependInfo.cmake
+|       |   |   |   |-- build.make
+|       |   |   |   |-- cmake_clean.cmake
+|       |   |   |   `-- progress.make
+|       |   |   |-- progress.marks
+|       |   |   |-- ramdisk.dir
+|       |   |   |   |-- DependInfo.cmake
+|       |   |   |   |-- build.make
+|       |   |   |   |-- cmake_clean.cmake
+|       |   |   |   |-- depend.internal
+|       |   |   |   |-- depend.make
+|       |   |   |   `-- progress.make
+|       |   |   `-- system-services-clean.dir
+|       |   |       |-- DependInfo.cmake
+|       |   |       |-- build.make
+|       |   |       |-- cmake_clean.cmake
+|       |   |       `-- progress.make
+|       |   |-- Makefile
+|       |   |-- cmake_install.cmake
+|       |   |-- compile_commands.json
+|       |   `-- system-servers
+|       |       |-- CMakeFiles
+|       |       |   |-- CMakeDirectoryInformation.cmake
+|       |       |   |-- generate_configurable_server_intermediate_file.dir
+|       |       |   |   |-- DependInfo.cmake
+|       |       |   |   |-- build.make
+|       |       |   |   |-- cmake_clean.cmake
+|       |       |   |   |-- depend.internal
+|       |       |   |   |-- depend.make
+|       |       |   |   `-- progress.make
+|       |       |   |-- generate_user_server_intermediate_file.dir
+|       |       |   |   |-- DependInfo.cmake
+|       |       |   |   |-- build.make
+|       |       |   |   |-- cmake_clean.cmake
+|       |       |   |   |-- depend.internal
+|       |       |   |   |-- depend.make
+|       |       |   |   `-- progress.make
+|       |       |   |-- progress.marks
+|       |       |   `-- system-servers-clean.dir
+|       |       |       |-- DependInfo.cmake
+|       |       |       |-- build.make
+|       |       |       |-- cmake_clean.cmake
+|       |       |       `-- progress.make
+|       |       |-- Makefile
+|       |       |-- cmake_install.cmake
+|       |       |-- fs_base
+|       |       |   |-- CMakeFiles
+|       |       |   |   |-- CMakeDirectoryInformation.cmake
+|       |       |   |   |-- fs_base.dir
+|       |       |   |   |   |-- C.includecache
+|       |       |   |   |   |-- DependInfo.cmake
+|       |       |   |   |   |-- build.make
+|       |       |   |   |   |-- cmake_clean.cmake
+|       |       |   |   |   |-- cmake_clean_target.cmake
+|       |       |   |   |   |-- depend.internal
+|       |       |   |   |   |-- depend.make
+|       |       |   |   |   |-- flags.make
+|       |       |   |   |   |-- fs_page_cache.c.o
+|       |       |   |   |   |-- fs_page_fault.c.o
+|       |       |   |   |   |-- fs_vnode.c.o
+|       |       |   |   |   |-- fs_wrapper.c.o
+|       |       |   |   |   |-- link.txt
+|       |       |   |   |   `-- progress.make
+|       |       |   |   `-- progress.marks
+|       |       |   |-- Makefile
+|       |       |   |-- cmake_install.cmake
+|       |       |   `-- libfs_base.a
+|       |       |-- fsm
+|       |       |   |-- CMakeFiles
+|       |       |   |   |-- CMakeDirectoryInformation.cmake
+|       |       |   |   |-- fsm.srv.dir
+|       |       |   |   |   |-- C.includecache
+|       |       |   |   |   |-- DependInfo.cmake
+|       |       |   |   |   |-- build.make
+|       |       |   |   |   |-- cmake_clean.cmake
+|       |       |   |   |   |-- depend.internal
+|       |       |   |   |   |-- depend.make
+|       |       |   |   |   |-- device.c.o
+|       |       |   |   |   |-- flags.make
+|       |       |   |   |   |-- link.txt
+|       |       |   |   |   |-- mount_disk_fs.c.o
+|       |       |   |   |   |-- mount_info.c.o
+|       |       |   |   |   `-- progress.make
+|       |       |   |   `-- progress.marks
+|       |       |   |-- Makefile
+|       |       |   |-- cmake_install.cmake
+|       |       |   `-- fsm.srv
+|       |       |-- procmgr
+|       |       |   |-- CMakeFiles
+|       |       |   |   |-- CMakeDirectoryInformation.cmake
+|       |       |   |   |-- create-procmgr-bin.dir
+|       |       |   |   |   |-- DependInfo.cmake
+|       |       |   |   |   |-- build.make
+|       |       |   |   |   |-- cmake_clean.cmake
+|       |       |   |   |   |-- depend.internal
+|       |       |   |   |   |-- depend.make
+|       |       |   |   |   `-- progress.make
+|       |       |   |   |-- generate_configure_file.dir
+|       |       |   |   |   |-- DependInfo.cmake
+|       |       |   |   |   |-- build.make
+|       |       |   |   |   |-- cmake_clean.cmake
+|       |       |   |   |   |-- depend.internal
+|       |       |   |   |   |-- depend.make
+|       |       |   |   |   `-- progress.make
+|       |       |   |   |-- procmgr.srv.dir
+|       |       |   |   |   |-- ASM.includecache
+|       |       |   |   |   |-- C.includecache
+|       |       |   |   |   |-- DependInfo.cmake
+|       |       |   |   |   |-- build.make
+|       |       |   |   |   |-- cmake_clean.cmake
+|       |       |   |   |   |-- depend.internal
+|       |       |   |   |   |-- depend.make
+|       |       |   |   |   |-- flags.make
+|       |       |   |   |   |-- incbin_fsm_elf.S.o
+|       |       |   |   |   |-- incbin_tmpfs_elf.S.o
+|       |       |   |   |   |-- link.txt
+|       |       |   |   |   |-- loader.c.o
+|       |       |   |   |   |-- proc_node.c.o
+|       |       |   |   |   |-- procmgr.c.o
+|       |       |   |   |   |-- progress.make
+|       |       |   |   |   |-- recycle.c.o
+|       |       |   |   |   |-- shell_msg_handler.c.o
+|       |       |   |   |   |-- srvmgr.c.o
+|       |       |   |   |   `-- start_daemon_service.c.o
+|       |       |   |   |-- progress.marks
+|       |       |   |   `-- touch-inc-tmpfs.dir
+|       |       |   |       |-- DependInfo.cmake
+|       |       |   |       |-- build.make
+|       |       |   |       |-- cmake_clean.cmake
+|       |       |   |       |-- depend.internal
+|       |       |   |       |-- depend.make
+|       |       |   |       `-- progress.make
+|       |       |   |-- Makefile
+|       |       |   |-- cmake_install.cmake
+|       |       |   |-- configurable_servers.txt
+|       |       |   |-- incbin_fsm_elf.S
+|       |       |   |-- incbin_tmpfs_elf.S
+|       |       |   |-- libs
+|       |       |   |   |-- CMakeFiles
+|       |       |   |   |   |-- CMakeDirectoryInformation.cmake
+|       |       |   |   |   `-- progress.marks
+|       |       |   |   |-- Makefile
+|       |       |   |   |-- cmake_install.cmake
+|       |       |   |   |-- libchcoreelf
+|       |       |   |   |   |-- CMakeFiles
+|       |       |   |   |   |   |-- CMakeDirectoryInformation.cmake
+|       |       |   |   |   |   |-- chcoreelf.dir
+|       |       |   |   |   |   |   |-- C.includecache
+|       |       |   |   |   |   |   |-- DependInfo.cmake
+|       |       |   |   |   |   |   |-- build.make
+|       |       |   |   |   |   |   |-- cmake_clean.cmake
+|       |       |   |   |   |   |   |-- cmake_clean_target.cmake
+|       |       |   |   |   |   |   |-- depend.internal
+|       |       |   |   |   |   |   |-- depend.make
+|       |       |   |   |   |   |   |-- flags.make
+|       |       |   |   |   |   |   |-- libchcoreelf.c.o
+|       |       |   |   |   |   |   |-- link.txt
+|       |       |   |   |   |   |   `-- progress.make
+|       |       |   |   |   |   `-- progress.marks
+|       |       |   |   |   |-- Makefile
+|       |       |   |   |   |-- cmake_install.cmake
+|       |       |   |   |   `-- libchcoreelf.a
+|       |       |   |   |-- liblaunch
+|       |       |   |   |   |-- CMakeFiles
+|       |       |   |   |   |   |-- CMakeDirectoryInformation.cmake
+|       |       |   |   |   |   |-- launch.dir
+|       |       |   |   |   |   |   |-- C.includecache
+|       |       |   |   |   |   |   |-- DependInfo.cmake
+|       |       |   |   |   |   |   |-- build.make
+|       |       |   |   |   |   |   |-- cmake_clean.cmake
+|       |       |   |   |   |   |   |-- cmake_clean_target.cmake
+|       |       |   |   |   |   |   |-- depend.internal
+|       |       |   |   |   |   |   |-- depend.make
+|       |       |   |   |   |   |   |-- flags.make
+|       |       |   |   |   |   |   |-- liblaunch.c.o
+|       |       |   |   |   |   |   |-- link.txt
+|       |       |   |   |   |   |   `-- progress.make
+|       |       |   |   |   |   `-- progress.marks
+|       |       |   |   |   |-- Makefile
+|       |       |   |   |   |-- cmake_install.cmake
+|       |       |   |   |   `-- liblaunch.a
+|       |       |   |   `-- librefcnt
+|       |       |   |       |-- CMakeFiles
+|       |       |   |       |   |-- CMakeDirectoryInformation.cmake
+|       |       |   |       |   |-- progress.marks
+|       |       |   |       |   `-- refcnt.dir
+|       |       |   |       |       |-- C.includecache
+|       |       |   |       |       |-- DependInfo.cmake
+|       |       |   |       |       |-- build.make
+|       |       |   |       |       |-- cmake_clean.cmake
+|       |       |   |       |       |-- cmake_clean_target.cmake
+|       |       |   |       |       |-- depend.internal
+|       |       |   |       |       |-- depend.make
+|       |       |   |       |       |-- flags.make
+|       |       |   |       |       |-- librefcnt.c.o
+|       |       |   |       |       |-- link.txt
+|       |       |   |       |       `-- progress.make
+|       |       |   |       |-- Makefile
+|       |       |   |       |-- cmake_install.cmake
+|       |       |   |       `-- librefcnt.a
+|       |       |   |-- procmgr
+|       |       |   |-- procmgr.srv
+|       |       |   `-- user_servers.txt
+|       |       `-- tmpfs
+|       |           |-- CMakeFiles
+|       |           |   |-- CMakeDirectoryInformation.cmake
+|       |           |   |-- cpio.dir
+|       |           |   |   |-- C.includecache
+|       |           |   |   |-- DependInfo.cmake
+|       |           |   |   |-- build.make
+|       |           |   |   |-- cmake_clean.cmake
+|       |           |   |   |-- cmake_clean_target.cmake
+|       |           |   |   |-- cpio.c.o
+|       |           |   |   |-- depend.internal
+|       |           |   |   |-- depend.make
+|       |           |   |   |-- flags.make
+|       |           |   |   |-- link.txt
+|       |           |   |   `-- progress.make
+|       |           |   |-- progress.marks
+|       |           |   |-- tmpfs.srv.dir
+|       |           |   |   |-- ASM.includecache
+|       |           |   |   |-- C.includecache
+|       |           |   |   |-- DependInfo.cmake
+|       |           |   |   |-- build.make
+|       |           |   |   |-- cmake_clean.cmake
+|       |           |   |   |-- depend.internal
+|       |           |   |   |-- depend.make
+|       |           |   |   |-- flags.make
+|       |           |   |   |-- incbin_ramdisk.S.o
+|       |           |   |   |-- internal_ops.c.o
+|       |           |   |   |-- link.txt
+|       |           |   |   |-- main.c.o
+|       |           |   |   |-- mem_usage_tool.c.o
+|       |           |   |   |-- namei.c.o
+|       |           |   |   |-- progress.make
+|       |           |   |   `-- tmpfs.c.o
+|       |           |   `-- touch-inc-ramdisk.dir
+|       |           |       |-- DependInfo.cmake
+|       |           |       |-- build.make
+|       |           |       |-- cmake_clean.cmake
+|       |           |       |-- depend.internal
+|       |           |       |-- depend.make
+|       |           |       `-- progress.make
+|       |           |-- Makefile
+|       |           |-- cmake_install.cmake
+|       |           |-- incbin_ramdisk.S
+|       |           |-- libcpio.a
+|       |           `-- tmpfs.srv
+|       `-- tests
+|           |-- CMakeCache.txt
+|           |-- CMakeFiles
+|           |   |-- 3.16.3
+|           |   |   |-- CMakeASMCompiler.cmake
+|           |   |   |-- CMakeCCompiler.cmake
+|           |   |   |-- CMakeDetermineCompilerABI_C.bin
+|           |   |   |-- CMakeSystem.cmake
+|           |   |   |-- CompilerIdASM
+|           |   |   `-- CompilerIdC
+|           |   |       |-- CMakeCCompilerId.c
+|           |   |       |-- a.out
+|           |   |       `-- tmp
+|           |   |-- CMakeDirectoryInformation.cmake
+|           |   |-- CMakeOutput.log
+|           |   |-- CMakeRuleHashes.txt
+|           |   |-- CMakeTmp
+|           |   |-- Makefile.cmake
+|           |   |-- Makefile2
+|           |   |-- TargetDirectories.txt
+|           |   |-- cmake.check_cache
+|           |   |-- cp_fs_test_full.bin_to_ramdisk.dir
+|           |   |   |-- DependInfo.cmake
+|           |   |   |-- build.make
+|           |   |   |-- cmake_clean.cmake
+|           |   |   |-- depend.internal
+|           |   |   |-- depend.make
+|           |   |   `-- progress.make
+|           |   |-- cp_fs_test_mmap.bin_to_ramdisk.dir
+|           |   |   |-- DependInfo.cmake
+|           |   |   |-- build.make
+|           |   |   |-- cmake_clean.cmake
+|           |   |   |-- depend.internal
+|           |   |   |-- depend.make
+|           |   |   `-- progress.make
+|           |   `-- progress.marks
+|           |-- Makefile
+|           |-- cmake_install.cmake
+|           |-- compile_commands.json
+|           `-- fs_tests
+|               |-- CMakeFiles
+|               |   |-- CMakeDirectoryInformation.cmake
+|               |   |-- fs_test_full.bin.dir
+|               |   |   |-- C.includecache
+|               |   |   |-- DependInfo.cmake
+|               |   |   |-- build.make
+|               |   |   |-- cmake_clean.cmake
+|               |   |   |-- depend.internal
+|               |   |   |-- depend.make
+|               |   |   |-- flags.make
+|               |   |   |-- fs_test_full.c.o
+|               |   |   |-- fs_tools
+|               |   |   |   |-- fs_test_helper.c.o
+|               |   |   |   |-- fs_test_lib.c.o
+|               |   |   |   |-- fstest_utils.c.o
+|               |   |   |   |-- tst_content.c.o
+|               |   |   |   |-- tst_dup.c.o
+|               |   |   |   |-- tst_lseek.c.o
+|               |   |   |   |-- tst_mmap.c.o
+|               |   |   |   `-- tst_open.c.o
+|               |   |   |-- link.txt
+|               |   |   `-- progress.make
+|               |   |-- fs_test_mmap.bin.dir
+|               |   |   |-- C.includecache
+|               |   |   |-- DependInfo.cmake
+|               |   |   |-- build.make
+|               |   |   |-- cmake_clean.cmake
+|               |   |   |-- depend.internal
+|               |   |   |-- depend.make
+|               |   |   |-- flags.make
+|               |   |   |-- fs_test_mmap.c.o
+|               |   |   |-- fs_tools
+|               |   |   |   |-- fs_test_helper.c.o
+|               |   |   |   |-- fs_test_lib.c.o
+|               |   |   |   |-- fstest_utils.c.o
+|               |   |   |   |-- tst_content.c.o
+|               |   |   |   |-- tst_dup.c.o
+|               |   |   |   |-- tst_lseek.c.o
+|               |   |   |   |-- tst_mmap.c.o
+|               |   |   |   `-- tst_open.c.o
+|               |   |   |-- link.txt
+|               |   |   `-- progress.make
+|               |   `-- progress.marks
+|               |-- Makefile
+|               |-- cmake_install.cmake
+|               |-- fs_test_full.bin
+|               `-- fs_test_mmap.bin
+|-- compile_commands.json
+|-- config.cmake
+|-- filelist.mk
+|-- kernel
+|   |-- CMakeLists.txt
+|   |-- arch
+|   |   `-- aarch64
+|   |       |-- CMakeLists.txt
+|   |       |-- boot
+|   |       |   |-- CMakeLists.txt
+|   |       |   |-- linker.tpl.ld
+|   |       |   `-- raspi3
+|   |       |       |-- CMakeLists.txt
+|   |       |       |-- firmware
+|   |       |       |   |-- README
+|   |       |       |   |-- bootcode.bin
+|   |       |       |   |-- config.txt
+|   |       |       |   |-- fixup.dat
+|   |       |       |   `-- start.elf
+|   |       |       |-- include
+|   |       |       |   |-- boot.h
+|   |       |       |   |-- consts.h
+|   |       |       |   `-- image.h
+|   |       |       |-- init
+|   |       |       |   |-- init_c.c.dbg.obj
+|   |       |       |   |-- init_c.c.obj
+|   |       |       |   |-- mmu.c.dbg.obj
+|   |       |       |   |-- mmu.c.obj
+|   |       |       |   |-- start.S.dbg.obj
+|   |       |       |   |-- start.S.obj
+|   |       |       |   |-- tools.S.dbg.obj
+|   |       |       |   `-- tools.S.obj
+|   |       |       `-- peripherals
+|   |       |           |-- uart.c.dbg.obj
+|   |       |           |-- uart.c.obj
+|   |       |           `-- uart.h
+|   |       |-- debug
+|   |       |   |-- CMakeLists.txt
+|   |       |   |-- backtrace.c.dbg.obj
+|   |       |   |-- backtrace.c.obj
+|   |       |   |-- ptrace.c.dbg.obj
+|   |       |   `-- ptrace.c.obj
+|   |       |-- head.S.dbg.obj
+|   |       |-- head.S.obj
+|   |       |-- irq
+|   |       |   |-- CMakeLists.txt
+|   |       |   |-- ipi.c.dbg.obj
+|   |       |   |-- ipi.c.obj
+|   |       |   |-- irq.S.dbg.obj
+|   |       |   |-- irq.S.obj
+|   |       |   |-- irq_entry.S.dbg.obj
+|   |       |   |-- irq_entry.S.obj
+|   |       |   |-- irq_entry.c.dbg.obj
+|   |       |   |-- irq_entry.c.obj
+|   |       |   |-- pgfault.c.dbg.obj
+|   |       |   `-- pgfault.c.obj
+|   |       |-- machine
+|   |       |   |-- CMakeLists.txt
+|   |       |   |-- pmu.c.dbg.obj
+|   |       |   |-- pmu.c.obj
+|   |       |   |-- smp.c.dbg.obj
+|   |       |   `-- smp.c.obj
+|   |       |-- main.c.dbg.obj
+|   |       |-- main.c.obj
+|   |       |-- mm
+|   |       |   |-- CMakeLists.txt
+|   |       |   |-- bzero.S.dbg.obj
+|   |       |   |-- bzero.S.obj
+|   |       |   |-- cache.c.dbg.obj
+|   |       |   |-- cache.c.obj
+|   |       |   |-- copy_from_user.S.dbg.obj
+|   |       |   |-- copy_from_user.S.obj
+|   |       |   |-- copy_to_user.S.dbg.obj
+|   |       |   |-- copy_to_user.S.obj
+|   |       |   |-- memcpy.S.dbg.obj
+|   |       |   |-- memcpy.S.obj
+|   |       |   |-- memmove.S.dbg.obj
+|   |       |   |-- memmove.S.obj
+|   |       |   |-- memset.c.dbg.obj
+|   |       |   |-- memset.c.obj
+|   |       |   |-- page_table.S.dbg.obj
+|   |       |   |-- page_table.S.obj
+|   |       |   |-- page_table.c.dbg.obj
+|   |       |   |-- page_table.c.obj
+|   |       |   |-- tlb.c.dbg.obj
+|   |       |   |-- tlb.c.obj
+|   |       |   |-- uaccess.c.dbg.obj
+|   |       |   |-- uaccess.c.obj
+|   |       |   |-- vmspace.c.dbg.obj
+|   |       |   `-- vmspace.c.obj
+|   |       |-- plat
+|   |       |   `-- raspi3
+|   |       |       |-- CMakeLists.txt
+|   |       |       |-- irq
+|   |       |       |   |-- irq.c.dbg.obj
+|   |       |       |   |-- irq.c.obj
+|   |       |       |   |-- timer.c.dbg.obj
+|   |       |       |   `-- timer.c.obj
+|   |       |       |-- mm
+|   |       |       |   |-- mmparse.c.dbg.obj
+|   |       |       |   `-- mmparse.c.obj
+|   |       |       |-- poweroff.c.dbg.obj
+|   |       |       |-- poweroff.c.obj
+|   |       |       `-- uart
+|   |       |           |-- uart.c.dbg.obj
+|   |       |           `-- uart.c.obj
+|   |       |-- sched
+|   |       |   |-- CMakeLists.txt
+|   |       |   |-- context.c.dbg.obj
+|   |       |   |-- context.c.obj
+|   |       |   |-- fpu.c.dbg.obj
+|   |       |   |-- fpu.c.obj
+|   |       |   |-- idle.S.dbg.obj
+|   |       |   |-- idle.S.obj
+|   |       |   |-- sched.c.dbg.obj
+|   |       |   `-- sched.c.obj
+|   |       |-- sync
+|   |       |   |-- CMakeLists.txt
+|   |       |   |-- rwlock.c.dbg.obj
+|   |       |   |-- rwlock.c.obj
+|   |       |   |-- ticket.c.dbg.obj
+|   |       |   `-- ticket.c.obj
+|   |       |-- tools.S.dbg.obj
+|   |       `-- tools.S.obj
+|   |-- config.cmake
+|   |-- incbin.tpl.S
+|   |-- include
+|   |   |-- arch
+|   |   |   `-- aarch64
+|   |   |       |-- arch
+|   |   |       |   |-- boot.h
+|   |   |       |   |-- context.h
+|   |   |       |   |-- ipi.h
+|   |   |       |   |-- machine
+|   |   |       |   |   |-- esr.h
+|   |   |       |   |   |-- pmu.h
+|   |   |       |   |   |-- registers.h
+|   |   |       |   |   `-- smp.h
+|   |   |       |   |-- mm
+|   |   |       |   |   `-- page_table.h
+|   |   |       |   |-- mmu.h
+|   |   |       |   |-- sched
+|   |   |       |   |   `-- arch_sched.h
+|   |   |       |   |-- sync.h
+|   |   |       |   |-- time.h
+|   |   |       |   |-- tools.h
+|   |   |       |   `-- trustzone
+|   |   |       |       |-- smc.h
+|   |   |       |       |-- spd
+|   |   |       |       |   |-- opteed
+|   |   |       |       |   |   `-- smc_num.h
+|   |   |       |       |   `-- teed
+|   |   |       |       |       `-- smc_num.h
+|   |   |       |       `-- tlogger.h
+|   |   |       `-- plat
+|   |   |           |-- ft2000
+|   |   |           |   |-- irq_num.h
+|   |   |           |   `-- machine.h
+|   |   |           |-- hikey970
+|   |   |           |   |-- irq_num.h
+|   |   |           |   `-- machine.h
+|   |   |           |-- raspi3
+|   |   |           |   |-- irq_num.h
+|   |   |           |   |-- machine.h
+|   |   |           |   `-- mailbox.h
+|   |   |           `-- raspi4
+|   |   |               |-- irq_num.h
+|   |   |               `-- machine.h
+|   |   |-- common
+|   |   |   |-- asm.h
+|   |   |   |-- backtrace.h
+|   |   |   |-- bitops.h
+|   |   |   |-- debug.h
+|   |   |   |-- endianness.h
+|   |   |   |-- errno.h
+|   |   |   |-- hashtable.h
+|   |   |   |-- kprint.h
+|   |   |   |-- list.h
+|   |   |   |-- lock.h
+|   |   |   |-- lock.md
+|   |   |   |-- macro.h
+|   |   |   |-- poweroff.h
+|   |   |   |-- radix.h
+|   |   |   |-- rbtree.h
+|   |   |   |-- rbtree_impl.h
+|   |   |   |-- sync.h
+|   |   |   |-- tee_uuid.h
+|   |   |   |-- types.h
+|   |   |   |-- util.h
+|   |   |   `-- vars.h
+|   |   |-- io
+|   |   |   `-- uart.h
+|   |   |-- ipc
+|   |   |   |-- channel.h
+|   |   |   |-- connection.h
+|   |   |   |-- futex.h
+|   |   |   `-- notification.h
+|   |   |-- irq
+|   |   |   |-- ipi.h
+|   |   |   |-- irq.h
+|   |   |   `-- timer.h
+|   |   |-- lib
+|   |   |   |-- efi.h
+|   |   |   |-- krand.h
+|   |   |   |-- mem_usage_info_tool.h
+|   |   |   |-- printk.h
+|   |   |   `-- ring_buffer.h
+|   |   |-- mm
+|   |   |   |-- buddy.h
+|   |   |   |-- cache.h
+|   |   |   |-- common_pte.h
+|   |   |   |-- extable.h
+|   |   |   |-- kmalloc.h
+|   |   |   |-- mm.h
+|   |   |   |-- page_fault.h
+|   |   |   |-- slab.h
+|   |   |   |-- uaccess.h
+|   |   |   `-- vmspace.h
+|   |   |-- object
+|   |   |   |-- cap_group.h
+|   |   |   |-- irq.h
+|   |   |   |-- memory.h
+|   |   |   |-- object.h
+|   |   |   |-- ptrace.h
+|   |   |   |-- recycle.h
+|   |   |   |-- thread.h
+|   |   |   `-- user_fault.h
+|   |   |-- sched
+|   |   |   |-- context.h
+|   |   |   |-- fpu.h
+|   |   |   `-- sched.h
+|   |   `-- syscall
+|   |       |-- opentrustee.h
+|   |       `-- syscall_hooks.h
+|   |-- ipc
+|   |   |-- CMakeLists.txt
+|   |   |-- connection.c.dbg.obj
+|   |   |-- connection.c.obj
+|   |   |-- futex.c.dbg.obj
+|   |   |-- futex.c.obj
+|   |   |-- notification.c.dbg.obj
+|   |   `-- notification.c.obj
+|   |-- irq
+|   |   |-- CMakeLists.txt
+|   |   |-- ipi.c.dbg.obj
+|   |   |-- ipi.c.obj
+|   |   |-- timer.c.dbg.obj
+|   |   `-- timer.c.obj
+|   |-- kernel-unit-tests-config.cmake
+|   |-- lib
+|   |   |-- CMakeLists.txt
+|   |   |-- krand_stub.c.dbg.obj
+|   |   |-- krand_stub.c.obj
+|   |   |-- mem_usage_info_tool.c.dbg.obj
+|   |   |-- mem_usage_info_tool.c.obj
+|   |   |-- printk.c.dbg.obj
+|   |   |-- printk.c.obj
+|   |   |-- radix.c.dbg.obj
+|   |   |-- radix.c.obj
+|   |   |-- rbtree.c.dbg.obj
+|   |   |-- rbtree.c.obj
+|   |   |-- ring_buffer.c.dbg.obj
+|   |   `-- ring_buffer.c.obj
+|   |-- mm
+|   |   |-- CMakeLists.txt
+|   |   |-- buddy.c.dbg.obj
+|   |   |-- buddy.c.obj
+|   |   |-- extable.c.dbg.obj
+|   |   |-- extable.c.obj
+|   |   |-- kmalloc.c.dbg.obj
+|   |   |-- kmalloc.c.obj
+|   |   |-- mm.c.dbg.obj
+|   |   |-- mm.c.obj
+|   |   |-- pgfault_handler.c.dbg.obj
+|   |   |-- pgfault_handler.c.obj
+|   |   |-- slab.c.dbg.obj
+|   |   |-- slab.c.obj
+|   |   |-- uaccess.c.dbg.obj
+|   |   |-- uaccess.c.obj
+|   |   |-- vmspace.c.dbg.obj
+|   |   `-- vmspace.c.obj
+|   |-- object
+|   |   |-- CMakeLists.txt
+|   |   |-- cap_group.c.dbg.obj
+|   |   |-- cap_group.c.obj
+|   |   |-- capability.c.dbg.obj
+|   |   |-- capability.c.obj
+|   |   |-- irq.c.dbg.obj
+|   |   |-- irq.c.obj
+|   |   |-- memory.c.dbg.obj
+|   |   |-- memory.c.obj
+|   |   |-- ptrace.c.dbg.obj
+|   |   |-- ptrace.c.obj
+|   |   |-- recycle.c.dbg.obj
+|   |   |-- recycle.c.obj
+|   |   |-- set_thread_env.c.dbg.obj
+|   |   |-- set_thread_env.c.obj
+|   |   |-- thread.c.dbg.obj
+|   |   |-- thread.c.obj
+|   |   |-- user_fault.c
+|   |   |-- user_fault.c.dbg.obj
+|   |   `-- user_fault.c.obj
+|   |-- sched
+|   |   |-- CMakeLists.txt
+|   |   |-- context.c.dbg.obj
+|   |   |-- context.c.obj
+|   |   |-- policy_pb.c.dbg.obj
+|   |   |-- policy_pb.c.obj
+|   |   |-- policy_rr.c.dbg.obj
+|   |   |-- policy_rr.c.obj
+|   |   |-- sched.c.dbg.obj
+|   |   `-- sched.c.obj
+|   |-- syscall
+|   |   |-- CMakeLists.txt
+|   |   |-- syscall.c.dbg.obj
+|   |   |-- syscall.c.obj
+|   |   |-- syscall_get_system_info.c.dbg.obj
+|   |   |-- syscall_get_system_info.c.obj
+|   |   |-- syscall_hooks.c.dbg.obj
+|   |   |-- syscall_hooks.c.obj
+|   |   |-- syscall_opentrustee.c.dbg.obj
+|   |   `-- syscall_opentrustee.c.obj
+|   `-- user-include
+|       `-- uapi
+|           |-- cache.h
+|           |-- get_system_info.h
+|           |-- ipc.h
+|           |-- memory.h
+|           |-- object.h
+|           |-- opentrustee
+|           |   |-- ipc.h
+|           |   |-- smc.h
+|           |   `-- syscall_num.h
+|           |-- ptrace.h
+|           |-- syscall_num.h
+|           `-- types.h
+|-- ramdisk
+|   |-- chcore_shell.bin
+|   `-- test_llm.bin
+|-- scores-part1.json
+|-- scores-part2.json
+|-- scores-part3.json
+|-- scores-part4.json
+`-- user
+    |-- chcore-libc
+    |   |-- .gitignore
+    |   |-- CMakeLists.txt
+    |   `-- libchcore
+    |       |-- arch
+    |       |   `-- aarch64
+    |       |       |-- debug_lock.h
+    |       |       `-- raw_syscall.h
+    |       |-- cmake
+    |       |   |-- PortingTools.cmake
+    |       |   |-- do_cleanup.sh
+    |       |   |-- do_override_dir.sh
+    |       |   `-- do_patch_dir.sh
+    |       `-- porting
+    |           |-- README.md
+    |           |-- overrides
+    |           |   |-- Makefile
+    |           |   |-- arch
+    |           |   |   |-- aarch64
+    |           |   |   |   `-- syscall_arch.h
+    |           |   |   |-- generic
+    |           |   |   |   `-- bits
+    |           |   |   |       `-- errno.h
+    |           |   |   `-- remove_bak.sh
+    |           |   |-- configure
+    |           |   |-- include
+    |           |   |   |-- chcore
+    |           |   |   |   |-- aslr.h
+    |           |   |   |   |-- bug.h
+    |           |   |   |   |-- container
+    |           |   |   |   |   |-- hashtable.h
+    |           |   |   |   |   |-- list.h
+    |           |   |   |   |   |-- radix.h
+    |           |   |   |   |   |-- rbtree.h
+    |           |   |   |   |   |-- rbtree_impl.h
+    |           |   |   |   |   `-- rbtree_plus.h
+    |           |   |   |   |-- cpio.h
+    |           |   |   |   |-- defs.h
+    |           |   |   |   |-- error.h
+    |           |   |   |   |-- falloc.h
+    |           |   |   |   |-- idman.h
+    |           |   |   |   |-- ipc.h
+    |           |   |   |   |-- launcher.h
+    |           |   |   |   |-- memory.h
+    |           |   |   |   |-- oh_vfs.h
+    |           |   |   |   |-- opentrustee
+    |           |   |   |   |   `-- syscall.h
+    |           |   |   |   |-- pmo.h
+    |           |   |   |   |-- pmu.h
+    |           |   |   |   |-- proc.h
+    |           |   |   |   |-- pthread.h
+    |           |   |   |   |-- ring_buffer.h
+    |           |   |   |   |-- services.h
+    |           |   |   |   |-- string.h
+    |           |   |   |   |-- syscall.h
+    |           |   |   |   |-- thread.h
+    |           |   |   |   `-- type.h
+    |           |   |   |-- chcore-internal
+    |           |   |   |   |-- audio_defs.h
+    |           |   |   |   |-- chanmgr_defs.h
+    |           |   |   |   |-- configurable_servers.h
+    |           |   |   |   |-- cpu_driver_defs.h
+    |           |   |   |   |-- flash_defs.h
+    |           |   |   |   |-- fs_debug.h
+    |           |   |   |   |-- fs_defs.h
+    |           |   |   |   |-- gpio_defs.h
+    |           |   |   |   |-- hdmi_defs.h
+    |           |   |   |   |-- lwip_defs.h
+    |           |   |   |   |-- net_interface.h
+    |           |   |   |   |-- opentrustee_defs.h
+    |           |   |   |   |-- procmgr_defs.h
+    |           |   |   |   |-- sd_defs.h
+    |           |   |   |   |-- serial_defs.h
+    |           |   |   |   |-- shell_defs.h
+    |           |   |   |   |-- shmmgr_defs.h
+    |           |   |   |   |-- terminal_defs.h
+    |           |   |   |   `-- usb_devmgr_defs.h
+    |           |   |   `-- sys
+    |           |   |       `-- mman.h
+    |           |   |-- ldso
+    |           |   |   `-- dynlink.c
+    |           |   |-- src
+    |           |   |   |-- chcore-port
+    |           |   |   |   |-- CMakeLists.txt
+    |           |   |   |   |-- chcore_kill.c
+    |           |   |   |   |-- chcore_kill.h
+    |           |   |   |   |-- chcore_mman.h
+    |           |   |   |   |-- chcore_mmap.c
+    |           |   |   |   |-- chcore_shm.c
+    |           |   |   |   |-- chcore_shm.h
+    |           |   |   |   |-- cpio.c
+    |           |   |   |   |-- eventfd.c
+    |           |   |   |   |-- eventfd.h
+    |           |   |   |   |-- fd.c
+    |           |   |   |   |-- fd.h
+    |           |   |   |   |-- file.c
+    |           |   |   |   |-- file.h
+    |           |   |   |   |-- fs_client.c
+    |           |   |   |   |-- fs_client_defs.h
+    |           |   |   |   |-- futex.h
+    |           |   |   |   |-- ipc.c
+    |           |   |   |   |-- liblauncher.c
+    |           |   |   |   |-- libshell.c
+    |           |   |   |   |-- memory.c
+    |           |   |   |   |-- oh_vfs.c
+    |           |   |   |   |-- ot_syscall.c
+    |           |   |   |   |-- pipe.c
+    |           |   |   |   |-- pipe.h
+    |           |   |   |   |-- poll.c
+    |           |   |   |   |-- poll.h
+    |           |   |   |   |-- rbtree.c
+    |           |   |   |   |-- rbtree_plus.c
+    |           |   |   |   |-- ring_buffer.c
+    |           |   |   |   |-- services.c
+    |           |   |   |   |-- socket.c
+    |           |   |   |   |-- socket.h
+    |           |   |   |   |-- stdio.c
+    |           |   |   |   |-- syscall.c
+    |           |   |   |   |-- syscall_dispatcher.c
+    |           |   |   |   |-- timerfd.c
+    |           |   |   |   `-- timerfd.h
+    |           |   |   |-- ipc
+    |           |   |   |   |-- shmat.c
+    |           |   |   |   |-- shmctl.c
+    |           |   |   |   |-- shmdt.c
+    |           |   |   |   `-- shmget.c
+    |           |   |   |-- malloc
+    |           |   |   |   `-- oldmalloc
+    |           |   |   |       `-- malloc.c
+    |           |   |   |-- process
+    |           |   |   |   `-- waitpid.c
+    |           |   |   `-- thread
+    |           |   |       |-- aarch64
+    |           |   |       |   |-- CMakeLists.txt
+    |           |   |       |   |-- __thread_exit.s
+    |           |   |       |   `-- __unmapself.s
+    |           |   |       |-- pthread_cancel.c
+    |           |   |       |-- pthread_create.c
+    |           |   |       |-- pthread_mutex_lock.c
+    |           |   |       |-- pthread_mutex_setprioceiling.c
+    |           |   |       |-- pthread_mutex_timedlock.c
+    |           |   |       `-- pthread_mutex_unlock.c
+    |           |   `-- tools
+    |           |       |-- ld.musl-clang.in
+    |           |       `-- musl-clang.in
+    |           |-- patches
+    |           |   |-- include
+    |           |   |   |-- PTHREAD_MUTEX_INITIALIZER.ceiling
+    |           |   |   |-- alltypes.h.in.sh
+    |           |   |   |-- pthread.h.sh
+    |           |   |   `-- pthread_mutex.ceiling
+    |           |   `-- src
+    |           |       `-- internal
+    |           |           |-- pthread_impl.h.sh
+    |           |           `-- pthread_t.struct
+    |           `-- symbols
+    |               |-- CMakeLists.txt
+    |               `-- src
+    |                   |-- CMakeLists.txt
+    |                   |-- process
+    |                   |   |-- CMakeLists.txt
+    |                   |   `-- waitpid.c
+    |                   `-- thread
+    |                       |-- CMakeLists.txt
+    |                       |-- aarch64
+    |                       |   |-- CMakeLists.txt
+    |                       |   `-- __unmapself.s
+    |                       |-- pthread_cancel.c
+    |                       |-- riscv64
+    |                       |   |-- CMakeLists.txt
+    |                       |   `-- __unmapself.S
+    |                       `-- x86_64
+    |                           |-- CMakeLists.txt
+    |                           |-- __set_thread_area.s
+    |                           `-- __unmapself.S
+    |-- system-services
+    |   |-- CMakeLists.txt
+    |   `-- system-servers
+    |       |-- CMakeLists.txt
+    |       |-- fs_base
+    |       |   |-- CMakeLists.txt
+    |       |   |-- fs_page_cache.c
+    |       |   |-- fs_page_cache.h
+    |       |   |-- fs_page_fault.c
+    |       |   |-- fs_page_fault.h
+    |       |   |-- fs_vnode.c
+    |       |   |-- fs_vnode.c.obj
+    |       |   |-- fs_vnode.h
+    |       |   |-- fs_wrapper.c
+    |       |   |-- fs_wrapper.c.obj
+    |       |   |-- fs_wrapper_defs.h
+    |       |   |-- fs_wrapper_ops.c
+    |       |   `-- fs_wrapper_ops.c.obj
+    |       |-- fsm
+    |       |   |-- CMakeLists.txt
+    |       |   |-- defs.h
+    |       |   |-- device.c
+    |       |   |-- device.h
+    |       |   |-- fsm.c
+    |       |   |-- fsm.c.obj
+    |       |   |-- fsm.h
+    |       |   |-- fsm_client_cap.c
+    |       |   |-- fsm_client_cap.c.obj
+    |       |   |-- fsm_client_cap.h
+    |       |   |-- libs
+    |       |   |   `-- libyaml.a
+    |       |   |-- mount_disk_fs.c
+    |       |   |-- mount_disk_fs.h
+    |       |   |-- mount_info.c
+    |       |   |-- mount_info.h
+    |       |   `-- yaml.h
+    |       |-- procmgr
+    |       |   |-- CMakeLists.txt
+    |       |   |-- Makefile
+    |       |   |-- incbin_basic_srv.tpl.S
+    |       |   |-- include
+    |       |   |   |-- cyaml
+    |       |   |   |   |-- cyaml.h
+    |       |   |   |   `-- private.h
+    |       |   |   |-- libchcoreelf.h
+    |       |   |   |-- liblaunch.h
+    |       |   |   |-- librefcnt.h
+    |       |   |   |-- loader.h
+    |       |   |   |-- oh_mem_ops.h
+    |       |   |   |-- proc_node.h
+    |       |   |   |-- procmgr_dbg.h
+    |       |   |   |-- readyaml_conf.h
+    |       |   |   |-- shell_msg_handler.h
+    |       |   |   |-- srvmgr.h
+    |       |   |   `-- uthash.h
+    |       |   |-- libs
+    |       |   |   |-- CMakeLists.txt
+    |       |   |   |-- libchcoreelf
+    |       |   |   |   |-- CMakeLists.txt
+    |       |   |   |   `-- libchcoreelf.c
+    |       |   |   |-- libcyaml.a
+    |       |   |   |-- liblaunch
+    |       |   |   |   |-- CMakeLists.txt
+    |       |   |   |   `-- liblaunch.c
+    |       |   |   |-- librefcnt
+    |       |   |   |   |-- CMakeLists.txt
+    |       |   |   |   `-- librefcnt.c
+    |       |   |   `-- libyaml.a
+    |       |   |-- linker.ld
+    |       |   |-- loader.c
+    |       |   |-- oh_mem_ops.c
+    |       |   |-- proc_node.c
+    |       |   |-- procmgr.c
+    |       |   |-- recycle.c
+    |       |   |-- shell_msg_handler.c
+    |       |   |-- srvmgr.c
+    |       |   |-- srvmgr_config_generator
+    |       |   |   |-- generate_config.py
+    |       |   |   `-- template.yaml
+    |       |   `-- start_daemon_service.c
+    |       `-- tmpfs
+    |           |-- CMakeLists.txt
+    |           |-- cpio.c
+    |           |-- cpio.h
+    |           |-- defs.h
+    |           |-- incbin_ramdisk.tpl.S
+    |           |-- internal_ops.c
+    |           |-- main.c
+    |           |-- mem_usage_tool.c
+    |           |-- namei.c
+    |           |-- namei.h
+    |           |-- tests
+    |           |   |-- CMakeLists.txt
+    |           |   |-- include
+    |           |   |   |-- chcore -> ../../../../chcore-libc/libchcore/porting/overrides/include/chcore
+    |           |   |   |-- minunit.h
+    |           |   |   `-- tmpfs_test.h
+    |           |   `-- tmpfs
+    |           |       |-- CMakeLists.txt
+    |           |       |-- internal_ops_tests.c
+    |           |       `-- namei_tests.c
+    |           `-- tmpfs.c
+    `-- tests
+        |-- CMakeLists.txt
+        `-- fs_tests
+            |-- CMakeLists.txt
+            |-- fs_test_full.c
+            |-- fs_test_mmap.c
+            `-- fs_tools
+                |-- fs_test.h
+                |-- fs_test_helper.c
+                |-- fs_test_lib.c
+                |-- fs_test_lib.h
+                |-- fstest.h
+                |-- fstest_utils.c
+                |-- fstest_utils.h
+                |-- tst_content.c
+                |-- tst_dup.c
+                |-- tst_lseek.c
+                |-- tst_mmap.c
+                `-- tst_open.c
+
+286 directories, 1423 files

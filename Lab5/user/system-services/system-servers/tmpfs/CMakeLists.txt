@@ -21,7 +21,7 @@ add_custom_target(touch-inc-ramdisk
 add_dependencies(tmpfs.srv ramdisk touch-inc-ramdisk)
 
 target_sources(tmpfs.srv PRIVATE incbin_ramdisk.S)
-
+# tmpfs.srv是当前目录tmpfs下的所有文件编译和链接成为的结果，所以如果要
 target_link_libraries(tmpfs.srv PRIVATE fs_base cpio)
 
 chcore_all_force_static_linked()
