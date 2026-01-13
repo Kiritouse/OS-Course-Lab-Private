@@ -78,24 +78,19 @@ static int predict_prefetch_pages(int fault_page_id,
                                   int prefetch_page_ids[MAX_LLM_PAGE_NUM]) 
 {
 	/* LAB7 TODO BEGIN */
-        /* Simple sequential prefetching strategy starting from fault page */
-        int prefetch_count = 0;
-        
-        /* Start from the fault page and prefetch sequentially */
-        for (int i = 0; i < MAX_LLM_PAGE_NUM && prefetch_count < MAX_LLM_PAGE_NUM; i++) {
-                int page_id = fault_page_id + i;
-                /* Basic sanity check to avoid extremely large page ids */
-                //BUG:这里或许以后可能会有问题，这里我们限制了page_id的最大范围
-                if (page_id >= 0 && page_id < (1 << 20)) { /* Limit to reasonable range */
-                        prefetch_page_ids[prefetch_count] = page_id;
-                        prefetch_count++;
-                } else {
-                        break; /* Stop if page id becomes unreasonable */
-                }
+        // prefetch_page_ids[0] = fault_page_id;
+        // return 0;
+           int n = 0;
+
+         // 必须包含 fault 页
+        prefetch_page_ids[n++] = fault_page_id;
+
+         // 顺序预取后面几页
+        for (int i = 1; i < MAX_LLM_PAGE_NUM; i++) {
+                prefetch_page_ids[n++] = fault_page_id + i;
         }
-        
-        /* Return actual number of pages to prefetch */
-        return prefetch_count > 0 ? prefetch_count : -1;
+
+        return n;   // ⚠️ 更合理的是返回预取页数
 	/* LAB7 TODO END */
 }
 
@@ -187,32 +182,25 @@ static int handle_one_fault(badge_t fault_badge, vaddr_t fault_va)
         if (flags & MAP_LLM) {
                 /* LAB7 TODO BEGIN */
                 /* predict prefetch pages and map them in one fault */
-                ret = predict_prefetch_pages(area_off / PAGE_SIZE, prefetch_page_ids);
-                if (ret < 0) {
+                int n = predict_prefetch_pages(area_off / PAGE_SIZE, prefetch_page_ids);
+                if (n < 0) {
                         BUG_ON("this call should always be success here\n");
                 }
-                /* notify pending thread only when prefetch is completed */
-                completed = true;
-                prefetch_offset = prefetch_page_ids[0] * PAGE_SIZE;
-                server_page_addr = fs_wrapper_fmap_get_page_addr(
-                        vnode, file_offset + prefetch_offset);
-                if (!server_page_addr) {
-                        /* The file offset is out-of-range */
-                        fs_debug_warn("vnode->size=0x%lx, offset=0x%lx\n",
-                                      vnode->size,
-                                      file_offset + prefetch_offset);
+                
+                for(int i = 0;i<n;i++){
+                        prefetch_offset = prefetch_page_ids[i] * PAGE_SIZE;
+                         server_page_addr = fs_wrapper_fmap_get_page_addr(vnode, file_offset + prefetch_offset);
+                         if (!server_page_addr) {
+                                /* The file offset is out-of-range */
+                                fs_debug_warn("vnode->size=0x%lx, offset=0x%lx\n",vnode->size,file_offset + prefetch_offset);
+                        }
+                         completed = (i==n-1);
+                         ret = usys_user_fault_map_batched(fault_badge, fault_va - area_off + prefetch_offset, server_page_addr, copy, map_perm, completed,fault_va);
+                        if (ret < 0) {
+                                BUG_ON("this call should always be success here\n");
+                        }
                 }
-                ret = usys_user_fault_map_batched(
-                        fault_badge, 
-                        fault_va - area_off + prefetch_offset, 
-                        server_page_addr, 
-                        copy, 
-                        map_perm, 
-                        completed,
-                        fault_va);
-                if (ret < 0) {
-                        BUG_ON("this call should always be success here\n");
-                }
+                /* notify pending thread only when prefetch is completed *//*只有当预取完成后才会取消阻塞*/                
 				/* LAB7 TODO END */
         }
         else {
