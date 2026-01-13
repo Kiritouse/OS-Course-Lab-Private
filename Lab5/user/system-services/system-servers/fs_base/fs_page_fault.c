@@ -74,25 +74,44 @@ vaddr_t fs_wrapper_fmap_get_page_addr(struct fs_vnode *vnode, off_t offset)
         return (vaddr_t)page_buf;
 }
 
+// static int predict_prefetch_pages(int fault_page_id,
+//                                   int prefetch_page_ids[MAX_LLM_PAGE_NUM]) 
+// {
+// 	/* LAB7 TODO BEGIN */
+//         // prefetch_page_ids[0] = fault_page_id;
+//         // return 0;
+//            int n = 0;
+
+//          // 必须包含 fault 页
+//         prefetch_page_ids[n++] = fault_page_id;
+
+//          // 顺序预取后面几页
+//         for (int i = 1; i < MAX_LLM_PAGE_NUM; i++) {
+//                 prefetch_page_ids[n++] = fault_page_id + i;
+//         }
+
+//         return n;   // ⚠️ 更合理的是返回预取页数
+// 	/* LAB7 TODO END */
+// }
 static int predict_prefetch_pages(int fault_page_id,
-                                  int prefetch_page_ids[MAX_LLM_PAGE_NUM]) 
+                                  int prefetch_page_ids[MAX_LLM_PAGE_NUM])
 {
-	/* LAB7 TODO BEGIN */
-        // prefetch_page_ids[0] = fault_page_id;
-        // return 0;
-           int n = 0;
+    int n = 0;
 
-         // 必须包含 fault 页
-        prefetch_page_ids[n++] = fault_page_id;
+    int start = fault_page_id;
+    int end = start + MAX_LLM_PAGE_NUM;
 
-         // 顺序预取后面几页
-        for (int i = 1; i < MAX_LLM_PAGE_NUM; i++) {
-                prefetch_page_ids[n++] = fault_page_id + i;
-        }
+    for (int i = start; i < end; i++) {
+        prefetch_page_ids[n++] = i;
+    }
 
-        return n;   // ⚠️ 更合理的是返回预取页数
-	/* LAB7 TODO END */
+    return n; // 一次性 16 个
 }
+
+
+
+
+
 
 static int handle_one_fault(badge_t fault_badge, vaddr_t fault_va)
 {
