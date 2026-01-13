@@ -45,6 +45,8 @@ pthread_rwlock_t fmap_area_lock;
  *      use specific operation defined by under file system (eg. tmpfs)
  * Return (vaddr_t)0 as error.
  */
+
+
 vaddr_t fs_wrapper_fmap_get_page_addr(struct fs_vnode *vnode, off_t offset)
 {
         vaddr_t page_buf;
@@ -243,6 +245,7 @@ void *user_fault_handler(void *args)
                                 (vaddr_t)((void *)fault_msg_buffer
                                           + END_OFFSET));
                         /* Handle msg */
+                        // debug_break();
                         ret = handle_one_fault(msg.fault_badge, msg.fault_va);
                         if (ret) {
                                 fs_debug_error("ret = %d\n", ret);
@@ -280,7 +283,6 @@ int fs_page_fault_init(void)
         pthread_rwlock_init(&fmap_area_lock, NULL);
 
         /* Create fault handler to do user-level page fault */
-        /*创建页*/
         ret = pthread_create(&fh, NULL, user_fault_handler, NULL);
         if (ret < 0) {
                 free_ringbuffer(fault_msg_buffer);
