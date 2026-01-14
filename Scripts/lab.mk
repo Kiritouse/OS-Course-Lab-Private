@@ -36,7 +36,7 @@ DOCKER ?= docker
 DOCKER_IMAGE ?= ipads/oslab:25.03
 ifeq (,$(wildcard /docker.env)) # 如果说/docker.env 文件为空，docker_run变量为空，直接运行
 DOCKER_RUN ?= 
-else
+else #设置DOCKER_RUN变量，运行docker容器，并且传递一些环境变量和挂载卷
 DOCKER_RUN ?= $(DOCKER) run -it --rm \
 		-e SCRIPTS=$(SCRIPTS) \
 		-e LABROOT=$(LABROOT) \
@@ -49,8 +49,8 @@ DOCKER_RUN ?= $(DOCKER) run -it --rm \
 		--platform=linux/amd64 \
 		$(DOCKER_IMAGE)
 endif
-QEMU-SYS ?= qemu-system-aarch64
-QEMU-USER ?= qemu-aarch64
+QEMU-SYS ?= qemu-system-aarch64 #QEMU系统模拟器，用于模拟整个ARM64系统
+QEMU-USER ?= qemu-aarch64 #QEMU用户态模拟器，用于运行ARM64用户态程序
 
 # Timeout for grading
 TIMEOUT ?= 10

@@ -163,20 +163,20 @@ rambuild() {
 }
 
 build() {
-    _check_config_file
-    _config_ask
-    _sync_config_with_cache
-    _echo_succ "Config synced to \`$config_file\` file."
+    _check_config_file # 检查config文件是否存在
+    _config_ask # 配置cmake
+    _sync_config_with_cache # 同步config文件和cmake缓存
+    _echo_succ "Config synced to \`$config_file\` file." # 输出成功信息
 
     if [ -z "$1" ]; then
-        build_target="all"
+        build_target="all" # 如果没有指定目标，则构建所有目标
     else
-        build_target="$1"
+        build_target="$1" # 否则构建指定目标
     fi
 
-    _echo_info "Building..."
+    _echo_info "Building..." # 输出构建信息
     cmake --build $cmake_build_dir --target $build_target --parallel $(nproc)
-
+    # 使用cmake构建指定目标，并行使用所有可用的处理器核心
     if [ -z "$1" ]; then
         _echo_succ "Succeeded to build all targets"
         _echo_info "To use chcore toolchain, please input the commnad"
@@ -286,7 +286,7 @@ _docker_run() {
 }
 
 _main() {
-    run_in_docker=true
+    run_in_docker=true  #默认在docker中运行，如果添加参数，则在本地中运行
     while [ $# -gt 0 ]; do
         case $1 in
         help | --help | -h)
