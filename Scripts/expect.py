@@ -65,17 +65,12 @@ class Colors(Enum):
     NEGATIVE = "\033[7m"
     CROSSED = "\033[9m"
     END = "\033[0m"
-    # cancel SGR codes if we don't write to a terminal
-    if not __import__("sys").stdout.isatty():
-        for _ in dir():
-            if isinstance(_, str) and _[0] != "_":
-                locals()[_] = ""
-    else:
-        # set Windows console in VT mode
-        if __import__("platform").system() == "Windows":
-            kernel32 = __import__("ctypes").windll.kernel32
-            kernel32.SetConsoleMode(kernel32.GetStdHandle(-11), 7)
-            del kernel32
+    # set Windows console in VT mode (skip the non-tty SGR-cancel branch
+    # because Python 3.8 Enum forbids reassigning existing members)
+    if __import__("sys").stdout.isatty() and __import__("platform").system() == "Windows":
+        kernel32 = __import__("ctypes").windll.kernel32
+        kernel32.SetConsoleMode(kernel32.GetStdHandle(-11), 7)
+        del kernel32
 
 
 @dataclass
