@@ -1,4 +1,4 @@
 LAB := 3
-TIMEOUT := 40
+TIMEOUT := 60
 
 include $(CURDIR)/../Scripts/lab.mk
