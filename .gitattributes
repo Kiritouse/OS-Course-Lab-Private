@@ -21,3 +21,14 @@
 *.woff binary
 *.pyc binary
 *.pdf binary
+
+*.elf binary
+*.gba binary
+*.srv binary
+*.bmp binary
+*.dll binary
+*.exe binary
+*.so binary
+*.assets binary
+*.resS binary
+*.unitypackage binary
