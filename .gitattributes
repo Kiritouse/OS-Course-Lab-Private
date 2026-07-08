@@ -1,4 +1,4 @@
-* text eol=lf
+* text=auto eol=lf
 
 *.obj binary
 *.dbg.obj binary
@@ -22,8 +22,22 @@
 *.pyc binary
 *.pdf binary
 
+*.elf binary
+*.gba binary
+*.srv binary
+*.bmp binary
+*.dll binary
+*.exe binary
+*.so binary
+*.assets binary
+*.resS binary
+*.unitypackage binary
+
 # extensionless precompiled binaries (not covered by any wildcard pattern above)
 Scripts/change_serial binary
 Lab1/user/procmgr binary
 Lab2/user/procmgr binary
 Lab4/ramdisk/tmpfs.srv binary
+
+# per-student bomb binaries (no extension)
+Lab0/warehouse/bomb-* binary
