@@ -1,4 +1,4 @@
-* text eol=lf
+* text=auto eol=lf
 
 *.obj binary
 *.dbg.obj binary
@@ -38,3 +38,6 @@ Scripts/change_serial binary
 Lab1/user/procmgr binary
 Lab2/user/procmgr binary
 Lab4/ramdisk/tmpfs.srv binary
+
+# per-student bomb binaries (no extension)
+Lab0/warehouse/bomb-* binary
