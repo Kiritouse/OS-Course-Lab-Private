@@ -78,3 +78,6 @@ Thirdparty/musl-libc/obj/
 # Lab*/Thirdparty by the build system
 .DS_Store
 *.bak
+
+# personal local Claude Code settings, not project config
+.claude/
