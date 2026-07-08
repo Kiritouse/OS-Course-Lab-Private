@@ -1,1 +1,0 @@
-/workspaces/OS-Course-Lab/Lab6/user/chcore-libc/libchcore/porting/overrides/arch/aarch64/syscall_arch.h
