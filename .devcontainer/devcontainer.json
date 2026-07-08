@@ -15,7 +15,10 @@
 			"ms-vscode.makefile-tools",
 			"twxs.cmake",
 			"dan-c-underwood.arm"
-		]
+		],
+		"settings": {
+			"terminal.integrated.defaultProfile.linux": "bash"
+		}
 	}
   }
 }
