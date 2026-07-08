@@ -21,3 +21,9 @@
 *.woff binary
 *.pyc binary
 *.pdf binary
+
+# extensionless precompiled binaries (not covered by any wildcard pattern above)
+Scripts/change_serial binary
+Lab1/user/procmgr binary
+Lab2/user/procmgr binary
+Lab4/ramdisk/tmpfs.srv binary
