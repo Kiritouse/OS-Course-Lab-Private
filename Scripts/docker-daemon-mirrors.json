@@ -1,0 +1,16 @@
+{
+    registry-mirrors: [
+        https://docker.m.daocloud.io,
+        https://dockerpull.org,
+        https://docker.1panel.dev,
+        https://hub.rat.dev
+    ],
+    insecure-registries: [
+        lab.com
+    ],
+    log-driver: json-file,
+    log-opts: {
+        max-size: 100m,
+        max-file: 3
+    }
+}
