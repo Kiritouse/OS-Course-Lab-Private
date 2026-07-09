@@ -120,6 +120,7 @@ add_subdirectory(mm)
 add_subdirectory(object)
 add_subdirectory(sched)
 add_subdirectory(syscall)
+add_subdirectory(tests/runtime)
 
 # Kernel testing
 if(CHCORE_KERNEL_TEST)

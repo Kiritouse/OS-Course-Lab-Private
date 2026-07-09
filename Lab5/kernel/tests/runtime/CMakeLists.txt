@@ -8,23 +8,6 @@
 # PURPOSE.
 # See the Mulan PSL v2 for more details.
 
-target_include_directories(${kernel_target} PRIVATE include)
-
-list(
-    APPEND
-    _init_sources
-    init/start.S
-    init/mmu.c
-    init/tools.S
-    init/init_c.c
-    peripherals/uart.c)
-
-chcore_target_sources_out_objects(${kernel_target} PRIVATE init_objects
-                                  ${_init_sources})
-
-set(init_objects
-    ${init_objects}
-    PARENT_SCOPE)
-
-chcore_objcopy_binary(${kernel_target} kernel8.img)
-
+chcore_target_precompile(${kernel_target} PRIVATE tests.c)
+target_sources(${kernel_target} PRIVATE serial_number.c)
+target_include_directories(${kernel_target} PRIVATE ../)
