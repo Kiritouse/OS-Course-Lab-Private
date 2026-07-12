@@ -139,12 +139,18 @@ struct thread *find_runnable_thread(struct list_head *thread_list)
         条件翻译过来就是线程没有被挂起并且内核栈状态是空闲的或者线程就是当前线程（如果没有其他线程可以运行
         那就让当前线程继续运行，这样也是符合逻辑的）
         */
-        for_each_in_list(thread, struct thread, ready_queue_node, thread_list){
-                  if(!thread->thread_ctx->is_suspended &&
-                  (thread->thread_ctx->kernel_stack_state == KS_FREE|| thread == current_thread)){
-                           return thread;
+        struct thread *iter;
+        for_each_in_list(iter, struct thread, ready_queue_node, thread_list){
+                  if(!iter->thread_ctx->is_suspended &&
+                  (iter->thread_ctx->kernel_stack_state == KS_FREE|| iter == current_thread)){
+                           thread = iter;
+                           break;
                   }
         }
+        /* 修复：循环耗尽时 for_each_in_list 的迭代变量停在 container_of(队列头) 上，
+         * 不是 NULL；原实现把这个伪造指针返回给调度器，导致就绪队列元数据被
+         * list_del/obj_put 损坏（Lab4 负载下小概率，Lab5 fs 多进程负载必现）。
+         * 改为仅在命中时赋值，未命中保持 NULL。 */
 
         /* LAB 4 TODO END (exercise 3) */
         return thread;
