@@ -43,6 +43,9 @@ struct fmap_area_mapping {
         u64 flags;
         vmr_prop_t prot;
 
+        /* LAB7: page fault counter for MAP_LLM area (printed at munmap) */
+        int llm_fault_count;
+
         struct list_head node;
 };
 
@@ -57,6 +60,7 @@ int fmap_area_insert(badge_t client_badge, vaddr_t client_va_start,
 int fmap_area_find(badge_t client_badge, vaddr_t client_va, size_t *area_off,
                    struct fs_vnode **vnode, off_t *file_offset, u64 *flags,
                    vmr_prop_t *prot);
+void fmap_area_count_fault(badge_t client_badge, vaddr_t client_va);
 int fmap_area_remove(badge_t client_badge, vaddr_t client_va_start,
                      size_t length);
 void fmap_area_recycle(badge_t client_badge);
