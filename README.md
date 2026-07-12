@@ -1,64 +1,57 @@
-# IPADS OS Course Lab Manual
+# ChCore —— all-in-one 可控内核
 
-[![GitHub Pages](https://github.com/SJTU-IPADS/OS-Course-Lab/actions/workflows/github-pages.yml/badge.svg)](https://sjtu-ipads.github.io/OS-Course-Lab/)
-[![Github License](https://img.shields.io/github/license/SJTU-IPADS/OS-Course-Lab)](https://github.com/SJTU-IPADS/OS-Course-Lab/blob/main/LICENSE)
-[![Github Releases](https://img.shields.io/github/v/release/SJTU-IPADS/OS-Course-Lab)](https://github.com/SJTU-IPADS/OS-Course-Lab/releases/latest)
-[![Github Issues](https://img.shields.io/github/issues/SJTU-IPADS/OS-Course-Lab)](https://github.com/SJTU-IPADS/OS-Course-Lab/issues)
+基于上海交通大学 IPADS《操作系统》课程 ChCore(v25.03)的完整微内核操作系统。
+本分支把 Lab1-5 各实验中由我亲手实现、原本在后续实验中被封装为预编译
+`.obj` 的代码全部还原为源码,融合为一棵可构建、可启动、可调试的完整源码树,
+并以真实项目的目录结构组织(课程材料与各实验的独立目录见 lab0-lab6 分支)。
 
-[![forthebadge lab](Assets/lab.svg)](https://sjtu-ipads.github.io/OS-Course-Lab/)
-[![forthebadge source code](Assets/source.svg)](https://sjtu-ipads.github.io/OS-Course-Lab/Appendix/source-code/Lab1/booting.html)
-[![forthebadge cc-nc-sa](http://ForTheBadge.com/images/badges/cc-nc-sa.svg)](https://creativecommons.org/licenses/by-nc-sa/4.0)
+## 目录结构
 
-本仓库包含上海交通大学IPADS实验室设计的操作系统课程系列实验。每个实验位于独立的目录，附有详细的[实验说明](https://sjtu-ipads.github.io/OS-Course-Lab/)和[源码解析](https://sjtu-ipads.github.io/OS-Course-Lab/Appendix/source-code/Lab1/booting.html)。
+```
+kernel/       内核:启动(boot)、内存管理(mm)、进程线程与能力(object)、
+              调度(sched)、IPC、系统调用、体系结构相关代码(arch/aarch64)
+user/         用户态:procmgr、fsm、tmpfs 等系统服务,chcore-libc,测试程序
+ramdisk/      初始 ramdisk(shell 与测试二进制)
+Thirdparty/   musl-libc 等第三方组件
+Scripts/      构建脚本(chbuild、CMake 模块、QEMU/GDB 封装)
+CMakeLists.txt / config.cmake / Makefile   构建入口
+```
 
-课程教材:
+## 构建与运行(建议在课程 devcontainer/ipads oslab 镜像内)
 
-<img src="Assets/os-book.jpeg" alt="The course textbook" style="width:300px;height:300px;">
+```bash
+make defconfig   # 首次:生成 .config(raspi3 平台)
+make build       # 构建内核与用户态,产物在 build/kernel.img
+make qemu        # QEMU (raspi3b) 启动,启动后自动跑 fs 测试并进入 shell
+make qemu-gdb    # 挂起等待 GDB(端口 1234)
+make gdb         # 另一终端:连接调试
+```
 
-完成系列实验后，你可以在树莓派上用自己DIY的ChCore内核，运行宝可梦游戏、调用DeepSeek、本地运行Qwen-1.5b等等。
+## 自实现部分(已全部源码化)
 
-[GBA](https://github.com/user-attachments/assets/00804575-bc97-4594-b09e-2d20e1d69509)
+- Lab1 启动:`kernel/arch/aarch64/boot/raspi3`(start.S/tools.S/mmu.c/init_c.c/uart.c)
+- Lab2 内存管理:`kernel/mm`(buddy/slab/kmalloc/vmspace/pgfault)与
+  `kernel/arch/aarch64/mm/page_table.c`
+- Lab3 进程线程:`kernel/object/{thread,cap_group}.c`、异常入口
+  `kernel/arch/aarch64/irq/irq_entry.S`、上下文 `kernel/arch/aarch64/sched/context.c`
+- Lab4 多核调度与 IPC:`kernel/sched/{sched,policy_rr}.c`、`kernel/ipc/connection.c`、
+  时钟中断 `kernel/irq/timer.c` 等
+- Lab5 文件系统:`user/system-services/system-servers/{fsm,fs_base}`
+  (vnode/wrapper/页缓存/缺页与 llm 预取)
 
+仍保持预编译的仅为课程未开放的参考实现(如 `kernel/arch/aarch64/main.c`、
+`kernel/syscall/syscall.c` 等,见各目录 CMakeLists 的 chcore_target_precompile)。
 
-> [!NOTE]
-> 如果你有任何建议或更正意见，欢迎提交 Pull Requests 或 Issues。让我们一起合作改进实验
+## 整合过程中修复的问题
 
-## Lab0: 拆炸弹 (ARM 汇编)
+1. `kernel/incbin.tpl.S`:内嵌 procmgr ELF 强制页对齐(零拷贝加载的隐含前提)。
+2. `kernel/arch/aarch64/cpu_stacks_align.c`:cpu_stacks 强制页对齐,
+   修复 KSTACK 映射物理截断导致的 .bss 静默损坏。
+3. 调度器 `find_runnable_thread` 迭代器误用修复。
+4. llm 缺页优化:按访问递推链预取,全程 2 次缺页。
 
-该实验受到CSAPP课程启发，CSAPP课程设计了一个针对x86/x86-64汇编的拆炸弹实验。
-不同之处在于，本实验目标是熟悉ARM汇编语言，并为后续的ARM/树莓派内核实验做好准备。
+验证:QEMU 连续 10/10 次启动通过全部 fs 测试;课程评分 100/100。
 
-Tutorial: <https://www.bilibili.com/video/BV1q94y1a7BF/?vd_source=63231f40c83c4d292b2a881fda478960>
+## License
 
-## Lab1: 内核启动
-
-该实验的主要内容是关于如何在内核启动过程中设置CPU异常级别、配置内核页表并启用MMU。
-在内核实验系列中，我们将使用 [ChCore 微内核](https://www.usenix.org/conference/atc20/presentation/gu) 的基础版本，并使用 Raspi3b+作为实验平台（无论是使用QEMU树莓派模拟器还是树莓派开发板都可以）。
-
-Tutorial: <https://www.bilibili.com/video/BV1gj411i7dh/?spm_id_from=333.337.search-card.all.click>
-
-## Lab2: 内存管理
-
-该实验主要内容是关于内核中的伙伴系统和slab分配器的实现，并为应用程序设置页表。
-
-Tutorial: <https://www.bilibili.com/video/BV1284y1Q7Jc/?vd_source=316867e8ad2c56f50fa94e8122dd7d38>
-
-## Lab3: 进程与线程
-
-该实验主要内容包括创建第一个用户态进程和线程，完善异常处理流程和系统调用，编写一个Hello-World在实验内核上运行。
-
-Tutorial: <https://www.bilibili.com/video/BV11N411j7bR/>
-
-## Lab4：多核调度与IPC
-
-该实验中可以看到多核是如何启动的、多线程如何调度、基于capability权限管控的进程间通信机制。
-
-Tutorial: <https://www.bilibili.com/video/BV1AS421N7rU/>
-
-## Lab5：虚拟文件系统
-
-该实验关注虚拟文件系统（Virtual File System，VFS）, VFS抽象层使得不同类型的文件系统可以在应用程序层面以统一的方式进行访问。
-
-## Lab6：GUI (Optional)
-
-该实验将详细介绍ChCore上基于Wayland的GUI系统的运行原理，包括Wayland通信协议和Wayland Compositor，并且要求读者在了解基于Wayland的GUI系统运行原理的基础上，基于ChCore的GUI框架编写自己的具有GUI界面的APP。
+Mulan PSL v2(见 LICENSE;ChCore 版权归 SJTU IPADS)。
