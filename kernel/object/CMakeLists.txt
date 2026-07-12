@@ -8,5 +8,5 @@
 # PURPOSE.
 # See the Mulan PSL v2 for more details.
 
-target_sources(${kernel_target} PRIVATE cap_group.c thread.c)
-chcore_target_precompile(${kernel_target} PRIVATE capability.c irq.c memory.c recycle.c set_thread_env.c ptrace.c user_fault.c)
+target_sources(${kernel_target} PRIVATE cap_group.c thread.c user_fault.c)
+chcore_target_precompile(${kernel_target} PRIVATE capability.c irq.c memory.c recycle.c set_thread_env.c ptrace.c)
