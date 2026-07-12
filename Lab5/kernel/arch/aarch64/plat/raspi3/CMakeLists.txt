@@ -8,4 +8,5 @@
 # PURPOSE.
 # See the Mulan PSL v2 for more details.
 
-chcore_target_precompile(${kernel_target} PRIVATE uart/uart.c irq/irq.c irq/timer.c mm/mmparse.c poweroff.c)
+target_sources(${kernel_target} PRIVATE irq/irq.c irq/timer.c)
+chcore_target_precompile(${kernel_target} PRIVATE uart/uart.c mm/mmparse.c poweroff.c)

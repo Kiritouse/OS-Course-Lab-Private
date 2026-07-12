@@ -8,4 +8,5 @@
 # PURPOSE.
 # See the Mulan PSL v2 for more details.
 
-chcore_target_precompile(${kernel_target} PRIVATE bzero.S cache.c memcpy.S memmove.S memset.c page_table.c page_table.S tlb.c uaccess.c vmspace.c copy_from_user.S copy_to_user.S)
+target_sources(${kernel_target} PRIVATE page_table.c)
+chcore_target_precompile(${kernel_target} PRIVATE bzero.S cache.c memcpy.S memmove.S memset.c page_table.S tlb.c uaccess.c vmspace.c copy_from_user.S copy_to_user.S)

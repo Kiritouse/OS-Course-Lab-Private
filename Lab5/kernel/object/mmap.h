@@ -10,18 +10,19 @@
  * See the Mulan PSL v2 for more details.
  */
 
-/* Kernel binary include template. */
+#ifndef KERNEL_OBJECT_MMAP_H
+#define KERNEL_OBJECT_MMAP_H
 
-        .section .rodata
-        .balign 4096
-        .globl binary_${binary_name}_start
-binary_${binary_name}_start:
-        .incbin "${binary_path}"
-binary_${binary_name}_end:
-        .globl binary_${binary_name}_size
-binary_${binary_name}_size:
-#if __SIZEOF_POINTER__ == 4
-        .word binary_${binary_name}_end - binary_${binary_name}_start
-#else
-        .quad binary_${binary_name}_end - binary_${binary_name}_start
-#endif
+#define MAP_SHARED  0x01
+#define MAP_PRIVATE 0x02
+
+#define MAP_ANONYMOUS 0x20
+
+#define PROT_NONE  0
+#define PROT_READ  1
+#define PROT_WRITE 2
+#define PROT_EXEC  4
+
+#define PROT_CHECK_MASK (~(PROT_NONE | PROT_READ | PROT_WRITE | PROT_EXEC))
+
+#endif /* KERNEL_OBJECT_MMAP_H */

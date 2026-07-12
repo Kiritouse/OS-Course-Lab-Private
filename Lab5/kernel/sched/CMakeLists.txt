@@ -8,4 +8,5 @@
 # PURPOSE.
 # See the Mulan PSL v2 for more details.
 
-chcore_target_precompile(${kernel_target} PRIVATE sched.c context.c policy_pb.c policy_rr.c)
+target_sources(${kernel_target} PRIVATE sched.c policy_rr.c)
+chcore_target_precompile(${kernel_target} PRIVATE context.c policy_pb.c)

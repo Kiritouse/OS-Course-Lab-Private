@@ -8,4 +8,5 @@
 # PURPOSE.
 # See the Mulan PSL v2 for more details.
 
-chcore_target_precompile(${kernel_target} PRIVATE buddy.c slab.c kmalloc.c mm.c uaccess.c pgfault_handler.c vmspace.c extable.c)
+target_sources(${kernel_target} PRIVATE buddy.c slab.c kmalloc.c mm.c pgfault_handler.c vmspace.c)
+chcore_target_precompile(${kernel_target} PRIVATE uaccess.c extable.c)

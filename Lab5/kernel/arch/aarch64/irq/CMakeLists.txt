@@ -8,4 +8,6 @@
 # PURPOSE.
 # See the Mulan PSL v2 for more details.
 
-chcore_target_precompile(${kernel_target} PRIVATE ipi.c irq_entry.c irq_entry.S irq.S pgfault.c)
+target_sources(${kernel_target} PRIVATE pgfault.c)
+target_sources(${kernel_target} PRIVATE irq_entry.S irq_entry.c)
+chcore_target_precompile(${kernel_target} PRIVATE ipi.c irq.S)

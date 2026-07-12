@@ -8,4 +8,5 @@
 # PURPOSE.
 # See the Mulan PSL v2 for more details.
 
-chcore_target_precompile(${kernel_target} PRIVATE connection.c notification.c futex.c)
+target_sources(${kernel_target} PRIVATE connection.c)
+chcore_target_precompile(${kernel_target} PRIVATE notification.c futex.c)

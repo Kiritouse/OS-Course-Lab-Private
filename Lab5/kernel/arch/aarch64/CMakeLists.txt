@@ -9,6 +9,7 @@
 # See the Mulan PSL v2 for more details.
 
 chcore_target_precompile(${kernel_target} PRIVATE head.S main.c tools.S)
+target_sources(${kernel_target} PRIVATE cpu_stacks_align.c)
 
 add_subdirectory(boot)
 
