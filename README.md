@@ -39,8 +39,12 @@ make gdb         # 另一终端:连接调试
 - Lab5 文件系统:`user/system-services/system-servers/{fsm,fs_base}`
   (vnode/wrapper/页缓存/缺页与 llm 预取)
 
-仍保持预编译的仅为课程未开放的参考实现(如 `kernel/arch/aarch64/main.c`、
-`kernel/syscall/syscall.c` 等,见各目录 CMakeLists 的 chcore_target_precompile)。
+凡课程曾以源码发放过的文件(含 `main.c`、`syscall.c`、`rbtree.c`、`smp.c`、
+`capability.c` 等讲义代码)均已源码化;仍保持预编译的仅剩课程从未发放过
+源码的部分(`object/memory.c`、`recycle.c`、`lib/printk.c`、`futex.c` 等
+四十余个,见各目录 CMakeLists 的 chcore_target_precompile)。其中
+`memory.c` 的 Lab3 讲义版与 Lab5 参考版存在 PMO_FILE 机制代差,
+验证会破坏 fmap 缺页路由,故保留预编译版。
 
 ## 整合过程中修复的问题
 

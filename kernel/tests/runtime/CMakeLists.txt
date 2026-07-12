@@ -9,5 +9,5 @@
 # See the Mulan PSL v2 for more details.
 
 chcore_target_precompile(${kernel_target} PRIVATE tests.c)
-target_sources(${kernel_target} PRIVATE serial_number.c)
+target_sources(${kernel_target} PRIVATE lab2_tests.c)
 target_include_directories(${kernel_target} PRIVATE ../)
